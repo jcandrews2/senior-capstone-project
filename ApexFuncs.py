@@ -4,6 +4,28 @@ from funcs import *
 import os
 import glob
 
+def apex_OCR(img_file):
+    out = {"code" : 'AC',
+           "squad_placed" : "0",
+           "players" : [
+               {
+                    "name" : 'x0',
+                    "kak" : '0/0/0',
+                    "damage" : "000",
+               },
+               {
+                    "name" : 'x1',
+                    "kak" : '1/1/1',
+                    "damage" : "111",
+               },
+               {
+                    "name" : 'x2',
+                    "kak" : '2/2/2',
+                    "damage" : "222",
+               }
+           ]}
+    return out
+
 def get_damage_dealt(img_file):
     img = cv2.imread(img_file)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -43,9 +65,6 @@ def get_damage_dealt(img_file):
 
     cv2.imwrite('processed_boxed_image.jpg', box_img)
     return list(filter(None, all_text))[:3]
-
-
-
 
 
 # get kills/assists/knocks
@@ -195,7 +214,15 @@ def get_KAK(img_file, pn):
     ideal_h = min(all_h)
     ideal_y = max(all_y)
     ideal_w = min(all_w)
-  
+
+    print('h: ', ideal_h)
+    print('w: ', ideal_w)
+    print('ratio: ', ideal_h/ideal_w)
+    if ideal_h / ideal_w > .10:
+        cut = int((ideal_h - (ideal_w * .10)) / 2)
+        ideal_y += cut
+        ideal_h -= cut
+
     for idx, item in enumerate(top3_similarities):
         # all_h.append(d['height'][item[0]])
         (x, y, w, h) = (d['left'][item[0]], d['top'][item[0]], d['width'][item[0]], d['height'][item[0]])
@@ -205,6 +232,9 @@ def get_KAK(img_file, pn):
         y = ideal_y+17
         w = ideal_w
         h = ideal_h + 20
+
+
+
 
         # rectangle
         kak_img = cv2.rectangle(kak_img, (x, y), (x + w, y + h), (0, 255, 0), 2) # G 
@@ -262,7 +292,7 @@ def get_char_boxes(img):
     height, width = img.shape[:2]
     
     # bounding boxes
-    d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 6')
+    d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 6 -c tessedit_char_whitelist="0123456789/"')
     n_boxes = len(d['char'])
 
     whole_txt = ''
@@ -286,8 +316,8 @@ def get_char_boxes(img):
         # crop = img[y2:y1, x1:x2]
         crop = img[y2:y1, x1:x2]
 
-        if (i != 0):
-            crop = scale_img(crop,100)
+        if (i == 0):
+            crop = scale_img(crop,80)
         
         cv2.imwrite(f'KAK_crops_char/char{i}.png', crop)
 
