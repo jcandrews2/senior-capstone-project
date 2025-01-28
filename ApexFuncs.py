@@ -5,6 +5,13 @@ import os
 import glob
 
 def apex_OCR(img_file):
+
+    # call methods for seamless run
+    dum1 = get_damage_dealt(img_file)
+    print('sucessfully ran damage_dealt_data_pull')
+    dum2 = get_KAK(img_file)
+    print('sucessfully ran KAK_data_pull')
+
     out = {"code" : 'AC',
            "squad_placed" : "0",
            "players" : [

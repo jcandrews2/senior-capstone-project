@@ -25,9 +25,6 @@ import cv2
 
 # print(get_char_boxes(cv2.imread('KAK_crops_temp/crop1.jpg')))
 
-# d = pytesseract.image_to_data(cv2.imread('KAK_crops_temp/crop2.jpg'), output_type=Output.DICT)
-txt = pytesseract.image_to_string(cv2.imread('KAK_crops_temp/crop0.jpg'), config='--psm 6 -c tessedit_char_whitelist="0123456789/"')
-# print(len(d['text']))
-print(txt)
+d = pytesseract.image_to_data(cv2.imread('KAK_crops_temp/crop0.jpg'), output_type=Output.DICT)
 
-print(apex_OCR(cv2.imread('KAK_crops_temp/crop0.jpg')))
+# print(apex_OCR(cv2.imread('KAK_crops_temp/crop0.jpg')))
