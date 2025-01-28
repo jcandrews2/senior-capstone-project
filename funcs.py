@@ -2,6 +2,7 @@ from PIL import Image
 import cv2
 import pytesseract
 import numpy as np
+from difflib import SequenceMatcher
 
 # scale
 def scale_img(img, pct):
@@ -12,6 +13,9 @@ def scale_img(img, pct):
     rs_image = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     
     return rs_image
+
+def str_similarity(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 
 ### THE FUNCS BELOW ARE NOT IN USE
