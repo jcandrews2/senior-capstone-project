@@ -1,0 +1,105 @@
+{
+    "map": "CUSTOM",
+    "players": [
+        {
+            "name": "reformedkirux",
+            "agent": "Skye",
+            "acs": "289",
+            "kda": "2/-1/6",
+            "econ": "72",
+            "fb": "4",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Soup",
+            "agent": "Iso",
+            "acs": "253",
+            "kda": "2/-1/3",
+            "econ": "53",
+            "fb": "5",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Karma",
+            "agent": "Cypher",
+            "acs": "223",
+            "kda": "1/-1/7",
+            "econ": "92",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "BitPumpkin",
+            "agent": "Brimstone",
+            "acs": "214",
+            "kda": "1/-1/-1",
+            "econ": "57",
+            "fb": "2",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "BIEFUMDKIN",
+            "agent": "Chamber",
+            "acs": "2146",
+            "kda": "-1/-1/8",
+            "econ": "0",
+            "fb": "0",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "refadxy",
+            "agent": "Yoru",
+            "acs": "212",
+            "kda": "1/-1/-1",
+            "econ": "52",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "ltzDingus",
+            "agent": "Fade",
+            "acs": "203",
+            "kda": "1/-1/5",
+            "econ": "55",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "TOPE",
+            "agent": "Raze",
+            "acs": "140",
+            "kda": "9/-1/3",
+            "econ": "50",
+            "fb": "4",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Closer",
+            "agent": "Clove",
+            "acs": "125",
+            "kda": "1/-1/5",
+            "econ": "35",
+            "fb": "0",
+            "plants": "8",
+            "defuses": "0"
+        },
+        {
+            "name": "MT6",
+            "agent": "Gekko",
+            "acs": "90",
+            "kda": "6/-1/-1",
+            "econ": "26",
+            "fb": "0",
+            "plants": "4",
+            "defuses": "0"
+        }
+    ]
+}

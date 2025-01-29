@@ -334,7 +334,7 @@ os.makedirs(json_output_dir, exist_ok=True)
 
 #Write the JSON string to a file
 json_output_path = os.path.join(json_output_dir, f'players_{args.filename.replace(".png","")}.json')
-json.output_path.replace(".jpg","")
+json_output_path.replace(".jpg","")
 with open(json_output_path, 'w') as json_file:
     json_file.write(map_json)
     json_file.write(players_json)

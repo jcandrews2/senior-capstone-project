@@ -1,0 +1,95 @@
+{
+    "map": "T DAR D CUSTOL",
+    "players": [
+        {
+            "name": "reformedkirux",
+            "agent": "Reyna",
+            "acs": "261",
+            "kda": "1/-1/-1",
+            "econ": "66",
+            "fb": "4",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Babo",
+            "agent": "Cypher",
+            "acs": "258",
+            "kda": "17/5/-1",
+            "econ": "71",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "BitPumpkin",
+            "agent": "Jett",
+            "acs": "245",
+            "kda": "4/-1/-1",
+            "econ": "60",
+            "fb": "1",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "Karma",
+            "agent": "Gekko",
+            "acs": "240",
+            "kda": "1/-1/3",
+            "econ": "85",
+            "fb": "0",
+            "plants": "4",
+            "defuses": "0"
+        },
+        {
+            "name": "TOPE",
+            "agent": "Clove",
+            "acs": "229",
+            "kda": "-1/1/4",
+            "econ": "0",
+            "fb": "1",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "ltzDingus",
+            "agent": "Omen",
+            "acs": "225",
+            "kda": "4/-1/-1",
+            "econ": "71",
+            "fb": "3",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Soup",
+            "agent": "Iso",
+            "acs": "225",
+            "kda": "1/1/-1",
+            "econ": "63",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Facade",
+            "agent": "Viper",
+            "acs": "95",
+            "kda": "5/-1/-1",
+            "econ": "24",
+            "fb": "2",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "MT",
+            "agent": "Breach",
+            "acs": "78",
+            "kda": "2/-1/-1",
+            "econ": "25",
+            "fb": "1",
+            "plants": "1",
+            "defuses": "0"
+        }
+    ]
+}

@@ -1,0 +1,105 @@
+{
+    "map": "USTOM",
+    "players": [
+        {
+            "name": "reformedkirux",
+            "agent": "Clove",
+            "acs": "375",
+            "kda": "-1/-1/7",
+            "econ": "0",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Soup",
+            "agent": "Iso",
+            "acs": "328",
+            "kda": "-1/-1/-1",
+            "econ": "0",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "TOPE",
+            "agent": "Reyna",
+            "acs": "259",
+            "kda": "8/-1/-1",
+            "econ": "78",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "PaparPucin",
+            "agent": "Omen",
+            "acs": "0",
+            "kda": "-1/-1/-1",
+            "econ": "8",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "7"
+        },
+        {
+            "name": "Paparucin",
+            "agent": "Omen",
+            "acs": "0",
+            "kda": "-1/-1/-1",
+            "econ": "0",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Karma",
+            "agent": "Killjoy",
+            "acs": "174",
+            "kda": "-1/-1/-1",
+            "econ": "55",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "EGDEMONJUAN",
+            "agent": "Jett",
+            "acs": "153",
+            "kda": "-1/-1/-1",
+            "econ": "43",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Closer",
+            "agent": "Gekko",
+            "acs": "153",
+            "kda": "-1/-1/-1",
+            "econ": "0",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "MikeyM",
+            "agent": "Sova",
+            "acs": "44",
+            "kda": "-1/-1/-1",
+            "econ": "4",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "basb",
+            "agent": "Sage",
+            "acs": "86",
+            "kda": "-1/-1/-1",
+            "econ": "28",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "0"
+        }
+    ]
+}

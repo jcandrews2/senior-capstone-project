@@ -1,92 +1,105 @@
-"Ascent"{
-    "1234": [
-        "Jett",
-        "281",
-        "0/0/0",
-        "80",
-        "5",
-        "1",
-        "1"
-    ],
-    "CCBeck": [
-        "Killjoy",
-        "265",
-        "0/0/0",
-        "91",
-        "2",
-        "0",
-        "0"
-    ],
-    "BUSHDOG": [
-        "Sova",
-        "242",
-        "0/0/0",
-        "76",
-        "5",
-        "3",
-        "3"
-    ],
-    "sweesk": [
-        "Omen",
-        "231",
-        "0/0/0",
-        "59",
-        "2",
-        "1",
-        "0"
-    ],
-    "Soup": [
-        "Iso",
-        "217",
-        "0/0/0",
-        "5",
-        "6",
-        "1",
-        "0"
-    ],
-    "reformedkirux": [
-        "Breach",
-        "214",
-        "0/0/0",
-        "52",
-        "2",
-        "0",
-        "0"
-    ],
-    "TOPE": [
-        "Sage",
-        "214",
-        "0/0/0",
-        "57",
-        "0",
-        "1",
-        "1"
-    ],
-    "Karma": [
-        "Omen",
-        "205",
-        "0/0/0",
-        "4",
-        "0",
-        "3",
-        "0"
-    ],
-    "Babo": [
-        "Cypher",
-        "132",
-        "0/0/0",
-        "38",
-        "4",
-        "2",
-        "0"
-    ],
-    "blobbins": [
-        "KAYO",
-        "104",
-        "0/0/0",
-        "27",
-        "1",
-        "0",
-        "0"
+{
+    "map": "Ascent",
+    "players": [
+        {
+            "name": "1234",
+            "agent": "Jett",
+            "acs": "281",
+            "kda": "22/16/4",
+            "econ": "80",
+            "fb": "5",
+            "plants": "1",
+            "defuses": "1"
+        },
+        {
+            "name": "CCBeck",
+            "agent": "Killjoy",
+            "acs": "265",
+            "kda": "22/7/4",
+            "econ": "91",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "BUSHDOG",
+            "agent": "Sova",
+            "acs": "242",
+            "kda": "19/16/8",
+            "econ": "76",
+            "fb": "5",
+            "plants": "3",
+            "defuses": "3"
+        },
+        {
+            "name": "sweesk",
+            "agent": "Omen",
+            "acs": "231",
+            "kda": "22/7/0",
+            "econ": "59",
+            "fb": "2",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "Soup",
+            "agent": "Iso",
+            "acs": "217",
+            "kda": "16/19/9",
+            "econ": "5",
+            "fb": "6",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "reformedkirux",
+            "agent": "Breach",
+            "acs": "214",
+            "kda": "18/20/8",
+            "econ": "52",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "TOPE",
+            "agent": "Sage",
+            "acs": "214",
+            "kda": "21/16/9",
+            "econ": "57",
+            "fb": "0",
+            "plants": "1",
+            "defuses": "1"
+        },
+        {
+            "name": "Karma",
+            "agent": "Omen",
+            "acs": "205",
+            "kda": "16/27/10",
+            "econ": "4",
+            "fb": "0",
+            "plants": "3",
+            "defuses": "0"
+        },
+        {
+            "name": "Babo",
+            "agent": "Cypher",
+            "acs": "132",
+            "kda": "1/18/4",
+            "econ": "38",
+            "fb": "4",
+            "plants": "2",
+            "defuses": "0"
+        },
+        {
+            "name": "blobbins",
+            "agent": "KAYO",
+            "acs": "104",
+            "kda": "9/16/9",
+            "econ": "27",
+            "fb": "1",
+            "plants": "0",
+            "defuses": "0"
+        }
     ]
 }

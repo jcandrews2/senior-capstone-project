@@ -1,0 +1,105 @@
+{
+    "map": "Ascent",
+    "players": [
+        {
+            "name": "40V3",
+            "agent": "Reyna",
+            "acs": "291",
+            "kda": "2/4/5",
+            "econ": "72",
+            "fb": "2",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Asato",
+            "agent": "KAYO",
+            "acs": "251",
+            "kda": "7 1/4/112",
+            "econ": "67",
+            "fb": "4",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "LeoNanza",
+            "agent": "Brimstone",
+            "acs": "249",
+            "kda": "2/4/18",
+            "econ": "73",
+            "fb": "1",
+            "plants": "2",
+            "defuses": "0"
+        },
+        {
+            "name": "gagwag",
+            "agent": "Killjoy",
+            "acs": "238",
+            "kda": "1/4/-1",
+            "econ": "70",
+            "fb": "4",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "Shaaaaaaaaaaaash",
+            "agent": "Phoenix",
+            "acs": "218",
+            "kda": "1/4/7",
+            "econ": "52",
+            "fb": "8",
+            "plants": "1",
+            "defuses": "0"
+        },
+        {
+            "name": "jade",
+            "agent": "Killjoy",
+            "acs": "206",
+            "kda": "1/4/-1",
+            "econ": "67",
+            "fb": "0",
+            "plants": "2",
+            "defuses": "0"
+        },
+        {
+            "name": "tivgisparrow",
+            "agent": "Omen",
+            "acs": "0",
+            "kda": "1/4/78",
+            "econ": "66",
+            "fb": "1",
+            "plants": "2",
+            "defuses": "0"
+        },
+        {
+            "name": "McMGravy",
+            "agent": "Sova",
+            "acs": "201",
+            "kda": "1/4/9",
+            "econ": "60",
+            "fb": "2",
+            "plants": "2",
+            "defuses": "0"
+        },
+        {
+            "name": "runuproman",
+            "agent": "Cypher",
+            "acs": "104",
+            "kda": "-1/4/2",
+            "econ": "30",
+            "fb": "1",
+            "plants": "4",
+            "defuses": "0"
+        },
+        {
+            "name": "EiSei",
+            "agent": "Sova",
+            "acs": "97",
+            "kda": "7/4/3",
+            "econ": "26",
+            "fb": "0",
+            "plants": "1",
+            "defuses": "0"
+        }
+    ]
+}

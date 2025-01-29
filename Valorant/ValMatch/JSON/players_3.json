@@ -1,0 +1,105 @@
+{
+    "map": "Haven",
+    "players": [
+        {
+            "name": "Duck",
+            "agent": "Breach",
+            "acs": "326",
+            "kda": "23//5/10",
+            "econ": "72",
+            "fb": "5",
+            "plants": "0",
+            "defuses": "1"
+        },
+        {
+            "name": "itzUingus",
+            "agent": "Omen",
+            "acs": "260",
+            "kda": "-1/-1/-1",
+            "econ": "0",
+            "fb": "2",
+            "plants": "5",
+            "defuses": "0"
+        },
+        {
+            "name": "gagwag",
+            "agent": "Killjoy",
+            "acs": "246",
+            "kda": "17/0/7",
+            "econ": "75",
+            "fb": "0",
+            "plants": "0",
+            "defuses": "1"
+        },
+        {
+            "name": "40V3",
+            "agent": "Reyna",
+            "acs": "227",
+            "kda": "18//1/4",
+            "econ": "60",
+            "fb": "4",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "refadxy",
+            "agent": "Yoru",
+            "acs": "208",
+            "kda": "15//6//5",
+            "econ": "58",
+            "fb": "1",
+            "plants": "0",
+            "defuses": "1"
+        },
+        {
+            "name": "EiSei",
+            "agent": "Sova",
+            "acs": "199",
+            "kda": "15//-1/-1",
+            "econ": "62",
+            "fb": "1",
+            "plants": "4",
+            "defuses": "1"
+        },
+        {
+            "name": "Facade",
+            "agent": "Killjoy",
+            "acs": "173",
+            "kda": "10//7//5",
+            "econ": "52",
+            "fb": "1",
+            "plants": "0",
+            "defuses": "0"
+        },
+        {
+            "name": "MT",
+            "agent": "Sova",
+            "acs": "165",
+            "kda": "124/4/4",
+            "econ": "51",
+            "fb": "1",
+            "plants": "7",
+            "defuses": "0"
+        },
+        {
+            "name": "tvgjsparrow",
+            "agent": "Omen",
+            "acs": "141",
+            "kda": "-1/-1/-1",
+            "econ": "8",
+            "fb": "2",
+            "plants": "5",
+            "defuses": "0"
+        },
+        {
+            "name": "BitPumpkin",
+            "agent": "Jett",
+            "acs": "110",
+            "kda": "6/8/2",
+            "econ": "33",
+            "fb": "3",
+            "plants": "0",
+            "defuses": "0"
+        }
+    ]
+}
