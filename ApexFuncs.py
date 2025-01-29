@@ -31,6 +31,7 @@ def apex_OCR(img_file):
                     "damage" : "222",
                }
            ]}
+    print(out)
     return out
 
 def get_damage_dealt(img_file):
@@ -250,11 +251,11 @@ def get_KAK(img_file, pn):
 
         # crop
         crop = img[y:y + h, x:x + w]
-        crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        # crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     
-        _, crop = cv2.threshold(crop, 127, 255, cv2.THRESH_BINARY)
+        # _, crop = cv2.threshold(crop, 127, 255, cv2.THRESH_BINARY)
         # crop = cv2.medianBlur(crop, 3)
-        crop = scale_img(crop, 200)
+        # crop = scale_img(crop, 100)
 
         fname = f'KAK_crops_temp/crop{idx}.jpg'
         cv2.imwrite(fname, crop)
@@ -296,44 +297,57 @@ def get_char_boxes(img):
     for f in files:
         os.remove(f)
     # dims
-    height, width = img.shape[:2]
+    # height, width = img.shape[:2]
     
-    # bounding boxes
-    d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 6 -c tessedit_char_whitelist="0123456789/"')
+    # # bounding boxes
+    # d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 7 -c tessedit_char_whitelist="0123456789/"')
+    # n_boxes = len(d['char'])
+    # print('num boxes: ', n_boxes)
+
+    # whole_txt = ''
+    # for i in range(n_boxes):
+    #     char = d['char'][i]
+    #     # print('default: ', char)
+
+    #     x1, y2, x2, y1 = d['left'][i], d['top'][i], d['right'][i], d['bottom'][i]
+        
+    #     # adjust for OpenCV (it uses top-left origin)
+    #     y1, y2 = height - y1, height - y2
+
+    #     # padding
+    #     padding = 10
+    #     x1 = max(x1 - padding, 0)
+    #     y1 = min(y1 + padding, height)
+    #     x2 = min(x2 + padding, width)
+    #     y2 = max(y2 - padding, 0)
+        
+    #     # crop
+    #     # crop = img[y2:y1, x1:x2]
+    #     crop = img[y2:y1, x1:x2]
+
+    #     if (i == 0):
+    #         crop = scale_img(crop,80)
+        
+    #     cv2.imwrite(f'KAK_crops_char/char{i}.png', crop)
+
+    #     text = pytesseract.image_to_string(crop, config='--psm 6 -c tessedit_char_whitelist="0123456789/"')
+    #     print(f'char{i}: ', text)
+    #     whole_txt += text
+    #     # print(text)
+    
+
+    
+    # return whole_txt
+        
+    height = img.shape[0]
+    width = img.shape[1]
+
+    d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 6')
+    
     n_boxes = len(d['char'])
-
-    whole_txt = ''
+    print('num boxes: ', n_boxes)
     for i in range(n_boxes):
-        char = d['char'][i]
-        # print('default: ', char)
-
-        x1, y2, x2, y1 = d['left'][i], d['top'][i], d['right'][i], d['bottom'][i]
-        
-        # adjust for OpenCV (it uses top-left origin)
-        y1, y2 = height - y1, height - y2
-
-        # padding
-        padding = 10
-        x1 = max(x1 - padding, 0)
-        y1 = min(y1 + padding, height)
-        x2 = min(x2 + padding, width)
-        y2 = max(y2 - padding, 0)
-        
-        # crop
-        # crop = img[y2:y1, x1:x2]
-        crop = img[y2:y1, x1:x2]
-
-        if (i == 0):
-            crop = scale_img(crop,80)
-        
-        cv2.imwrite(f'KAK_crops_char/char{i}.png', crop)
-
-        text = pytesseract.image_to_string(crop, config='--psm 6 -c tessedit_char_whitelist="0123456789/"')
-        print(f'char{i}: ', text)
-        whole_txt += text[:1]
-        # print(text)
-    
-
-    
-    return whole_txt
-        
+        (text,x1,y2,x2,y1) = (d['char'][i],d['left'][i],d['top'][i],d['right'][i],d['bottom'][i])
+        cv2.rectangle(img, (x1,height-y1), (x2,height-y2) , (0,255,0), 2)
+    cv2.imshow('img',img)
+    cv2.waitKey(0)
