@@ -296,6 +296,8 @@ def get_char_boxes(img):
     files = glob.glob('KAK_crops_char/*')
     for f in files:
         os.remove(f)
+
+
     # dims
     # height, width = img.shape[:2]
     
@@ -339,15 +341,157 @@ def get_char_boxes(img):
     
     # return whole_txt
         
-    height = img.shape[0]
-    width = img.shape[1]
+    # height = img.shape[0]
+    # width = img.shape[1]
 
-    d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 6')
+    # d = pytesseract.image_to_boxes(img, output_type=Output.DICT, config='--psm 6')
     
-    n_boxes = len(d['char'])
-    print('num boxes: ', n_boxes)
+    # n_boxes = len(d['char'])
+    # print('num boxes: ', n_boxes)
+    # for i in range(n_boxes):
+    #     (text,x1,y2,x2,y1) = (d['char'][i],d['left'][i],d['top'][i],d['right'][i],d['bottom'][i])
+    #     cv2.rectangle(img, (x1,height-y1), (x2,height-y2) , (0,255,0), 2)
+    # cv2.imshow('img',img)
+    # cv2.waitKey(0)
+
+
+def find_vertical_lines(arr):
+    max_val = max(arr)
+    bin_arr = []
+    flag = True
+    sub_bin_arr = []
+    for idx , val in enumerate(arr):
+        if val == max_val:
+            if flag:
+                sub_bin_arr.append(idx)
+            else:
+                sub_bin_arr = []
+                sub_bin_arr.append(idx)
+                flag = True
+        else:
+            if flag:
+                bin_arr.append(sub_bin_arr)
+                flag = False
+    bin_arr.append(sub_bin_arr)
+
+
+    var_lines = bin_arr[1:5]
+    out = []
+    for arr in var_lines:
+        out.append(int(sum(arr) / len(arr)))
+    
+    return out
+
+
+def get_KAK_crops(img_file):
+    files = glob.glob('KAK_crops_temp/*')
+    for f in files:
+        os.remove(f)
+
+    img = cv2.imread(img_file)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, bin = cv2.threshold(gray , 127, 255, cv2.THRESH_BINARY)
+    AT = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+
+    d = pytesseract.image_to_data(gray, output_type=Output.DICT, lang='eng', config='--psm 6 -c tessedit_char_whitelist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"')#0123456789/
+
+    box_img = img.copy()
+
+    # detected boxes
+    n_boxes = len(d['text'])
+
+    # all_text = []
+    text_dict = {}
     for i in range(n_boxes):
-        (text,x1,y2,x2,y1) = (d['char'][i],d['left'][i],d['top'][i],d['right'][i],d['bottom'][i])
-        cv2.rectangle(img, (x1,height-y1), (x2,height-y2) , (0,255,0), 2)
-    cv2.imshow('img',img)
-    cv2.waitKey(0)
+        if int(d['conf'][i]) > -1:  # Adjust confidence threshold
+            (x, y, w, h) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i])
+            
+            # expand
+            x = max(x - 5 - 5, 0)
+            y = max(y - 5 - 5, 0)
+            w = w + 10 + 10
+            h = h + 10 + 10
+
+            # rectangle
+            box_img = cv2.rectangle(box_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+            # crop
+            crop = img[y:y + h, x:x + w]
+            crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        
+            _, crop = cv2.threshold(crop, 127, 255, cv2.THRESH_BINARY)
+            crop = scale_img(crop, 150)
+
+            text = pytesseract.image_to_string(crop, config='--psm 6')# -c tessedit_char_whitelist="0123456789/"')
+            
+            if (len(text) > 5):
+                text_dict[i] = text[:-1]
+            
+            # print(f"Detected text in box {i}: {text.strip()}")
+    
+
+    target = "Kills / Assists / Knocks"
+    similarities = [(key, val, str_similarity(val, target)) for key, val in text_dict.items()]
+    top3_similarities = sorted(similarities, key=lambda x: x[2], reverse=True)[:3]
+    top3_similarities = sorted(top3_similarities, key=lambda x:x[0], reverse=False)
+
+    kak_img = img.copy()
+    all_h = []
+    all_y = []
+    all_w = []
+    ## get the boxes on KAK from target boxes
+    for item in top3_similarities:
+        all_h.append(d['height'][item[0]])
+        all_y.append(d['top'][item[0]])
+        all_w.append(d['width'][item[0]])
+        # (x, y, w, h) = (d['left'][item[0]], d['top'][item[0]], d['width'][item[0]], d['height'][item[0]])
+        # # expand
+        # all_h.append(h)
+        # x = max(x - 5 - 5, 0)
+        # y = max(y - 5 - 5, 0)
+        # w = w + 10 + 10
+        # h = h + 10 + 10
+
+        # rectangle
+        # kak_img = cv2.rectangle(kak_img, (x, (y+h//2)), (x + w, y + h), (0, 255, 0), 2)
+
+    ideal_h = min(all_h)
+    ideal_y = max(all_y)
+    ideal_w = min(all_w)
+
+    print('h: ', ideal_h)
+    print('w: ', ideal_w)
+    print('ratio: ', ideal_h/ideal_w)
+    if ideal_h / ideal_w > .10:
+        cut = int((ideal_h - (ideal_w * .10)) / 2)
+        ideal_y += cut
+        ideal_h -= cut
+
+    for idx, item in enumerate(top3_similarities):
+        # all_h.append(d['height'][item[0]])
+        (x, y, w, h) = (d['left'][item[0]], d['top'][item[0]], d['width'][item[0]], d['height'][item[0]])
+
+        all_h.append(h)
+        x = x-10
+        y = ideal_y+17
+        w = ideal_w
+        h = ideal_h + 20
+
+        # rectangle
+        kak_img = cv2.rectangle(kak_img, (x, y), (x + w, y + h), (0, 255, 0), 2) # G 
+        kak_img = cv2.rectangle(kak_img, (x, ideal_y), (x + ideal_w, ideal_y + ideal_h), (255, 0, 0), 2) # B
+
+        # crop
+        crop = img[y:y + h, x:x + w]
+        # crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    
+        # _, crop = cv2.threshold(crop, 127, 255, cv2.THRESH_BINARY)
+        # crop = cv2.medianBlur(crop, 3)
+        # crop = scale_img(crop, 100)
+
+        fname = f'KAK_crops_temp/crop{idx}.jpg'
+        cv2.imwrite(fname, crop)
+
+        ### CALL CROP READER
+        
+                
