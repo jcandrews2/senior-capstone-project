@@ -1,5 +1,4 @@
 from ApexFuncs import *
-from funcs import scale_img
 import cv2
 from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
