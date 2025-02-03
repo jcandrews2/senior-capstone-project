@@ -16,7 +16,7 @@ def login():
     print(username, password)
     try: 
         cursor.execute( 
-            "SELECT * from Users WHERE username = %s", (username,)
+            "SELECT * from users WHERE username = %s", (username,)
         )
 
         user = cursor.fetchone()

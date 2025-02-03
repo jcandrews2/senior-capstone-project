@@ -33,6 +33,9 @@ def upload_file():
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(file_path)
 
+    # Generate a public URL for the image
+    file_url = f"{request.host_url}uploads/{file.filename}"
+
     try:
         if game not in ocr_scripts:
             return jsonify({"error": f"OCR not supported for game: {game}"}), 400
@@ -55,6 +58,7 @@ def upload_file():
         
         # Format the output to include all required attributes
         formatted_data = {
+            "image_url": file_url,
             "game": game,  # Assuming the game is Valorant for this OCR
             "week": week,  # Week will need to be added manually in the ModifyPage
             "school": school,  # School will need to be added manually in the ModifyPage

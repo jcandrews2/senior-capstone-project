@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ModifyPage from "./components/ModifyPage";
 import Footer from "./components/Footer";
 import ProfilePage from "./components/ProfilePage";
-import SuperAdminPage from "./components/SuperAdminPage";
+import DisputesManagementPage from "./components/DisputesManagementPage";
 
 function App() {
   return (
@@ -23,8 +23,8 @@ function App() {
           element={<ProtectedRoute page={<UploadPage />} />}
         />
         <Route
-          path="/superadmin"
-          element={<ProtectedRoute page={<SuperAdminPage />} />}
+          path="/disputes"
+          element={<ProtectedRoute page={<DisputesManagementPage />} />}
         />
         <Route
           path="/modify"
