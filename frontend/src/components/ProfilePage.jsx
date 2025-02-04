@@ -1,15 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import ManageAccounts from "./ManageAccounts";
-import SetRoster from "./SetRoster";
+import ManageRosters from "./ManageRosters";
+import Roster from "./Roster";
 
 const ProfilePage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const usernameInput = useRef();
   const passwordInput = useRef();
 
-  const { username, loggedIn, isAdmin, login, logout } = useAuth();
+  const { username, loggedIn, isAdmin, handleLogin, handleLogout } = useAuth();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -32,14 +33,20 @@ const ProfilePage = () => {
               </button>
               <button
                 className="m-2 bg-custom-gold px-8 py-2 font-bold text-black"
-                onClick={logout}
+                onClick={handleLogout}
               >
                 Logout
               </button>
             </div>
           </div>
-          {!isAdmin ? <SetRoster /> : null}
-          {isAdmin ? <ManageAccounts /> : null}
+
+          {isAdmin ? (
+            <>
+              <ManageAccounts /> <ManageRosters />
+            </>
+          ) : (
+            <Roster />
+          )}
         </div>
       ) : (
         <div className="flex w-1/2 flex-col items-center">
@@ -59,12 +66,12 @@ const ProfilePage = () => {
             ></input>
             {showPassword ? (
               <IoEyeSharp
-                className="absolute right-4 top-1/2 translate-y-[-50%] transform"
+                className="absolute right-4 top-1/2 translate-y-[-50%] transform cursor-pointer"
                 onClick={toggleShowPassword}
               />
             ) : (
               <IoEyeOffSharp
-                className="absolute right-4 top-1/2 translate-y-[-50%] transform"
+                className="absolute right-4 top-1/2 translate-y-[-50%] transform cursor-pointer"
                 onClick={toggleShowPassword}
               />
             )}
@@ -72,7 +79,10 @@ const ProfilePage = () => {
           <button
             className="m-8 bg-custom-off-white px-8 py-2 font-bold text-black hover:bg-custom-gold"
             onClick={() =>
-              login(usernameInput.current.value, passwordInput.current.value)
+              handleLogin(
+                usernameInput.current.value,
+                passwordInput.current.value,
+              )
             }
           >
             Enter

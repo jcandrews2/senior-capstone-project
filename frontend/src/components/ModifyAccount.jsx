@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { API_ENDPOINTS } from "../config";
 
 const ModifyAccount = (props) => {
   const { username, handleGetAccounts } = props;
@@ -6,7 +7,7 @@ const ModifyAccount = (props) => {
 
   const handleChangePassword = async (password) => {
     try {
-      const response = await fetch("http://40.85.147.30:8080/accounts", {
+      const response = await fetch(API_ENDPOINTS.handleChangePassword(), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -29,7 +30,7 @@ const ModifyAccount = (props) => {
 
   const handleDeleteAccount = async () => {
     try {
-      const response = await fetch("http://40.85.147.30:8080/accounts", {
+      const response = await fetch(API_ENDPOINTS.handleDeleteAccount(), {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -42,8 +43,6 @@ const ModifyAccount = (props) => {
       if (response.ok) {
         alert("Account deleted successfully!");
         handleGetAccounts();
-      } else {
-        console.error("Account not found.");
       }
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -51,7 +50,7 @@ const ModifyAccount = (props) => {
   };
 
   return (
-    <div className="flex items-center justify-center p-8">
+    <div className="flex items-center justify-center p-2">
       <h3 className="p-4 font-bold">{username}</h3>
       <div className="p-4">
         <input
