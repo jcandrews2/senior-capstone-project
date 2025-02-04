@@ -5,8 +5,8 @@ from db import get_db_connection
 
 player_bp = Blueprint('player', __name__)
 
-@player_bp.route('/player/<game>', methods=['GET'])
-def get_player_stats(game):
+@player_bp.route('/player/<videogame>', methods=['GET'])
+def get_player_stats(videogame):
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
@@ -14,13 +14,13 @@ def get_player_stats(game):
     player = unquote(data)
 
     game_queries = { 
-        "RL": "SELECT school, player_name, score, goals, assists, saves, shots from RL_game WHERE player_name = %s",
-        "Val": "SELECT school, player_name, combat_score, kills, deaths, assists, econ, fb, plants, defuses from Val_game WHERE player_name = %s",
-        "Apex": "SELECT school, player_name, kills, assists, knocks, damage, score from Apex_game WHERE player_name = %s",
+        "rl": "SELECT school, player_name, score, goals, assists, saves, shots from rl_game WHERE player_name = %s",
+        "val": "SELECT school, player_name, combat_score, kills, deaths, assists, econ, fb, plants, defuses from val_game WHERE player_name = %s",
+        "apex": "SELECT school, player_name, kills, assists, knocks, damage, score from apex_game WHERE player_name = %s",
         }
     
     try:
-        cursor.execute(game_queries[game], (player,))
+        cursor.execute(game_queries[videogame], (player,))
 
         reports = cursor.fetchall()
 

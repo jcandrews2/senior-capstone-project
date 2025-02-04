@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from "../config";
 
 const UploadPage = () => {
   const [file, setFile] = useState(null);
@@ -42,14 +43,14 @@ const UploadPage = () => {
     setLoading(true); // Start the loading animation
 
     try {
-      const response = await fetch("http://40.85.147.30:8080/upload_file", {
+      const response = await fetch(API_ENDPOINTS.uploadFile, {
         method: "POST",
         body: formData,
       });
 
       if (response.ok) {
         const ocrData = await response.json();
-        navigate("/modify", { state: { ocrData } });
+        navigate("/modify", { state: { ocrData, file } });
       } else {
         console.error("File upload failed.");
         alert("Failed to process the file.");

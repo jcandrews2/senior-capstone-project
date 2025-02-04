@@ -5,6 +5,7 @@ const ManageAccounts = () => {
   const [accounts, setAccounts] = useState([]);
   const usernameInput = useRef();
   const passwordInput = useRef();
+  const schoolInput = useRef();
 
   const handleGetAccounts = async () => {
     try {
@@ -33,6 +34,7 @@ const ManageAccounts = () => {
         body: JSON.stringify({
           username: usernameInput.current.value,
           password: passwordInput.current.value,
+          school: schoolInput.current.value,
         }),
       });
 
@@ -55,6 +57,12 @@ const ManageAccounts = () => {
     <>
       <div className="flex flex-col items-center p-8">
         <h1 className="p-8 text-3xl font-semibold"> Create Account </h1>
+        <input
+          type="text"
+          placeholder="School"
+          ref={schoolInput}
+          className="m-8 w-full border border-black p-4"
+        ></input>
         <input
           type="text"
           placeholder="Username"

@@ -9,37 +9,41 @@ const PlayerReport = (props) => {
         {`${player} Stats Report`}
       </h3>
 
-      <table className="w-full table-auto text-left">
-        <thead>
-          <tr className="text-white">
-            {Object.keys(playerReports[0]).map((header, index) => (
-              <th
-                key={index}
-                className="border-b border-custom-off-white bg-custom-gray p-4"
-              >
-                {header.toUpperCase()}
-              </th>
-            ))}
-          </tr>
-        </thead>
-
-        <tbody>
-          {playerReports.map((playerReport, index) => (
-            <tr key={`player-${index}`}>
-              {Object.values(playerReport).map((stat, i) => (
-                <td
-                  key={`player-${index}-stat-${i}`}
-                  className={`${
-                    index % 2 === 0 ? "bg-custom-light-gray" : "bg-custom-gray"
-                  } border-y border-custom-off-white p-4`}
+      <div className="overflow-x-scroll">
+        <table className="w-full table-auto text-left">
+          <thead>
+            <tr className="text-white">
+              {Object.keys(playerReports[0]).map((header, index) => (
+                <th
+                  key={index}
+                  className="border-b border-custom-off-white bg-custom-gray p-4"
                 >
-                  {stat}
-                </td>
+                  {header.toUpperCase()}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {playerReports.map((playerReport, index) => (
+              <tr key={`player-${index}`}>
+                {Object.values(playerReport).map((stat, i) => (
+                  <td
+                    key={`player-${index}-stat-${i}`}
+                    className={`${
+                      index % 2 === 0
+                        ? "bg-custom-light-gray"
+                        : "bg-custom-gray"
+                    } border-y border-custom-off-white p-4`}
+                  >
+                    {stat}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

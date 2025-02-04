@@ -14,7 +14,7 @@ def accounts():
     if request.method == 'GET': 
         try: 
             cursor.execute( 
-                "SELECT * from Users WHERE is_admin = 0"
+                "SELECT * from users WHERE is_admin = 0"
             )
 
             response = []
@@ -25,6 +25,7 @@ def accounts():
 
                 user_info = { 
                     "username": user.get("username"),
+                    "school": user.get("school"),
                 }
 
                 response.append(user_info)
@@ -43,12 +44,13 @@ def accounts():
     elif request.method == 'POST':
 
         data = request.get_json()
+        school = data.get('shool')
         username = data.get('username')
         password = bcrypt.hashpw(data.get('password').encode('utf-8'), bcrypt.gensalt()).decode('UTF-8')
 
         try: 
             cursor.execute ( 
-                "INSERT INTO Users (username, password, is_admin) VALUES (%s, %s, 0)", (username, password)
+                "INSERT INTO users (school, username, password, is_admin) VALUES (%s, %s, %s, 0)", (school, username, password)
             )
 
             return jsonify({"message": "Account created successfully."}), 200
@@ -69,7 +71,7 @@ def accounts():
 
         try: 
             cursor.execute ( 
-                "UPDATE Users SET password = %s WHERE username = %s", (password, username)
+                "UPDATE users SET password = %s WHERE username = %s", (password, username)
             )
 
             return jsonify({"message": "User password updated successfully."}), 200
@@ -89,7 +91,7 @@ def accounts():
 
         try: 
             cursor.execute ( 
-                "DELETE FROM Users WHERE username = %s", (username,)
+                "DELETE FROM users WHERE username = %s", (username,)
             )
 
             return jsonify({"message": "Account deleted successfully."}), 200

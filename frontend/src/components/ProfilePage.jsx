@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import ManageAccounts from "./ManageAccounts";
+import SetRoster from "./SetRoster";
 
 const ProfilePage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +38,7 @@ const ProfilePage = () => {
               </button>
             </div>
           </div>
-
+          {!isAdmin ? <SetRoster /> : null}
           {isAdmin ? <ManageAccounts /> : null}
         </div>
       ) : (

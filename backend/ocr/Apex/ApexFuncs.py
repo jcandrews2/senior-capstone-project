@@ -1,3 +1,5 @@
+import argparse
+import json
 import cv2
 from pytesseract import pytesseract, Output
 # from funcs import *

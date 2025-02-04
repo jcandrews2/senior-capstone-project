@@ -304,8 +304,8 @@ def main():
 
     #Save result
     output_path = f'scoreboard_result{args.filename}'
-    cv.imshow('Result', img_result)
-    cv.waitKey(0)
+    #cv.imshow('Result', img_result)
+    #cv.waitKey(0)
     cv.imwrite(output_path, img_result)
 
     #Ensure valid map name
