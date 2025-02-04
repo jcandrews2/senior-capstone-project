@@ -67,6 +67,8 @@ def upload_file():
             "map": ocr_data.get("map", ""),
             "code": ocr_data.get("code", ""),
             "squad_placed": ocr_data.get("squad_placed", ""),
+            "w_points": ocr_data.get("w_points", ""),
+            "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
         }
 

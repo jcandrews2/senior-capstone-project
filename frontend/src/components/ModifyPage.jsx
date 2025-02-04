@@ -19,6 +19,8 @@ const ModifyPage = () => {
     players: [],
     game_number: "",
     did_win: "1",
+    w_points: "",
+    l_points: "",
   };
 
   const file = location.state?.file || null; // 🔹 File object passed from UploadPage
@@ -77,32 +79,32 @@ const ModifyPage = () => {
     }
   };
 
-    // 🔹 Submit the modified data to the backend
-    const handleWeekAndSeason = async () => {
-      setLoading(true);
-      setError("");
-  
-      try {
-        const response = await fetch(API_ENDPOINTS.updateWeekAndSeason, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-  
-        if (response.ok) {
-          alert("Data submitted successfully!");
-          navigate("/");
-        } else {
-          const errorData = await response.json();
-          setError(errorData.error || "Failed to submit data.");
-        }
-      } catch (err) {
-        console.error("Error submitting data:", err);
-        setError("An error occurred while submitting the data.");
-      } finally {
-        setLoading(false);
+  // 🔹 Submit the modified data to the backend
+  const handleWeekAndSeason = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(API_ENDPOINTS.updateWeekAndSeason, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Data submitted successfully!");
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to submit data.");
       }
-    };
+    } catch (err) {
+      console.error("Error submitting data:", err);
+      setError("An error occurred while submitting the data.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading)
     return (
@@ -217,6 +219,19 @@ const ModifyPage = () => {
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             readOnly
           />
+
+          <input
+            type="text"
+            value={formData.w_points}
+            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+            readOnly
+          />
+          <input
+            type="text"
+            value={formData.l_points}
+            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+            readOnly
+          />
         </div>
       </div>
 
@@ -253,7 +268,6 @@ const ModifyPage = () => {
       <button
         className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
         onClick={handleGame()}
-        
       >
         {loading ? "Submitting..." : "Submit"}
       </button>
