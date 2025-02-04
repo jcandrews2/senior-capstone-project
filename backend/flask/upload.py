@@ -106,7 +106,6 @@ def upload_match():
                 "valorant": """
                     INSERT INTO val_game (game_id, school, player_name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, map, did_win, game_number, week_number)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    )
                 """,
                 "apex-legends": """
                     INSERT INTO apex_game (game_id, school, player_name, kills, assists, knocks, damage, score, placement, game_number, week_number)
@@ -117,15 +116,15 @@ def upload_match():
             
             picture_queries = {
                 "rocket-league": """INSERT INTO rl_picture (
-                        game_id, game_number, week_number, w_school, l_school, w_points, l_points)
+                        game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s);
                     """,
                 "valorant": """INSERT INTO val_picture (
-                        game_id, game_number, week_number, w_school, l_school, w_points, l_points)
+                        game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s);
                     """,
-                    "rocket-league": """INSERT INTO rl_picture (
-                        game_id, game_number, week_number)
+                    "apex-legends": """INSERT INTO rl_picture (
+                        game_id, game_number, week_number, picture)
                     VALUES (%s, %s, %s, %s, %s);
                     """,
                 
@@ -146,7 +145,7 @@ def upload_match():
                     cursor.execute(
                         picture_queries[game],
                         game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"]
+                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
                     )
                 elif game == "valorant":
                     cursor.execute(
@@ -162,7 +161,7 @@ def upload_match():
                     cursor.execute(
                         picture_queries[game],
                         game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"]
+                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
                     )
                 elif game == "apex-legends":
                     cursor.execute(
@@ -174,6 +173,11 @@ def upload_match():
                             data.get("game_number"), data.get("week")
                         )
                         
+                    )
+                    cursor.execute(
+                        picture_queries[game],
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["image_url"]
                     )
 
             conn.commit()  # 🔹 Save changes
