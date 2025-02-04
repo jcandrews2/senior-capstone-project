@@ -18,7 +18,10 @@ import sys
 #5. If abnormal data is detected (e.g. 0 ACS, 0/0/0 KDA, 0 Econ Rating), uploader will be required to verify the data
 
 def main():
-    pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract'
+    #usr for vm, homebrew for mac, program files for Windows
+    pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # For VM
+    #pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract' # For Mac
+    #pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' # For Windows
 
     parser = argparse.ArgumentParser(
                         prog='Valorant OCR',
@@ -41,8 +44,8 @@ def main():
 
     img_rgb = cv.resize(img_rgb, (1920, 1080))
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    #                               Agent,   ACS,   KDA,  Econ,  FB,   P,  D
-    players = defaultdict(lambda: ('Agent', '0', '0/0/0', '0', '0', '0', '0'))
+    #                               Agent, ACS, Kills, Deaths, Assists,  Econ,  FB,   P,  D
+    players = defaultdict(lambda: ('Agent', '0', '0', '0', '0', '0', '0', '0', '0'))
     img_map = img_gray[115:145, 60:240]
     img_map = cv.adaptiveThreshold(
         img_map, 
@@ -54,6 +57,9 @@ def main():
     )
 
     img_map = cv.resize(img_map, None, fx=4, fy=4, interpolation=cv.INTER_CUBIC)
+
+    img_score0 = img_gray[80:150, 730:800]
+    img_score1 = img_gray[80:150, 1075:1160]
 
     #Define the region of interest (ROI)
     x, y, w, h = 240, 280, 120, 700
@@ -235,22 +241,6 @@ def main():
         strip_p = strip_stats[:, 700:780]
         strip_d = strip_stats[:, 780:]
 
-        strips = [strip_acs, strip_kills, strip_deaths, strip_assists, strip_econ, strip_fb, strip_p, strip_d]
-
-        #cv.imshow(f'OCR ROI ACS {agent}', strip_acs)
-        #cv.waitKey(0)
-        #cv.imshow(f'OCR ROI {agent}', s)
-        for s in strips:
-            s = cv.resize(s, None, fx=10, fy=10, interpolation=cv.INTER_LINEAR)
-            s = cv.adaptiveThreshold(
-            s, 
-            255,
-            cv.ADAPTIVE_THRESH_MEAN_C, 
-            cv.THRESH_BINARY, 
-            7, 
-            -2
-    )   
-            s = cv.Canny(s, 50, 150)
         #Set OCR configurations
         config0 = '--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234456789'
         config1 = '--psm 7 -c tessedit_char_whitelist=0123456789'
@@ -266,9 +256,11 @@ def main():
         ocr_fb = pytesseract.image_to_string(strip_fb, config=config1)
         ocr_p = pytesseract.image_to_string(strip_p, config=config1)
         ocr_d = pytesseract.image_to_string(strip_d, config=config1)
+        ocr_s0 = pytesseract.image_to_string(img_score0, config=config1).replace('\n', '')
+        ocr_s1 = pytesseract.image_to_string(img_score1, config=config1).replace('\n', '')
         #print(f"OCR Stats for {ocr_name.split(' ')[0]} on {agent}: {ocr_acs.strip()}, {ocr_kills.strip()}, {ocr_deaths.strip()}, {ocr_assists.strip()}, {ocr_econ.strip()}, {ocr_fb.strip()}, {ocr_p.strip()}, {ocr_d.strip()}")
         #Update player stats, using 0 if not found
-        _, current_acs, current_kda, current_econ, current_fb, current_p, current_d = players[ocr_name.split(' ')[0]]
+        _, current_acs, current_kills, current_deaths, current_assists, current_econ, current_fb, current_p, current_d = players[ocr_name.split(' ')[0]]
         if ocr_acs.strip():
             current_acs = ocr_acs.strip()
 
@@ -279,7 +271,6 @@ def main():
             current_deaths = ocr_deaths.strip()
         if ocr_assists.strip():
             current_assists = ocr_assists.strip()
-        current_kda = f'{current_kills.strip()}/{current_deaths.strip()}/{current_assists.strip()}'
         if ocr_econ.strip():
             current_econ = ocr_econ.strip()
         if ocr_fb.strip():
@@ -288,14 +279,16 @@ def main():
             current_p = ocr_p.strip()
         if ocr_d.strip():
             current_d = ocr_d.strip()
-        players[ocr_name.split(' ')[0]] = current_agent, current_acs, current_kda, current_econ, current_fb, current_p, current_d
+        players[ocr_name.split(' ')[0]] = current_agent, current_acs, current_kills, current_deaths, current_assists, current_econ, current_fb, current_p, current_d
 
 
         #Draw rectangles and text on the result image
         cv.rectangle(img_result, (strip_x, strip_y), (strip_x + strip_w, strip_y + strip_h), (255, 0, 0), 2)
         cv.putText(img_result, f"{ocr_name.split(' ')[0]}", (strip_x, strip_y + 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-        cv.putText(img_result, f'ACS: {current_acs}', (strip_x + 360, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-        cv.putText(img_result, f'KDA: {current_kda}', (strip_x + 480, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        cv.putText(img_result, f'ACS: {current_acs}', (strip_x + 320, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        cv.putText(img_result, f'Kills: {current_kills}', (strip_x + 420, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        cv.putText(img_result, f'Deaths: {current_deaths}', (strip_x + 500, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        cv.putText(img_result, f'Assists: {current_assists}', (strip_x + 600, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
         cv.putText(img_result, f'Econ: {current_econ.strip()}', (strip_x + 700, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
         cv.putText(img_result, f'FB: {current_fb.strip()}', (strip_x + 880, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
         cv.putText(img_result, f'Plants: {current_p.strip()}', (strip_x + 980, strip_y+ 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
@@ -318,16 +311,20 @@ def main():
     players = dict(players)
     result = {
         "map": ocr_map.strip(),
+        "w_points": ocr_s0,
+        "l_points": ocr_s1,
         "players": [
             {
                 "name": name,
                 "agent": agent,
-                "acs": stats[0] if len(stats) > 0 else "0",
-                "kda": stats[1] if len(stats) > 1 else "0/0/0",
-                "econ": stats[2] if len(stats) > 2 else "0",
-                "fb": stats[3] if len(stats) > 3 else "0",
-                "plants": stats[4] if len(stats) > 4 else "0",
-                "defuses": stats[5] if len(stats) > 5 else "0"
+                "acs": stats[0] if len(stats) > 0 else "-1",
+                "kills": stats[1] if len(stats) > 1 else "-1",
+                "deaths": stats[2] if len(stats) > 1 else "-1",
+                "assists": stats[3] if len(stats) > 1 else "-1",
+                "econ": stats[4] if len(stats) > 2 else "-1",
+                "fb": stats[5] if len(stats) > 3 else "-1",
+                "plants": stats[6] if len(stats) > 4 else "-1",
+                "defuses": stats[7] if len(stats) > 5 else "-1"
             }
             for name, (agent, *stats) in players.items()
         ]
@@ -341,10 +338,10 @@ def main():
     json_output_path = os.path.join(json_output_dir, f'players_{args.filename.replace(".png","")}.json')
     json_output_path = json_output_path.replace(".jpg", "")
 
-    with open(json_output_path, 'w') as json_file:
-        json.dump(result, json_file, indent=4)
+    # with open(json_output_path, 'w') as json_file:
+    #     json.dump(result, json_file, indent=4)
     sys.stdout.write(json.dumps(result)) #Ensures only the JSON result is sent to stdout
-    return json_file
+    # return json_file
 
 if __name__ == '__main__':
     main()

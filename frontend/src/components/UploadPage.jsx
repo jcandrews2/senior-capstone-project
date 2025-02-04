@@ -6,6 +6,7 @@ const UploadPage = () => {
   const [file, setFile] = useState(null);
   const [game, setGame] = useState("");
   const [week, setWeek] = useState("");
+  const [game_number, setGameNumber] = useState("");
   const [school, setSchool] = useState("");
   const [opponent_school, setOpponentSchool] = useState("");
   const [loading, setLoading] = useState(false);
@@ -95,9 +96,20 @@ const UploadPage = () => {
               onChange={(e) => setWeek(e.target.value)}
             >
               <option value="">Select Week</option>
-              <option value="week-1">Week 1</option>
-              <option value="week-2">Week 2</option>
-              <option value="week-3">Week 3</option>
+              <option value="1">Week 1</option>
+              <option value="2">Week 2</option>
+              <option value="3">Week 3</option>
+            </select>
+
+            <select
+              className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
+              value={game_number}
+              onChange={(e) => setGameNumber(e.target.value)}
+            >
+              <option value="">Select Game Number</option>
+              <option value="1">Game 1</option>
+              <option value="2">Game 2</option>
+              <option value="3">Game 3</option>
             </select>
 
             <select

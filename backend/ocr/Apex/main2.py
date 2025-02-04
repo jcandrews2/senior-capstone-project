@@ -27,14 +27,3 @@ import matplotlib.pyplot as plt
 
 print(apex_OCR('apex_ss/1.png'))
 # print(apex_OCR('apex_ss/6.png'))
-
-
-
-# # log = np.full((3, 3), '.', dtype=str)
-# log = [['.', '.' ,'.'],
-#  ['.' ,'.','.'],
-#  ['.', '.' ,'.']]
-
-# log[0][1] = '974'
-# # print(log[0][0])
-# print(log)
