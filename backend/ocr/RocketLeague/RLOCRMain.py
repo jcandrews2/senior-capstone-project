@@ -45,15 +45,19 @@ def main():
     #Define ROI for OCR
         strip_x =  67
         if i == 0:
-            strip_y = 10
+            strip_y = 5
+        if i == 1:
+            strip_y = 60
+        if i == 2:
+            strip_y = 120
         if i == 3:
-            strip_y = 58 * i + 86
-        elif i > 3:
-            strip_y =  58 * i + 90
-        else:
-            strip_y = 60 * i
+            strip_y = 260
+        if i == 4:
+            strip_y = 320
+        if i == 5:
+            strip_y = 375
         strip_w = 843
-        strip_h = 45
+        strip_h = 40
         strip = roi_gray[strip_y:strip_y + strip_h, strip_x:strip_x + strip_w]
         #cv.imshow(f'OCR ROI', strip)
         #cv.waitKey(0)
@@ -63,18 +67,23 @@ def main():
         255,
         cv.ADAPTIVE_THRESH_MEAN_C, 
         cv.THRESH_BINARY, 
-        11, 
+        5, 
         -2
     )
-        fx = 7
-        fy = 7
+        fx = 2.5
+        fy = 2.5
+       
         strip_name = strip_gray[:35, :300]
         #cv.imshow("NAME", strip_name)
         #cv.waitKey(0)
-        strip_stats = strip_gray[5:, 390:]
-        strip_score = cv.resize(strip_stats[5:, :100], (0,0), fx=fx, fy=fy)
-        #cv.imshow("SCORE", strip_score)
-        #cv.waitKey(0)
+        strip_stats = strip_gray[10:, 390:]
+        strip_score = strip_stats[5:, :100]
+        kernel = np.ones(1, np.uint8)
+        strip_score = cv.dilate(strip_score, kernel=kernel)
+        strip_score = cv.erode(strip_score, kernel=kernel)
+        strip_score = cv.resize(strip_score, (0,0), fx=fx, fy=fy)
+        cv.imshow("SCORE", strip_score)
+        cv.waitKey(0)
         strip_goals = cv.resize(strip_stats[5:, 115:175], (0,0), fx=fx, fy=fy)
         #cv.imshow("GOALS", strip_goals)
         #cv.waitKey(0)
@@ -99,7 +108,7 @@ def main():
         #cv.waitKey(0)
 
         #Perform OCR
-        ocr_name = pytesseract.image_to_string(strip_name, config=config0).replace('\n', '')
+        ocr_name = pytesseract.image_to_string(strip_name, config=config0).strip()
         ocr_score = pytesseract.image_to_string(strip_score, config=config1)
         ocr_goals = pytesseract.image_to_string(strip_goals, config=config2)
         ocr_assists = pytesseract.image_to_string(strip_assists, config=config2)
