@@ -117,15 +117,18 @@ def upload_match():
             }
             
             picture_queries = {
-                "rocket-league": """INSERT INTO rl_picture (
+                "rocket-league": """
+                    INSERT INTO rl_picture (
                         game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                     """,
-                "valorant": """INSERT INTO val_picture (
+                "valorant": """
+                    INSERT INTO val_picture (
                         game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                     """,
-                    "apex-legends": """INSERT INTO rl_picture (
+                    "apex-legends": """
+                    INSERT INTO rl_picture (
                         game_id, game_number, week_number, picture)
                     VALUES (%s, %s, %s, %s);
                     """,
