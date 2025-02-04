@@ -1,15 +1,17 @@
 import React, { useState, createContext, useContext } from "react";
+import { API_ENDPOINTS } from "../config";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(true);
   const [username, setUsername] = useState("");
+  const [school, setSchool] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const login = async (username, password) => {
+  const handleLogin = async (username, password) => {
     try {
-      const response = await fetch("http://40.85.147.30:8080/login", {
+      const response = await fetch(API_ENDPOINTS.handleLogin(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,18 +26,17 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         setLoggedIn(true);
         setUsername(data[0]["username"]);
+        setSchool(data[0]["school"]);
         if (data[0]["isAdmin"]) {
           setIsAdmin(true);
         }
-      } else {
-        console.log();
       }
     } catch (error) {
       console.error("Invalid credentials.", error);
     }
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     setLoggedIn(false);
     setUsername("");
     setIsAdmin(false);
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ username, loggedIn, isAdmin, login, logout }}
+      value={{ username, school, loggedIn, isAdmin, handleLogin, handleLogout }}
     >
       {children}
     </AuthContext.Provider>

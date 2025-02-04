@@ -27,7 +27,7 @@ const HomePage = () => {
   const handleGetPlayerReports = useCallback(async () => {
     try {
       const response = await fetch(
-        API_ENDPOINTS.getPlayerStats(videogame, searchInput.current.value),
+        API_ENDPOINTS.handleGetPlayerReports(videogame, week),
       );
 
       if (response.ok) {
@@ -44,11 +44,12 @@ const HomePage = () => {
 
   const handleGetMatchReports = useCallback(async () => {
     try {
-      const response = await fetch(API_ENDPOINTS.getGameReports(videogame, week));
+      const response = await fetch(
+        API_ENDPOINTS.getGameReports(videogame, week),
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setMatchReports(data);
       } else {
         setMatchReports([]);
@@ -61,7 +62,6 @@ const HomePage = () => {
 
   useEffect(() => {
     handleGetMatchReports();
-    handleGetPlayerReports();
   }, [videogame, week, handleGetMatchReports, handleGetPlayerReports]);
 
   return (
@@ -108,7 +108,7 @@ const HomePage = () => {
               />
               <IoSearch
                 className="absolute right-4 top-5 h-auto w-12 cursor-pointer"
-                onClick={handleGetPlayerReports}
+                onClick={() => handleGetPlayerReports}
               />
             </div>
           </div>

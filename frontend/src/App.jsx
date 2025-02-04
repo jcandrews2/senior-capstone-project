@@ -12,7 +12,7 @@ import DisputesManagementPage from "./components/DisputesManagementPage";
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <Navbar />
 
       <Routes>

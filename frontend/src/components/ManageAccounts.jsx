@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ModifyAccount from "./ModifyAccount";
+import { API_ENDPOINTS } from "../config";
 
 const ManageAccounts = () => {
   const [accounts, setAccounts] = useState([]);
@@ -9,11 +10,10 @@ const ManageAccounts = () => {
 
   const handleGetAccounts = async () => {
     try {
-      const response = await fetch(`http://40.85.147.30:8080/accounts`);
+      const response = await fetch(API_ENDPOINTS.handleGetAccounts());
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setAccounts(data);
       } else {
         setAccounts([]);
@@ -26,7 +26,7 @@ const ManageAccounts = () => {
 
   const handleCreateAccount = async () => {
     try {
-      const response = await fetch("http://40.85.147.30:8080/accounts", {
+      const response = await fetch(API_ENDPOINTS.handleCreateAccount(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

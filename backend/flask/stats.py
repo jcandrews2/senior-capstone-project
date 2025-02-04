@@ -16,7 +16,7 @@ def get_game_stats(videogame):
     # Queries for getting matchup list
     matchup_queries = { 
         "rl": "SELECT DISTINCT school, team_score, opponent, opponent_score FROM rl_week WHERE week_number = %s AND did_win = TRUE",
-        "val": "SELECT DISTINCT school, team_score, opponent, opponent_score FROM val_week WHERE week_number = %s AND and did_win = TRUE",
+        "val": "SELECT DISTINCT school, team_score, opponent, opponent_score FROM val_week WHERE week_number = %s AND did_win = TRUE",
         "apex": "SELECT DISTINCT school FROM apex_week WHERE week_number = %s;"
     }
 
@@ -26,12 +26,12 @@ def get_game_stats(videogame):
             "game_query": """
                 SELECT game_id, game_number, w_school, l_school, w_points, l_points
                 FROM rl_picture
-                WHERE week_number = %s AND (w_school = %s OR l_school)
+                WHERE week_number = %s AND w_school = %s
                 GROUP BY game_id
                 ORDER BY game_number;
             """,
             "player_query": """
-                SELECT school, player_name, score, goals, assists, saves, shots
+                SELECT school, player_name AS `player`, score, goals, assists, saves, shots
                 FROM rl_game
                 WHERE game_id = %s;
             """
@@ -39,14 +39,15 @@ def get_game_stats(videogame):
         "val": {
             "game_query": """
                 SELECT game_id, game_number, w_school, l_school, w_points, l_points
-                FROM val_game
-                WHERE week_number = %s AND AND (w_school = %s OR l_school)
+                FROM val_picture
+                WHERE week_number = %s AND w_school = %s
+                GROUP BY game_id
                 ORDER BY game_number;
             """,
             "player_query": """
-                SELECT school, player_name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, score
+                SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb, plants, defuses
                 FROM val_game
-                WHERE game_id = %s AND school = %s;
+                WHERE game_id = %s;
             """
         },
         "apex": {
@@ -58,7 +59,7 @@ def get_game_stats(videogame):
                 ORDER BY game_number;
             """,
             "player_query": """
-                SELECT school, player_name, placement, kills, assists, knocks, damage, score 
+                SELECT school, player_name AS `player`, placement, kills, assists, knocks, damage
                 FROM apex_game
                 WHERE game_id = %s AND school = %s;
             """
@@ -96,7 +97,6 @@ def get_game_stats(videogame):
                 cursor.execute(game_queries[videogame]["game_query"], (week, school))
                 games = cursor.fetchall()
 
-                
                 match_points = 0
                 for game in games: 
 
@@ -136,7 +136,8 @@ def get_game_stats(videogame):
                         "gameStats": {
                             "school": school,
                             "points": game_points,
-                            "gameNumber": game["game_number"]
+                            "gameNumber": game["game_number"],
+                            "game_id": game['game_id']
                         },
                         "teamStats": team_stats,
                     }
@@ -182,7 +183,8 @@ def get_game_stats(videogame):
                             "opponent": opponent,
                             "teamScore": game["w_points"],
                             "opponentScore": game["l_points"],
-                            "gameNumber": game["game_number"]
+                            "gameNumber": game["game_number"],
+                            "game_id": game['game_id']
                         },
                         "teamStats": team_stats,
                         "opponentStats": opponent_stats
