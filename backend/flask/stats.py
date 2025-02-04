@@ -16,7 +16,7 @@ def get_game_stats(videogame):
     # Queries for getting matchup list
     matchup_queries = { 
         "rl": "SELECT DISTINCT school, team_score, opponent, opponent_score FROM rl_week WHERE week_number = %s AND did_win = TRUE",
-        "val": "SELECT DISTINCT school, team_score, opponent, opponent_score FROM val_week WHERE week_number = %s AND and did_win = TRUE",
+        "val": "SELECT DISTINCT school, team_score, opponent, opponent_score FROM val_week WHERE week_number = %s AND did_win = TRUE",
         "apex": "SELECT DISTINCT school FROM apex_week WHERE week_number = %s;"
     }
 
