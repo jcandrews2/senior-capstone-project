@@ -9,6 +9,7 @@ const API_ENDPOINTS = {
     `${API_BASE_URL}/stats/${videogame}?week=${encodeURIComponent(week)}`,
   uploadFile: `${API_BASE_URL}/upload_file`,
   uploadMatch: `${API_BASE_URL}/upload_match`,
+  updateWeekAndSeason: `${API_BASE_URL}/update_week_and_season`,
   getAllDisputes: `${API_BASE_URL}/get_all_disputes`,
   resolveDispute: (gameId) => `${API_BASE_URL}/resolve_dispute/${gameId}`,
 };

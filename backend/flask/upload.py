@@ -171,8 +171,7 @@ def upload_match():
                             player["kills"], player["assists"], player["knocks"],
                             player["damage"], player["score"], player["placement"],
                             data.get("game_number"), data.get("week")
-                        )
-                        
+                        )   
                     )
                     cursor.execute(
                         picture_queries[game],
