@@ -99,7 +99,7 @@ def upload_match():
             # 🔹 Generate a new unique game_id if one isn't provided
             game_id = data.get("game_id", str(uuid.uuid4()))
 
-            # Define game-specific queries
+            # Define game-specific queries for the game tables
             game_queries = {
                 "rocket-league": """
                     INSERT INTO rl_game (game_id, school, player_name, score, goals, assists, saves, shots, did_win, game_number, week_number)
@@ -116,6 +116,7 @@ def upload_match():
                 """,
             }
             
+            #Define game-specific queries for the picture table
             picture_queries = {
                 "rocket-league": """
                     INSERT INTO rl_picture (
@@ -147,11 +148,6 @@ def upload_match():
                             data.get("did_win"), data.get("game_number"), data.get("week")
                         )
                     )
-                    cursor.execute(
-                        picture_queries[game],
-                        game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                    )
                 elif game == "valorant":
                     cursor.execute(
                         game_queries[game],
@@ -163,13 +159,6 @@ def upload_match():
                             data.get("did_win"), data.get("game_number"), data.get("week")
                         )   
                     )
-                    cursor.execute(
-                        picture_queries[game],
-                        (
-                            game_id, data.get("game_number"), data.get("week"), data["school"],
-                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                        )
-                    )
                 elif game == "apex-legends":
                     cursor.execute(
                         game_queries[game],
@@ -180,7 +169,26 @@ def upload_match():
                             data.get("game_number"), data.get("week")
                         )   
                     )
+            
+            #runs picture query for the appropriate game
+            if game == "rocket-league":
                     cursor.execute(
+                        picture_queries[game],
+                    (
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                    )
+                )
+            elif game == "valorant":
+                cursor.execute(
+                        picture_queries[game],
+                        (
+                            game_id, data.get("game_number"), data.get("week"), data["school"],
+                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                        )
+                    )
+            elif game == "apex-legends":
+                cursor.execute(
                         picture_queries[game],
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["image_url"]
