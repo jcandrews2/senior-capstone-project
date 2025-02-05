@@ -152,6 +152,7 @@ def upload_match():
                     print(school + "2" )
                     print(o_school + "2")
                 school_index + 1
+                print(school_index)
                 if game == "rocket-league":
                     cursor.execute(
                         game_queries[game],
