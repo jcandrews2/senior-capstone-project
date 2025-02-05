@@ -214,17 +214,17 @@ def upload_match():
                     WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                     """)
                 
-            for player in data["players"]:
-                if game == "valorant":
-                    cursor.execute(f"""UPDATE val_week
-                        SET val_week.opponent_score = (
-                        SELECT sum(did_win)
-                        FROM val_game
-                        WHERE val_game.week_number = {data["week"]}
-                        GROUP by {data["opponent_school"]}
-                        )
-                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
-                        """)
+            # for player in data["players"]:
+            #     if game == "valorant":
+            #         cursor.execute(f"""UPDATE val_week
+            #             SET val_week.opponent_score = (
+            #             SELECT sum(did_win)
+            #             FROM val_game
+            #             WHERE val_game.week_number = {data["week"]} and val_game.school = {data["opponent_school"]}
+            #             GROUP by school
+            #             )
+            #             WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
+            #             """)
             #if one update
             
             conn.commit()  # 🔹 Save changes
