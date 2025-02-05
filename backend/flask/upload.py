@@ -144,13 +144,13 @@ def upload_match():
                 if school_index % 2 == 0:
                     school = data["school"]
                     o_school = data["opponent_school"]
-                    print(school + 1 )
-                    print(o_school + 1)
+                    print(school + "1" )
+                    print(o_school + "1")
                 else:
                     school = data["opponent_school"] 
                     o_school = data["school"]
-                    print(school + 2 )
-                    print(o_school + 2)
+                    print(school + "2" )
+                    print(o_school + "2")
                 school_index + 1
                 if game == "rocket-league":
                     cursor.execute(
