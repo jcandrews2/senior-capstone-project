@@ -194,7 +194,7 @@ def upload_match():
                         data["image_url"]
                     )
             #Query to see if it exists. Will return a zero or one
-            cursor.execute(f"""SELECT COUNT(*) from {game}_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
+            cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
             
             #returns if it is zero or one
             is_exists = cursor.fetchone
