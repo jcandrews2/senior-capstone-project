@@ -197,7 +197,7 @@ def upload_match():
             cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
             
             #returns if it is zero or one
-            is_exists = cursor.fetchone
+            is_exists = cursor.fetchone()
             print(is_exists)
             #if zero insert
             if is_exists == 0 and game == "valorant":
