@@ -151,7 +151,7 @@ def upload_match():
                     o_school = data["school"]
                     print(school + "2" )
                     print(o_school + "2")
-                school_index + 1
+                school_index = school_index + 1
                 print(school_index)
                 if game == "rocket-league":
                     cursor.execute(
@@ -191,7 +191,6 @@ def upload_match():
                 
                 #returns if it is zero or one in a tuple format. only need the first item
                 is_exists = cursor.fetchone()
-                print(is_exists[0])
                 #if zero insert
                 if is_exists[0] == 0 and game == "valorant":
                     cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
