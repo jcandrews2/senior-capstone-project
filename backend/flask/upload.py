@@ -207,6 +207,10 @@ def upload_match():
                         SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
                         WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                         """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.opponent = '{o_school}'
+                        WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
+                        """)
                     
                 for player in data["players"]:
                     if game == "valorant":
