@@ -194,7 +194,7 @@ def upload_match():
                         data["image_url"]
                     )
             #Query to see if it exists. Will return a zero or one
-            cursor.execute(f"""SELECT COUNT(*) from {game}_week where player_name="{player["name"]}" and week_number =%{data["week"]};""")
+            cursor.execute(f"""SELECT COUNT(*) from {game}_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
             
             #returns if it is zero or one
             is_exists = cursor.fetchone
@@ -233,54 +233,6 @@ def upload_match():
         except Exception as e:
             conn.rollback()  # 🔹 Rollback if error occurs
             print(f"Error uploading match data: {e}")
-            return jsonify({"error": str(e)}), 500
-        
-        finally:
-            cursor.close()
-            conn.close()
-
-    elif request.method == "PUT":
-        try:
-            # 🔹 Update weekly & seasonal tables
-            update_week_query = f"""
-                INSERT INTO {game}_week (week_number, school, player_name, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg, team_score)
-                SELECT week_number, school, player_name, AVG(score), AVG(goals), AVG(assists), AVG(saves), AVG(shots), SUM(did_win)
-                FROM {game}_game
-                WHERE player_name='{data["playerName"]}' AND week_number={data["week"]}
-                GROUP BY player_name
-                ON DUPLICATE KEY UPDATE
-                    week_score_avg = VALUES(week_score_avg),
-                    week_goals_avg = VALUES(week_goals_avg),
-                    week_assists_avg = VALUES(week_assists_avg),
-                    week_saves_avg = VALUES(week_saves_avg),
-                    week_shots_avg = VALUES(week_shots_avg),
-                    team_score = VALUES(team_score);
-            """
-
-            update_season_query = f"""
-                INSERT INTO {game}_season (school, player_name, season_score_avg, season_goals_avg, season_assists_avg, season_saves_avg, season_shots_avg, season_wins_total)
-                SELECT school, player_name, AVG(week_score_avg), AVG(week_goals_avg), AVG(week_assists_avg), AVG(week_saves_avg), AVG(week_shots_avg), SUM(did_win)
-                FROM {game}_week
-                WHERE player_name='{data["playerName"]}'
-                GROUP BY player_name
-                ON DUPLICATE KEY UPDATE
-                    season_score_avg = VALUES(season_score_avg),
-                    season_goals_avg = VALUES(season_goals_avg),
-                    season_assists_avg = VALUES(season_assists_avg),
-                    season_saves_avg = VALUES(season_saves_avg),
-                    season_shots_avg = VALUES(season_shots_avg),
-                    season_wins_total = VALUES(season_wins_total);
-            """
-            
-            cursor.execute(update_season_query)
-            cursor.execute(update_week_query)
-            conn.commit()
-            
-            return jsonify({"message": "Weekly and season tables updated successfully"}), 200
-        
-        except Exception as e:
-            conn.rollback()
-            print(f"Error updating stats: {e}")
             return jsonify({"error": str(e)}), 500
         
         finally:
