@@ -223,7 +223,7 @@ def upload_match():
                         WHERE val_game.week_number = {data["week"]}
                         GROUP by {data["opponent_school"]}
                         )
-                        WHERE val_week.player_name = '{player["name"]}’ AND val_week.week_number = {data["week"]}; 
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
                         """)
             #if one update
             
