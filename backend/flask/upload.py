@@ -170,7 +170,42 @@ def upload_match():
                         )   
                     )
             
-            #runs picture query for the appropriate game
+
+                #Query to see if it exists. Will return a zero or one
+                cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
+                
+                #returns if it is zero or one in a tuple format. only need the first item
+                is_exists = cursor.fetchone()
+                print(is_exists[0])
+                #if zero insert
+                if is_exists[0] == 0 and game == "valorant":
+                    cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
+                                week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg, team_score)
+                        SELECT week_number, school, player_name, AVG(combat_score), AVG(kills),
+                        AVG(deaths), AVG(assists), AVG(econ), AVG(fb), AVG(plants), AVG(defuses), sum(did_win)
+                        FROM val_game
+                        WHERE player_name='{player["name"]}' and week_number={data["week"]}
+                        GROUP BY week_number, school, player_name;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
+                        WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
+                        """)
+                    
+                # for player in data["players"]:
+                #     if game == "valorant":
+                #         cursor.execute(f"""UPDATE val_week
+                #             SET val_week.opponent_score = (
+                #             SELECT sum(did_win)
+                #             FROM val_game
+                #             WHERE val_game.week_number = {data["week"]} and val_game.school = {data["opponent_school"]}
+                #             GROUP by school
+                #             )
+                #             WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
+                #             """)
+                #if one update
+                
+                #runs picture query for the appropriate game
             if game == "rocket-league":
                     cursor.execute(
                         picture_queries[game],
@@ -193,39 +228,6 @@ def upload_match():
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["image_url"]
                     )
-            #Query to see if it exists. Will return a zero or one
-            cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
-            
-            #returns if it is zero or one in a tuple format. only need the first item
-            is_exists = cursor.fetchone()
-            print(is_exists[0])
-            #if zero insert
-            if is_exists[0] == 0 and game == "valorant":
-                cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
-                               week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg, team_score)
-                    SELECT week_number, school, player_name, AVG(combat_score), AVG(kills),
-                    AVG(deaths), AVG(assists), AVG(econ), AVG(fb), AVG(plants), AVG(defuses), sum(did_win)
-                    FROM val_game
-                    WHERE player_name='{player["name"]}' and week_number={data["week"]}
-                    GROUP BY week_number, school, player_name;
-                    """)
-                cursor.execute(f"""UPDATE val_week
-                    SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
-                    WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
-                    """)
-                
-            # for player in data["players"]:
-            #     if game == "valorant":
-            #         cursor.execute(f"""UPDATE val_week
-            #             SET val_week.opponent_score = (
-            #             SELECT sum(did_win)
-            #             FROM val_game
-            #             WHERE val_game.week_number = {data["week"]} and val_game.school = {data["opponent_school"]}
-            #             GROUP by school
-            #             )
-            #             WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
-            #             """)
-            #if one update
             
             conn.commit()  # 🔹 Save changes
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
