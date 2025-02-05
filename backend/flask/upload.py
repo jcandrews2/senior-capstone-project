@@ -137,12 +137,20 @@ def upload_match():
             }
 
             # Insert player data
+            school_index = 0
             for player in data["players"]:
+                if school_index%2 ==0:
+                    school = data["school"]
+                    o_school = data["opponent_school"] 
+                else:
+                    school = data["opponent_school"] 
+                    o_school = data["school"]
+                school_index + 1
                 if game == "rocket-league":
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, data["school"], player["name"],
+                            game_id, school, player["name"],
                             player["score"], player["goals"], player["assists"],
                             player["saves"], player["shots"], 
                             data.get("did_win"), data.get("game_number"), data.get("week")
@@ -152,7 +160,7 @@ def upload_match():
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, data["school"], player["name"],
+                            game_id, school, player["name"],
                             player["acs"], player["kills"], player["deaths"],
                             player["assists"], player["econ"], player["fb"],
                             player["plants"], player["defuses"], player["agent"], data["map"],
@@ -163,7 +171,7 @@ def upload_match():
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, data["school"], player["name"],
+                            game_id, school, player["name"],
                             player["kills"], player["assists"], player["knocks"],
                             player["damage"], player["score"], player["placement"],
                             data.get("game_number"), data.get("week")
@@ -192,17 +200,17 @@ def upload_match():
                         WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                         """)
                     
-                # for player in data["players"]:
-                #     if game == "valorant":
-                #         cursor.execute(f"""UPDATE val_week
-                #             SET val_week.opponent_score = (
-                #             SELECT sum(did_win)
-                #             FROM val_game
-                #             WHERE val_game.week_number = {data["week"]} and val_game.school = {data["opponent_school"]}
-                #             GROUP by school
-                #             )
-                #             WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
-                #             """)
+                for player in data["players"]:
+                    if game == "valorant":
+                        cursor.execute(f"""UPDATE val_week
+                            SET val_week.opponent_score = (
+                            SELECT sum(did_win)
+                            FROM val_game
+                            WHERE val_game.week_number = {data["week"]} and val_game.school = '"""+ o_school +"""'
+                            GROUP by school
+                            )
+                            WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
+                            """)
                 #if one update
                 
                 #runs picture query for the appropriate game
