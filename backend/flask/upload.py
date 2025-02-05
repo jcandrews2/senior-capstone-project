@@ -196,11 +196,11 @@ def upload_match():
             #Query to see if it exists. Will return a zero or one
             cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
             
-            #returns if it is zero or one
+            #returns if it is zero or one in a tuple format. only need the first item
             is_exists = cursor.fetchone()
-            print(is_exists)
+            print(is_exists[0])
             #if zero insert
-            if is_exists == 0 and game == "valorant":
+            if is_exists[0] == 0 and game == "valorant":
                 cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
                                week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg, team_score)
                     SELECT week_number, school, player_name, AVG(combat_score), AVG(kills),
