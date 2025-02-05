@@ -138,10 +138,12 @@ def upload_match():
 
             # Insert player data
             school_index = 0
+            school
+            o_school
             for player in data["players"]:
                 if school_index%2 ==0:
                     school = data["school"]
-                    o_school = data["opponent_school"] 
+                    o_school = data["opponent_school"]
                 else:
                     school = data["opponent_school"] 
                     o_school = data["school"]
