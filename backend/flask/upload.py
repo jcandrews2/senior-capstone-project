@@ -129,7 +129,7 @@ def upload_match():
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                     """,
                     "apex-legends": """
-                    INSERT INTO rl_picture (
+                    INSERT INTO apex_picture (
                         game_id, game_number, week_number, picture)
                     VALUES (%s, %s, %s, %s);
                     """,
