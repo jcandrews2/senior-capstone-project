@@ -26,21 +26,25 @@ def upload_file():
 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
+    
+    if game not in ocr_scripts:
+        return jsonify({"error": f"OCR not supported for game: {game}"}), 400
 
     # Save the uploaded file
     UPLOAD_FOLDER = 'uploads/'
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    # Generate a **unique** filename to prevent overwriting (UUID + original extension)
+    file_extension = os.path.splitext(file.filename)[1]
+    unique_filename = f"{uuid.uuid4()}{file_extension}"
+    file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
     file.save(file_path)
 
-    # Generate a public URL for the image
-    file_url = f"{request.host_url}uploads/{file.filename}"
+    # Generate a **correct** public URL for the uploaded image
+    base_url = request.host_url.rstrip('/')  # Ensures no double slashes
+    file_url = f"{base_url}/{UPLOAD_FOLDER}{unique_filename}"
 
     try:
-        if game not in ocr_scripts:
-            return jsonify({"error": f"OCR not supported for game: {game}"}), 400
-
         # Define the OCR script path
         ocr_script = os.path.join(os.path.dirname(__file__), ocr_scripts[game])
 
@@ -99,44 +103,44 @@ def upload_match():
             # 🔹 Generate a new unique game_id if one isn't provided
             game_id = data.get("game_id", str(uuid.uuid4()))
 
-            # Define game-specific queries for the game tables
+            # Ensure the image URL is correctly formatted
+            image_url = data.get("image_url", "").strip()
+            if not image_url.startswith("http"):
+                return jsonify({"error": "Invalid image URL"}),
+
+            # Define game-specific queries for the **game tables**
             game_queries = {
                 "rocket-league": """
                     INSERT INTO rl_game (game_id, school, player_name, score, goals, assists, saves, shots, did_win, game_number, week_number)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    """,
+                """,
                 "valorant": """
                     INSERT INTO val_game (game_id, school, player_name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, map, did_win, game_number, week_number)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
                 "apex-legends": """
                     INSERT INTO apex_game (game_id, school, player_name, kills, assists, knocks, damage, score, placement, game_number, week_number)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON DUPLICATE KEY UPDATE kills = VALUES(kills), assists = VALUES(assists), knocks = VALUES(knocks), damage = VALUES(damage), score = VALUES(score), placement = VALUES(placement);
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
             }
             
-            #Define game-specific queries for the picture table
+            # Define queries for the **picture tables**
             picture_queries = {
                 "rocket-league": """
-                    INSERT INTO rl_picture (
-                        game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
+                    INSERT INTO rl_picture (game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-                    """,
+                """,
                 "valorant": """
-                    INSERT INTO val_picture (
-                        game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
+                    INSERT INTO val_picture (game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-                    """,
-                    "apex-legends": """
-                    INSERT INTO rl_picture (
-                        game_id, game_number, week_number, picture)
-                    VALUES (%s, %s, %s, %s);
-                    """,
-                
+                """,
+                "apex-legends": """
+                    INSERT INTO apex_picture (game_id, game_number, week_number, school, picture, verified)
+                    VALUES (%s, %s, %s, %s, %s, %s);
+                """,
             }
 
-            # Insert player data
+            # Insert player data into **game tables**
             for player in data["players"]:
                 if game == "rocket-league":
                     cursor.execute(
@@ -170,10 +174,10 @@ def upload_match():
                         )   
                     )
             
-            #runs picture query for the appropriate game
+            # Insert data into the **picture tables**
             if game == "rocket-league":
-                    cursor.execute(
-                        picture_queries[game],
+                cursor.execute(
+                    picture_queries[game],
                     (
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
@@ -181,18 +185,20 @@ def upload_match():
                 )
             elif game == "valorant":
                 cursor.execute(
-                        picture_queries[game],
-                        (
-                            game_id, data.get("game_number"), data.get("week"), data["school"],
-                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                        )
+                    picture_queries[game],
+                    (
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
                     )
+                )
             elif game == "apex-legends":
                 cursor.execute(
-                        picture_queries[game],
+                    picture_queries[game],
+                    (
                         game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["image_url"]
+                        data["image_url"], True  # Verified = True by default
                     )
+                )
 
             conn.commit()  # 🔹 Save changes
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
