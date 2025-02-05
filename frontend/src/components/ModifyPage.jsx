@@ -55,15 +55,13 @@ const ModifyPage = () => {
   // 🔹 Submit the modified data to the backend
   const handleGame = async () => {
     setLoading(true);
-    setError("");
-
     try {
       const response = await fetch(API_ENDPOINTS.uploadMatch, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
         alert("Data submitted successfully!");
         navigate("/");
@@ -77,32 +75,40 @@ const ModifyPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   // 🔹 Submit the modified data to the backend
   const handleWeekAndSeason = async () => {
-    setLoading(true);
-    setError("");
+    // loop thru the players
+    for (player of formData.players) {
 
-    try {
-      const response = await fetch(API_ENDPOINTS.updateWeekAndSeason, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      try { 
+      // get request for each player for week table 
+      const response = await fetch(API_ENDPOINTS.handleGetWeekPlayer());
 
       if (response.ok) {
-        alert("Data submitted successfully!");
-        navigate("/");
+        // run the put request for week
       } else {
-        const errorData = await response.json();
-        setError(errorData.error || "Failed to submit data.");
-      }
-    } catch (err) {
-      console.error("Error submitting data:", err);
-      setError("An error occurred while submitting the data.");
-    } finally {
-      setLoading(false);
+        // run the post request for week
+        }
+    } catch (error) {
+      console.error("insert error message", error);
+      } 
+
+    try { 
+        // get request for each player for week table 
+        const response = await fetch(API_ENDPOINTS.handleGetSeasonPlayer());
+
+        if (response.ok) {
+          // run the put request for week
+
+        } else {
+          // run the post request for week
+
+        }
+      } catch (error) {
+        console.error("insert error message", error);
+      } 
     }
   };
 
