@@ -77,40 +77,6 @@ const ModifyPage = () => {
     }
   }
 
-  // 🔹 Submit the modified data to the backend
-  // const handleWeekAndSeason = async () => {
-  //   // loop thru the players
-  //   for (player of formData.players) {
-
-  //     try { 
-  //     // get request for each player for week table 
-  //     const response = await fetch(API_ENDPOINTS.handleGetWeekPlayer());
-
-  //     if (response.ok) {
-  //       // run the put request for week
-  //     } else {
-  //       // run the post request for week
-  //       }
-  //   } catch (error) {
-  //     console.error("insert error message", error);
-  //     } 
-
-  //   try { 
-  //       // get request for each player for week table 
-  //       const response = await fetch(API_ENDPOINTS.handleGetSeasonPlayer());
-
-  //       if (response.ok) {
-  //         // run the put request for week
-
-  //       } else {
-  //         // run the post request for week
-
-  //       }
-  //     } catch (error) {
-  //       console.error("insert error message", error);
-  //     } 
-  //   }
-  // };
 
   if (loading)
     return (
@@ -273,7 +239,7 @@ const ModifyPage = () => {
       {/* 🔹 Submit Button */}
       <button
         className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
-        onClick={handleGame()}
+        onClick={handleGame}
       >
         {loading ? "Submitting..." : "Submit"}
       </button>

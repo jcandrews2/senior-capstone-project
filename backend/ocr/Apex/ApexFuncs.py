@@ -48,7 +48,7 @@ def apex_OCR(img_file):
 
     for i in range(3):
         # out["players"].append({"kak" : KAKs[i], "damage": DDs[i]})
-        out['players'].append({'player_name':'_',
+        out['players'].append({'name':'_',
                                 'kills':log[i][0],
                                 'assists':log[i][1],
                                 'knocks':log[i][2],
