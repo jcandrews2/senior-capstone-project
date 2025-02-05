@@ -198,7 +198,7 @@ def upload_match():
             
             #returns if it is zero or one
             is_exists = cursor.fetchone
-            
+            print(is_exists)
             #if zero insert
             if is_exists == 0 and game == "valorant":
                 cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
