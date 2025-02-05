@@ -137,6 +137,8 @@ def upload_match():
             }
 
             # Insert player data
+            print (data["opponent_school"])
+            
             school_index = 0
             school = ""
             o_school =""
