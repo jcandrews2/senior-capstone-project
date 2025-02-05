@@ -200,11 +200,11 @@ def upload_match():
                     )
                 )
 
-            conn.commit()  # 🔹 Save changes
+            conn.commit()
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
         
         except Exception as e:
-            conn.rollback()  # 🔹 Rollback if error occurs
+            conn.rollback()
             print(f"Error uploading match data: {e}")
             return jsonify({"error": str(e)}), 500
         
@@ -214,7 +214,6 @@ def upload_match():
 
     elif request.method == "PUT":
         try:
-            # 🔹 Update weekly & seasonal tables
             update_week_query = f"""
                 INSERT INTO {game}_week (week_number, school, player_name, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg, team_score)
                 SELECT week_number, school, player_name, AVG(score), AVG(goals), AVG(assists), AVG(saves), AVG(shots), SUM(did_win)
