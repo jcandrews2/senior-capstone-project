@@ -40,7 +40,7 @@ def get_game_stats(videogame):
             "game_query": """
                 SELECT game_id, game_number, w_school, l_school, w_points, l_points
                 FROM val_game
-                WHERE week_number = %s AND AND (w_school = %s OR l_school)
+                WHERE week_number = %s AND (w_school = %s OR l_school)
                 ORDER BY game_number;
             """,
             "player_query": """
