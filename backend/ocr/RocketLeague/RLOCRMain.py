@@ -12,7 +12,25 @@ def load_and_preprocess_image(img_path):
     img_rgb = cv.imread(img_path)
     img_rgb = cv.resize(img_rgb, (1920, 1080))
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+    #clahe = cv.createCLAHE(clipLimit=2.0, tileGridSize=(3, 3))
+    #img_gray = clahe.apply(img_gray)
     return img_rgb, img_gray
+
+
+def classify_scoreboard(image, roi_x, roi_y, roi_w, roi_h, threshold=65):
+    """Classify the scoreboard based on the darkness of the match timer"""
+
+    roi = image[roi_y:roi_y + roi_h, roi_x:roi_x + roi_w]
+    #cv.imshow("Timer?", roi)
+    #cv.waitKey(0)
+
+    average_intensity = np.mean(roi)
+    #print(average_intensity)
+
+    if average_intensity < threshold:
+        return "Replay"
+    else:
+        return "Post"
 
 def extract_roi(img_gray, x, y, w, h):
     """Extract the region of interest (ROI) from the image."""
@@ -28,26 +46,44 @@ def open_strip(strip):
     #strip = cv.dilate(strip, kernel=kernel)
     return strip
 
-def process_strip(strip_gray, strip_n, strip_y, strip_h, strip_x, strip_w):
+def process_strip(strip_gray, strip_n, strip_y, strip_h, strip_x, strip_w, scoreboard_type):
     """Process each strip (player's stats) within the ROI."""
     strip_gray = cv.GaussianBlur(strip_gray, (3,3), 0)
     _, strip_gray = cv.threshold(strip_gray, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    strip_name = strip_n[:27, :290]
-    #cv.imshow("Name", strip_name)
-    strip_stats = strip_gray[:, 330:]
-    #cv.imshow("Stats", strip_stats)
-    #cv.waitKey(0)
-    strip_score = open_strip(strip_stats[:, :65])
-    #cv.imshow("Score", strip_score)
-    strip_goals = open_strip(strip_stats[:, 95:150])
-    #cv.imshow("Goals", strip_goals)
-    strip_assists = open_strip(strip_stats[:, 185:230])
-    #cv.imshow("Assits", strip_assists)
-    strip_saves = open_strip(strip_stats[:, 275:320])
-    #cv.imshow("Saves", strip_saves)
-    strip_shots = open_strip(strip_stats[:, 360:])
-    #cv.imshow("Shots", strip_shots)
-    #cv.waitKey(0)
+    if scoreboard_type == "Post":
+        strip_name = strip_n[:27, :290]
+        #cv.imshow("Name", strip_name)
+        strip_stats = strip_gray[:, 330:]
+        #cv.imshow("Stats", strip_stats)
+        #cv.waitKey(0)
+        strip_score = open_strip(strip_stats[:, :65])
+        #cv.imshow("Score", strip_score)
+        strip_goals = open_strip(strip_stats[:, 95:150])
+        #cv.imshow("Goals", strip_goals)
+        strip_assists = open_strip(strip_stats[:, 185:230])
+        #cv.imshow("Assists", strip_assists)
+        strip_saves = open_strip(strip_stats[:, 275:320])
+        #cv.imshow("Saves", strip_saves)
+        strip_shots = open_strip(strip_stats[:, 360:])
+        #cv.imshow("Shots", strip_shots)
+        #cv.waitKey(0)
+    else:
+        strip_name = strip_n[:27, :290]
+        #cv.imshow("Name", strip_name)
+        strip_stats = strip_gray[:, 305:]
+        #cv.imshow("Stats", strip_stats)
+        #cv.waitKey(0)
+        strip_score = open_strip(strip_stats[:, :65])
+        #cv.imshow("Score", strip_score)
+        strip_goals = open_strip(strip_stats[:, 95:145])
+        #cv.imshow("Goals", strip_goals)
+        strip_assists = open_strip(strip_stats[:, 180:230])
+        #cv.imshow("Assists", strip_assists)
+        strip_saves = open_strip(strip_stats[:, 270:320])
+        #cv.imshow("Saves", strip_saves)
+        strip_shots = open_strip(strip_stats[:, 360:])
+        #cv.imshow("Shots", strip_shots)
+        #cv.waitKey(0)
     return strip_name, strip_score, strip_goals, strip_assists, strip_saves, strip_shots
 
 def perform_ocr(strip, config):
@@ -59,6 +95,8 @@ def perform_ocr(strip, config):
 def update_player_stats(players, ocr_name, ocr_score, ocr_goals, ocr_assists, ocr_saves, ocr_shots, i):
     """Update the player's stats in the dictionary."""
     current_score, current_goals, current_assists, current_saves, current_shots = players.get(ocr_name.split(' ')[0], ('0', '0', '0', '0', '0'))
+    if not ocr_name.strip:
+        return players
     if ocr_score != '' or ocr_score == '0':
         #print(f'Score:', ocr_score)
         current_score = ocr_score
@@ -119,22 +157,29 @@ def main():
 
     img_rgb, img_gray = load_and_preprocess_image(img_path)
     players = defaultdict(lambda: ('-1', '-1', '-1', '-1', '-1'))
+    roi_x, roi_y, roi_w, roi_h = 880, 47, 160, 63  # Adjust these values based on your image
 
-    x, y, w, h = 725, 275, 730, 355
+    # Classify the scoreboard
+    scoreboard_type = classify_scoreboard(img_gray, roi_x, roi_y, roi_w, roi_h, threshold=65)
+
+    if scoreboard_type == "Post":
+        x, y, w, h = 725, 275, 730, 355
+    else:
+        x, y, w, h = 590, 377, 710, 360
     roi_gray, roi_gray_n = extract_roi(img_gray, x, y, w, h)
     img_result = img_rgb.copy()
 
     for i in range(6):
         strip_x = 0
-        strip_y = [3, 55, 100, 230, 275, 332][i]
+        strip_y = [3, 55, 100, 225, 275, 325][i]
         strip_w = 725
         strip_h = 35
         strip = roi_gray[strip_y:strip_y + strip_h, strip_x:strip_x + strip_w]
-        #cv.imshow("strip", strip)
-        #cv.waitKey(0)
         strip_n = roi_gray_n[strip_y:strip_y + 30, strip_x:strip_x + strip_w]
+        cv.imshow('', strip)
+        cv.waitKey(0)
 
-        strip_name, strip_score, strip_goals, strip_assists, strip_saves, strip_shots = process_strip(strip, strip_n, strip_y, strip_h, strip_x, strip_w)
+        strip_name, strip_score, strip_goals, strip_assists, strip_saves, strip_shots = process_strip(strip, strip_n, strip_y, strip_h, strip_x, strip_w, scoreboard_type)
 
         config0 = '--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         config1 = '--psm 8 -c tessedit_char_whitelist=0123456789'
