@@ -5,47 +5,14 @@ import os
 import subprocess
 from urllib.parse import unquote
 import uuid
+import json
+
 
 
 upload_bp = Blueprint('upload', __name__)
 
-@upload_bp.route('/get_upload/<videogame>', methods=['GET'])
-def get_upload(videogame): 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        # get the game_id
-        data = request.args.get('game_id')
-        game_id = unquote(data)
-
-        get_picture_queries = { 
-            "rl": "SELECT picture FROM rl_picture WHERE game_id = %s",
-            "val": "SELECT picture FROM val_picture WHERE game_id = %s",
-            "apex": "SELECT picture FROM apex_picture WHERE game_id = %s"
-        }
-
-        try: 
-            # cursor.execute(get_picture_queries[videogame], (game_id,))
-            # cursor.fetchone()
-
-            return jsonify(""), 200
-
-        except Exception as e: 
-            print(e)
-            return jsonify({"error": str(e)}), 500
-    
-        finally: 
-            cursor.close()
-            conn.close()
-
-
 @upload_bp.route('/upload_file', methods=['POST'])
 def upload_file():
-
-        ocr_scripts = {
-            'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
-            'apex-legends': "../ocr/Apex/ApexFuncs.py",
-
     ocr_scripts = {
         'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
         'apex-legends': "../ocr/Apex/ApexFuncs.py",
@@ -112,70 +79,16 @@ def upload_file():
             "players": ocr_data.get("players", []),
             "game_number": game_number
         }
-        if 'file' not in request.files:
-            return jsonify({"error": "No file part"}), 400
 
-        file = request.files['file']
-        school = request.form.get('school')
-        opponent_school = request.form.get('opponent_school')
-        week = request.form.get('week')
-        game = request.form.get('game')
+        return jsonify(formatted_data), 200
 
-        if file.filename == '':
-            return jsonify({"error": "No selected file"}), 400
-
-        # Save the uploaded file
-        UPLOAD_FOLDER = 'uploads/'
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-        file.save(file_path)
-
-        # Generate a public URL for the image
-        file_url = f"{request.host_url}uploads/{file.filename}"
-
-        try:
-            if game not in ocr_scripts:
-                return jsonify({"error": f"OCR not supported for game: {game}"}), 400
-
-            # Define the OCR script path
-            ocr_script = os.path.join(os.path.dirname(__file__), ocr_scripts[game])
-
-            # Run the OCR script and capture JSON output
-            process = subprocess.run(
-                ["python", ocr_script, "-f", file_path],
-                capture_output=True,
-                text=True,
-                check=True
-            )
-
-            # Extract JSON output from stdout
-            ocr_output = process.stdout.strip()
-            ocr_data = json.loads(ocr_output)
-            
-            
-            # Format the output to include all required attributes
-            formatted_data = {
-                "image_url": file_url,
-                "game": game,  # Assuming the game is Valorant for this OCR
-                "week": week,  # Week will need to be added manually in the ModifyPage
-                "school": school,  # School will need to be added manually in the ModifyPage
-                "opponent_school": opponent_school,  # Opponent will need to be added manually in the ModifyPage
-                "map": ocr_data.get("map", ""),
-                "code": ocr_data.get("code", ""),
-                "squad_placed": ocr_data.get("squad_placed", ""),
-                "players": ocr_data.get("players", []),
-            }
-
-            return jsonify(formatted_data), 200
-
-        except FileNotFoundError:
-            return jsonify({"error": "OCR output file not found"}), 500
-        except json.JSONDecodeError:
-            return jsonify({"error": "Failed to decode OCR output"}), 500
-        except subprocess.CalledProcessError as e:
-            print(f"OCR script error: {e.stderr}")
-            return jsonify({"error": "OCR processing failed"}), 500
+    except FileNotFoundError:
+        return jsonify({"error": "OCR output file not found"}), 500
+    except json.JSONDecodeError:
+        return jsonify({"error": "Failed to decode OCR output"}), 500
+    except subprocess.CalledProcessError as e:
+        print(f"OCR script error: {e.stderr}")
+        return jsonify({"error": "OCR processing failed"}), 500
 
 @upload_bp.route('/upload_match', methods=['POST', 'PUT'])
 def upload_match():
@@ -184,7 +97,6 @@ def upload_match():
 
     data = request.json  # JSON data from frontend
     game = data.get("game")
-    print(data.get("did_win"))
     
     if request.method == "POST":
         try:
@@ -236,6 +148,7 @@ def upload_match():
                     """, 
             }
             
+            # insert queries for picture tables
             if game == "rocket-league":
                     cursor.execute(
                         picture_queries[game],
@@ -248,7 +161,7 @@ def upload_match():
                 cursor.execute(
                         picture_queries[game],
                         (
-                            game_id, data.get("game_number"), data.get("week"), data["school"],
+                            game_id, data.get("game_number", "-1"), data.get("week"), data["school"],
                             data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
                         )
                     )
@@ -258,18 +171,22 @@ def upload_match():
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["image_url"]
                     )
+                
             # Insert player data
-            print(data.get("game_number"))
+            print(data)
             
             school = ""
             o_school =""
+            did_win = 0
             for player in data["players"]:
                 if player["school"] == "W":
                     school = data["school"]
                     o_school = data["opponent_school"]
+                    did_win = 1
                 else:
                     school = data["opponent_school"] 
                     o_school = data["school"]
+                    did_win = 0
                     
                 if game == "rocket-league":
                     cursor.execute(
@@ -289,7 +206,7 @@ def upload_match():
                             player["acs"], player["kills"], player["deaths"],
                             player["assists"], player["econ"], player["fb"],
                             player["plants"], player["defuses"], player["agent"], data["map"],
-                            data.get("did_win", "1"), data.get("game_number", "1"), data.get("week", "1")
+                            did_win, data["game_number"], data.get("week", "1")
                         )   
                     )
                 elif game == "apex-legends":
@@ -328,17 +245,22 @@ def upload_match():
                         SET val_week.opponent = '{o_school}'
                         WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                         """)
-                    
-                for player in data["players"]:
-                    if game == "valorant":
-                        cursor.execute(f"""UPDATE val_week
-                            SET val_week.opponent_score = (
-                            SELECT sum(did_win)
-                            FROM val_game
-                            WHERE val_game.week_number = {data["week"]} and val_game.school = '{o_school}'
-                            )
-                            WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
-                            """)
+                
+            for player in data["players"]:
+                if player["school"] == "W":
+                    o_school = data["opponent_school"]
+                else:
+                    o_school = data["school"]
+                if game == "valorant":
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.opponent_score = (
+                        SELECT sum(did_win)/5
+                        FROM val_game
+                        WHERE val_game.week_number = {data["week"]} and val_game.school = '{o_school}'
+                        GROUP by map
+                        )
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
+                        """)
                 #if one update
                 
                 #runs picture query for the appropriate game
