@@ -183,7 +183,7 @@ def upload_match():
                 else:
                     school = data["opponent_school"] 
                     o_school = data["school"]
-                    
+                    did_win = 0
                 if game == "rocket-league":
                     cursor.execute(
                         game_queries[game],
