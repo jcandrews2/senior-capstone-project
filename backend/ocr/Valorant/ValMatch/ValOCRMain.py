@@ -17,8 +17,27 @@ import sys
 #4. Winning Team is responisble for uploading screenshots
 #5. If abnormal data is detected (e.g. 0 ACS, 0/0/0 KDA, 0 Econ Rating), uploader will be required to verify the data
 
+def team_read(image, threshold=65):
+    image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+
+    #Calculate average intensity of the red and green channels
+    red_avg = np.mean(image_rgb[:, :, 0])
+    green_avg = np.mean(image_rgb[:, :, 1])
+
+    #Normalize red and green averages to a range of 0 to 1
+    total = red_avg + green_avg
+    red_ratio = red_avg / total
+    green_ratio = green_avg / total
+    #Determine dominant color
+    if red_ratio > green_ratio:
+        return "L"
+    return "W"
+
 def main():
-    pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract'
+    #usr for vm, homebrew for mac, program files for Windows
+    pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # For VM
+    #pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract' # For Mac
+    #pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' # For Windows
 
     parser = argparse.ArgumentParser(
                         prog='Valorant OCR',
@@ -206,6 +225,9 @@ def main():
         strip_w = 1200
         strip_h = h - 30
         strip = img_rgb[strip_y:strip_y + strip_h, strip_x:strip_x + strip_w]
+        team = team_read(strip)
+        print(team)
+
         #cv.imshow(f'OCR ROI {agent}', strip)
         #cv.waitKey(0)
 
@@ -321,6 +343,7 @@ def main():
         "players": [
             {
                 "name": name,
+                "school" : team,
                 "agent": agent,
                 "acs": stats[0] if len(stats) > 0 else "0",
                 "kda": stats[1] if len(stats) > 1 else "0/0/0",
