@@ -17,19 +17,21 @@ def load_and_preprocess_image(img_path):
     return img_rgb, img_gray
 
 
-def classify_scoreboard(image, roi_x, roi_y, roi_w, roi_h, threshold=65):
-    """Classify the scoreboard based on the darkness of the match timer"""
+def classify_scoreboard(image, roi_x, roi_y, roi_w, roi_h, threshold=10):
+    """Classify the scoreboard based on the darkness of the post-game chat"""
 
     roi = image[roi_y:roi_y + roi_h, roi_x:roi_x + roi_w]
     #cv.imshow("Timer?", roi)
     #cv.waitKey(0)
 
     average_intensity = np.mean(roi)
-    #print(average_intensity)
+    print(average_intensity)
 
-    if average_intensity < threshold:
+    if average_intensity > threshold:
+        print("Replay")
         return "Replay"
     else:
+        print("Post")
         return "Post"
 
 def extract_roi(img_gray, x, y, w, h):
@@ -157,10 +159,10 @@ def main():
 
     img_rgb, img_gray = load_and_preprocess_image(img_path)
     players = defaultdict(lambda: ('-1', '-1', '-1', '-1', '-1'))
-    roi_x, roi_y, roi_w, roi_h = 880, 47, 160, 63  # Adjust these values based on your image
+    roi_x, roi_y, roi_w, roi_h = 330, 70, 120, 150
 
     # Classify the scoreboard
-    scoreboard_type = classify_scoreboard(img_gray, roi_x, roi_y, roi_w, roi_h, threshold=65)
+    scoreboard_type = classify_scoreboard(img_gray, roi_x, roi_y, roi_w, roi_h, threshold=10)
 
     if scoreboard_type == "Post":
         x, y, w, h = 725, 275, 730, 355
