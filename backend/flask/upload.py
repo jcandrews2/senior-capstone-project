@@ -147,6 +147,7 @@ def upload_match():
                     """, 
             }
             
+            # insert queries for picture tables
             if game == "rocket-league":
                     cursor.execute(
                         picture_queries[game],
@@ -169,6 +170,7 @@ def upload_match():
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["image_url"]
                     )
+                
             # Insert player data
             print(data.get("game_number"))
             
@@ -241,7 +243,7 @@ def upload_match():
                         SET val_week.opponent = '{o_school}'
                         WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                         """)
-                    
+                
                 for player in data["players"]:
                     if game == "valorant":
                         cursor.execute(f"""UPDATE val_week
