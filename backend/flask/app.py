@@ -19,6 +19,7 @@ from player import player_bp
 # from disputes import disputes_bp
 from roster import roster_bp
 from schools import schools_bp
+from retrieve import retrieve_bp
 
 app.register_blueprint(login_bp)
 app.register_blueprint(account_bp)
@@ -28,6 +29,7 @@ app.register_blueprint(player_bp)
 # app.register_blueprint(disputes_bp)
 app.register_blueprint(roster_bp)
 app.register_blueprint(schools_bp)
+app.register_blueprint(retrieve_bp)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080, debug=True)

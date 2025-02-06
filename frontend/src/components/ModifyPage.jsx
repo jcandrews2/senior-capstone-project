@@ -8,7 +8,7 @@ const ModifyPage = () => {
 
   // Accept OCR data passed from UploadPage or set default empty structure
   const initialData = location.state?.ocrData || {
-    image_url: "", // 🔹 Backend URL of the uploaded image
+    image_url: "",
     game: "",
     week: "",
     school: "",
@@ -17,6 +17,10 @@ const ModifyPage = () => {
     code: "",
     squad_placed: "",
     players: [],
+    game_number: "",
+    did_win: "1",
+    w_points: "",
+    l_points: "",
   };
 
   const file = location.state?.file || null; // 🔹 File object passed from UploadPage
@@ -49,12 +53,39 @@ const ModifyPage = () => {
   };
 
   // 🔹 Submit the modified data to the backend
-  const handleSubmit = async () => {
+  const handleGame = async () => {
     setLoading(true);
     setError("");
 
     try {
       const response = await fetch(API_ENDPOINTS.uploadMatch, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Data submitted successfully!");
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to submit data.");
+      }
+    } catch (err) {
+      console.error("Error submitting data:", err);
+      setError("An error occurred while submitting the data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔹 Submit the modified data to the backend
+  const handleWeekAndSeason = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(API_ENDPOINTS.updateWeekAndSeason, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -134,9 +165,19 @@ const ModifyPage = () => {
             value={formData.week}
             onChange={(e) => handleDropdownChange(e, "week")}
           >
-            <option value="week-1">Week 1</option>
-            <option value="week-2">Week 2</option>
-            <option value="week-3">Week 3</option>
+            <option value="1">Week 1</option>
+            <option value="2">Week 2</option>
+            <option value="3">Week 3</option>
+          </select>
+
+          <select
+            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+            value={formData.game_number}
+            onChange={(e) => handleDropdownChange(e, "game_number")}
+          >
+            <option value="1">Game 1</option>
+            <option value="2">Game 2</option>
+            <option value="3">Game 3</option>
           </select>
 
           {formData.game === "valorant" && (
@@ -178,6 +219,19 @@ const ModifyPage = () => {
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             readOnly
           />
+
+          <input
+            type="text"
+            value={formData.w_points}
+            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+            readOnly
+          />
+          <input
+            type="text"
+            value={formData.l_points}
+            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+            readOnly
+          />
         </div>
       </div>
 
@@ -213,7 +267,7 @@ const ModifyPage = () => {
       {/* 🔹 Submit Button */}
       <button
         className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
-        onClick={handleSubmit}
+        onClick={handleGame()}
       >
         {loading ? "Submitting..." : "Submit"}
       </button>
