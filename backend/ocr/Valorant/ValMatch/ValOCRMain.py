@@ -310,7 +310,7 @@ def main():
             current_p = ocr_p.strip()
         if ocr_d.strip():
             current_d = ocr_d.strip()
-        players[ocr_name.split(' ')[0]] = current_agent, current_acs, current_kda, current_econ, current_fb, current_p, current_d
+        players[ocr_name.split(' ')[0]] = current_agent, current_acs, current_kda, current_econ, current_fb, current_p, current_d, team
 
 
         #Draw rectangles and text on the result image
@@ -343,7 +343,7 @@ def main():
         "players": [
             {
                 "name": name,
-                "school" : team,
+                "school" : stats[6],
                 "agent": agent,
                 "acs": stats[0] if len(stats) > 0 else "0",
                 "kda": stats[1] if len(stats) > 1 else "0/0/0",
