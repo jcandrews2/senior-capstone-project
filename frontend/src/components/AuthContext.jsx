@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setLoggedIn(false);
+        setLoggedIn(true);
         setUsername(data[0]["username"]);
         setSchool(data[0]["school"]);
         if (data[0]["isAdmin"]) {
