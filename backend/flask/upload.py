@@ -160,7 +160,7 @@ def upload_match():
                 cursor.execute(
                         picture_queries[game],
                         (
-                            game_id, data.get("game_number"), data.get("week"), data["school"],
+                            game_id, data.get("game_number",1), data.get("week"), data["school"],
                             data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
                         )
                     )
