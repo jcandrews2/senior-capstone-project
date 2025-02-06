@@ -29,7 +29,7 @@ const UploadPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!file || !game || !week || !school || !opponent_school) {
+    if (!file || !game || !week || !school || !opponent_school || !game_number) {
       alert("Please fill all the fields and upload a file.");
       return;
     }

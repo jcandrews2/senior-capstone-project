@@ -97,7 +97,6 @@ def upload_match():
 
     data = request.json  # JSON data from frontend
     game = data.get("game")
-    print(data.get("did_win"))
     
     if request.method == "POST":
         try:
