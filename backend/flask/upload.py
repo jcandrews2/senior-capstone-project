@@ -186,6 +186,7 @@ def upload_match():
                     school = data["opponent_school"] 
                     o_school = data["school"]
                     did_win = 0
+                    
                 if game == "rocket-league":
                     cursor.execute(
                         game_queries[game],
@@ -204,7 +205,7 @@ def upload_match():
                             player["acs"], player["kills"], player["deaths"],
                             player["assists"], player["econ"], player["fb"],
                             player["plants"], player["defuses"], player["agent"], data["map"],
-                            did_win, data.get("game_number", "1"), data.get("week", "1")
+                            did_win, data["game_number"], data.get("week", "1")
                         )   
                     )
                 elif game == "apex-legends":
