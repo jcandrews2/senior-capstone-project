@@ -5,10 +5,9 @@ import os
 import subprocess
 from urllib.parse import unquote
 import uuid
-import JSON
+import json
 
 
-upload_bp = Blueprint('upload', __name__)
 
 upload_bp = Blueprint('upload', __name__)
 
