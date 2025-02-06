@@ -8,7 +8,7 @@ CORS(app)
 # db config
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'afkuser'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'afk'
 app.config['MYSQL_DB'] = 'SCAC_STATS'
 
 from login import login_bp
