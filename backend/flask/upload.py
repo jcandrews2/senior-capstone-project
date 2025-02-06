@@ -174,10 +174,12 @@ def upload_match():
             
             school = ""
             o_school =""
+            did_win = 0
             for player in data["players"]:
                 if player["school"] == "W":
                     school = data["school"]
                     o_school = data["opponent_school"]
+                    did_win = 1
                 else:
                     school = data["opponent_school"] 
                     o_school = data["school"]
@@ -200,7 +202,7 @@ def upload_match():
                             player["acs"], player["kills"], player["deaths"],
                             player["assists"], player["econ"], player["fb"],
                             player["plants"], player["defuses"], player["agent"], data["map"],
-                            data.get("did_win", "1"), data.get("game_number", "1"), data.get("week", "1")
+                            did_win, data.get("game_number", "1"), data.get("week", "1")
                         )   
                     )
                 elif game == "apex-legends":
@@ -247,6 +249,7 @@ def upload_match():
                             SELECT sum(did_win)
                             FROM val_game
                             WHERE val_game.week_number = {data["week"]} and val_game.school = '{o_school}'
+                            GROUP by map
                             )
                             WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
                             """)
