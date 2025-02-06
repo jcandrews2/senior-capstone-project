@@ -77,7 +77,7 @@ def upload_file():
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
-            "game_numer": game_number
+            "game_number": game_number
         }
 
         return jsonify(formatted_data), 200
