@@ -58,6 +58,7 @@ def upload_file():
     opponent_school = request.form.get('opponent_school')
     week = request.form.get('week')
     game = request.form.get('game')
+    game_number = request.form.get('game_number')
 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
@@ -109,7 +110,7 @@ def upload_file():
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
-
+            "game_number": game_number
         }
         if 'file' not in request.files:
             return jsonify({"error": "No file part"}), 400
@@ -183,7 +184,7 @@ def upload_match():
 
     data = request.json  # JSON data from frontend
     game = data.get("game")
-    print(data)
+    print(data.get("did_win"))
     
     if request.method == "POST":
         try:
@@ -223,20 +224,58 @@ def upload_match():
                 "valorant": """
                     INSERT INTO val_picture (game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-                """,
-                "apex-legends": """
-                    INSERT INTO apex_picture (game_id, game_number, week_number, school, picture, verified)
-                    VALUES (%s, %s, %s, %s, %s, %s);
-                """,
-            }
+
 
             # Insert player data into **game tables**
+
+                    """,
+                    "apex-legends": """
+                    INSERT INTO apex_picture (
+                        game_id, game_number, week_number, picture)
+                    VALUES (%s, %s, %s, %s);
+                    """, 
+            }
+            
+            if game == "rocket-league":
+                    cursor.execute(
+                        picture_queries[game],
+                    (
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                    )
+                )
+            elif game == "valorant":
+                cursor.execute(
+                        picture_queries[game],
+                        (
+                            game_id, data.get("game_number"), data.get("week"), data["school"],
+                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                        )
+                    )
+            elif game == "apex-legends":
+                cursor.execute(
+                        picture_queries[game],
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["image_url"]
+                    )
+            # Insert player data
+            print(data.get("game_number"))
+            
+            school = ""
+            o_school =""
             for player in data["players"]:
+                if player["school"] == "W":
+                    school = data["school"]
+                    o_school = data["opponent_school"]
+                else:
+                    school = data["opponent_school"] 
+                    o_school = data["school"]
+                    
                 if game == "rocket-league":
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, data["school"], player["playerName"],
+                            game_id, school, player["name"],
                             player["score"], player["goals"], player["assists"],
                             player["saves"], player["shots"], 
                             data.get("did_win"), data.get("game_number"), data.get("week")
@@ -246,103 +285,71 @@ def upload_match():
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, data["school"], player["name"],
+                            game_id, school, player["name"],
                             player["acs"], player["kills"], player["deaths"],
                             player["assists"], player["econ"], player["fb"],
                             player["plants"], player["defuses"], player["agent"], data["map"],
-                            data.get("did_win"), data.get("game_number"), data.get("week")
+                            data.get("did_win", "1"), data.get("game_number", "1"), data.get("week", "1")
                         )   
                     )
                 elif game == "apex-legends":
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, data["school"], player["name"],
+                            game_id, school, player["name"],
                             player["kills"], player["assists"], player["knocks"],
                             player["damage"], player["score"], player["placement"],
                             data.get("game_number"), data.get("week")
                         )   
                     )
             
-            # Insert data into the **picture tables**
-            if game == "rocket-league":
-                cursor.execute(
-                    picture_queries[game],
-                    (
-                        game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                    )
-                )
-            elif game == "valorant":
-                cursor.execute(
-                    picture_queries[game],
-                    (
-                        game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                    )
-                )
-            elif game == "apex-legends":
-                cursor.execute(
-                    picture_queries[game],
-                    (
-                        game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["image_url"], True  # Verified = True by default
-                    )
-                )
+  
 
-            conn.commit()
+                #Query to see if it exists. Will return a zero or one
+                cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
+                
+                #returns if it is zero or one in a tuple format. only need the first item
+                is_exists = cursor.fetchone()
+                #if zero insert
+                if is_exists[0] == 0 and game == "valorant":
+                    cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
+                                week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg, team_score)
+                        SELECT week_number, school, player_name, AVG(combat_score), AVG(kills),
+                        AVG(deaths), AVG(assists), AVG(econ), AVG(fb), AVG(plants), AVG(defuses), sum(did_win)
+                        FROM val_game
+                        WHERE player_name='{player["name"]}' and week_number={data["week"]}
+                        GROUP BY week_number, school, player_name;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
+                        WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.opponent = '{o_school}'
+                        WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
+                        """)
+                    
+                for player in data["players"]:
+                    if game == "valorant":
+                        cursor.execute(f"""UPDATE val_week
+                            SET val_week.opponent_score = (
+                            SELECT sum(did_win)
+                            FROM val_game
+                            WHERE val_game.week_number = {data["week"]} and val_game.school = '{o_school}'
+                            )
+                            WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
+                            """)
+                #if one update
+                
+                #runs picture query for the appropriate game
+           
+            
+            conn.commit()  # 🔹 Save changes
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
         
         except Exception as e:
             conn.rollback()
             print(f"Error uploading match data: {e}")
-            return jsonify({"error": str(e)}), 500
-        
-        finally:
-            cursor.close()
-            conn.close()
-
-    elif request.method == "PUT":
-        try:
-            update_week_query = f"""
-                INSERT INTO {game}_week (week_number, school, player_name, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg, team_score)
-                SELECT week_number, school, player_name, AVG(score), AVG(goals), AVG(assists), AVG(saves), AVG(shots), SUM(did_win)
-                FROM {game}_game
-                WHERE player_name='{data["playerName"]}' AND week_number={data["week"]}
-                GROUP BY player_name
-                ON DUPLICATE KEY UPDATE
-                    week_score_avg = VALUES(week_score_avg),
-                    week_goals_avg = VALUES(week_goals_avg),
-                    week_assists_avg = VALUES(week_assists_avg),
-                    week_saves_avg = VALUES(week_saves_avg),
-                    week_shots_avg = VALUES(week_shots_avg),
-                    team_score = VALUES(team_score);
-            """
-
-            update_season_query = f"""
-                INSERT INTO {game}_season (school, player_name, season_score_avg, season_goals_avg, season_assists_avg, season_saves_avg, season_shots_avg, season_wins_total)
-                SELECT school, player_name, AVG(week_score_avg), AVG(week_goals_avg), AVG(week_assists_avg), AVG(week_saves_avg), AVG(week_shots_avg), SUM(did_win)
-                FROM {game}_week
-                WHERE player_name='{data["playerName"]}'
-                GROUP BY player_name
-                ON DUPLICATE KEY UPDATE
-                    season_score_avg = VALUES(season_score_avg),
-                    season_goals_avg = VALUES(season_goals_avg),
-                    season_assists_avg = VALUES(season_assists_avg),
-                    season_saves_avg = VALUES(season_saves_avg),
-                    season_shots_avg = VALUES(season_shots_avg),
-                    season_wins_total = VALUES(season_wins_total);
-            """
-            
-            cursor.execute(update_season_query)
-            cursor.execute(update_week_query)
-            conn.commit()
-            
-            return jsonify({"message": "Weekly and season tables updated successfully"}), 200
-        
-        except Exception as e:
-            conn.rollback()
-            print(f"Error updating stats: {e}")
             return jsonify({"error": str(e)}), 500
         
         finally:

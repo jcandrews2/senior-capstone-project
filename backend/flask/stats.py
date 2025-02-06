@@ -42,6 +42,7 @@ def get_game_stats(videogame):
                 FROM val_picture
                 WHERE week_number = %s AND w_school = %s
                 GROUP BY game_id
+
                 ORDER BY game_number;
             """,
             "player_query": """
