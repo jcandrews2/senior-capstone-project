@@ -162,18 +162,16 @@ def upload_match():
             # Insert player data
             print(data.get("game_number"))
             
-            school_index = 0
             school = ""
             o_school =""
             for player in data["players"]:
-                if school_index % 2 == 0:
+                if player["school"] == "W":
                     school = data["school"]
                     o_school = data["opponent_school"]
                 else:
                     school = data["opponent_school"] 
                     o_school = data["school"]
-                school_index = school_index + 1
-                print(school_index)
+                    
                 if game == "rocket-league":
                     cursor.execute(
                         game_queries[game],
