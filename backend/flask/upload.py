@@ -25,6 +25,7 @@ def upload_file():
     opponent_school = request.form.get('opponent_school')
     week = request.form.get('week')
     game = request.form.get('game')
+    game_number = request.form.get('game_number')
 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
@@ -76,6 +77,7 @@ def upload_file():
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
+            "game_numer": game_number
         }
 
         return jsonify(formatted_data), 200
@@ -172,7 +174,7 @@ def upload_match():
                     )
                 
             # Insert player data
-            print(data.get("game_number"))
+            print(data)
             
             school = ""
             o_school =""
