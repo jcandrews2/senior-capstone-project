@@ -246,7 +246,7 @@ def upload_match():
                     if game == "valorant":
                         cursor.execute(f"""UPDATE val_week
                             SET val_week.opponent_score = (
-                            SELECT sum(did_win)
+                            SELECT sum(did_win)/5
                             FROM val_game
                             WHERE val_game.week_number = {data["week"]} and val_game.school = '{o_school}'
                             GROUP by map
