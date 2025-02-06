@@ -12,32 +12,25 @@ def load_and_preprocess_image(img_path):
     img_rgb = cv.imread(img_path)
     img_rgb = cv.resize(img_rgb, (1920, 1080))
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    #clahe = cv.createCLAHE(clipLimit=2.0, tileGridSize=(3, 3))
-    #img_gray = clahe.apply(img_gray)
     return img_rgb, img_gray
 
 
 def classify_scoreboard(image, roi_x, roi_y, roi_w, roi_h, threshold=10):
     """Classify the scoreboard based on the darkness of the post-game chat"""
-
     roi = image[roi_y:roi_y + roi_h, roi_x:roi_x + roi_w]
-    #cv.imshow("Timer?", roi)
-    #cv.waitKey(0)
-
     average_intensity = np.mean(roi)
-    print(average_intensity)
+    #print(average_intensity)
 
     if average_intensity > threshold:
-        print("Replay")
+        #print("Replay")
         return "Replay"
     else:
-        print("Post")
+        #print("Post")
         return "Post"
 
 def extract_roi(img_gray, x, y, w, h):
     """Extract the region of interest (ROI) from the image."""
     roi_gray = img_gray[y:y+h, x:x+w]
-    #roi_gray_name = cv.Canny(roi_gray, 50, 150)
     return roi_gray, roi_gray
 
 def open_strip(strip):
@@ -178,8 +171,8 @@ def main():
         strip_h = 35
         strip = roi_gray[strip_y:strip_y + strip_h, strip_x:strip_x + strip_w]
         strip_n = roi_gray_n[strip_y:strip_y + 30, strip_x:strip_x + strip_w]
-        cv.imshow('', strip)
-        cv.waitKey(0)
+        #cv.imshow('', strip)
+        #cv.waitKey(0)
 
         strip_name, strip_score, strip_goals, strip_assists, strip_saves, strip_shots = process_strip(strip, strip_n, strip_y, strip_h, strip_x, strip_w, scoreboard_type)
 
