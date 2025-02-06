@@ -22,6 +22,8 @@ const API_ENDPOINTS = {
     `${API_BASE_URL}/roster/${videogame}?school=${encodeURIComponent(school)}`,
   handleDeleteRoster: (videogame) => `${API_BASE_URL}/roster/${videogame}`,
   handleGetSchools: () => `${API_BASE_URL}/schools`,
+  handleGetPicture: (videogame, game_id) =>
+    `${API_BASE_URL}/get_upload/${videogame}?game_id=${encodeURIComponent(game_id)}`,
 };
 
 export { API_BASE_URL, API_ENDPOINTS };

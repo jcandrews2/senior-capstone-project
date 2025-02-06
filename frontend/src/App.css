@@ -9,3 +9,15 @@
 h1, h2, h3, h4, h5, h6 { 
     color: white;
 }
+
+.rl { 
+    background-image: url("./images/Rocket_League.jpeg");
+}
+
+.val { 
+    background-image: url("./images/Rocket_League.jpeg");
+}
+
+.apex { 
+    background-image: url("./images/Valorant.jpeg");
+}

@@ -1,16 +1,51 @@
-import re
 from flask import Blueprint, jsonify, request
 import pymysql
 from db import get_db_connection
 import os
 import subprocess
-import json
+from urllib.parse import unquote
 import uuid
+
 
 upload_bp = Blueprint('upload', __name__)
 
+@upload_bp.route('/get_upload/<videogame>', methods=['GET'])
+def get_upload(videogame): 
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # get the game_id
+        data = request.args.get('game_id')
+        game_id = unquote(data)
+
+        get_picture_queries = { 
+            "rl": "SELECT picture FROM rl_picture WHERE game_id = %s",
+            "val": "SELECT picture FROM val_picture WHERE game_id = %s",
+            "apex": "SELECT picture FROM apex_picture WHERE game_id = %s"
+        }
+
+        try: 
+            # cursor.execute(get_picture_queries[videogame], (game_id,))
+            # cursor.fetchone()
+
+            return jsonify(""), 200
+
+        except Exception as e: 
+            print(e)
+            return jsonify({"error": str(e)}), 500
+    
+        finally: 
+            cursor.close()
+            conn.close()
+
+
 @upload_bp.route('/upload_file', methods=['POST'])
 def upload_file():
+
+        ocr_scripts = {
+            'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
+            'apex-legends': "../ocr/Apex/ApexFuncs.py",
+
     ocr_scripts = {
         'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
         'apex-legends': "../ocr/Apex/ApexFuncs.py",
@@ -74,17 +109,72 @@ def upload_file():
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
+
         }
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part"}), 400
 
-        return jsonify(formatted_data), 200
+        file = request.files['file']
+        school = request.form.get('school')
+        opponent_school = request.form.get('opponent_school')
+        week = request.form.get('week')
+        game = request.form.get('game')
 
-    except FileNotFoundError:
-        return jsonify({"error": "OCR output file not found"}), 500
-    except json.JSONDecodeError:
-        return jsonify({"error": "Failed to decode OCR output"}), 500
-    except subprocess.CalledProcessError as e:
-        print(f"OCR script error: {e.stderr}")
-        return jsonify({"error": "OCR processing failed"}), 500
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+
+        # Save the uploaded file
+        UPLOAD_FOLDER = 'uploads/'
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(file_path)
+
+        # Generate a public URL for the image
+        file_url = f"{request.host_url}uploads/{file.filename}"
+
+        try:
+            if game not in ocr_scripts:
+                return jsonify({"error": f"OCR not supported for game: {game}"}), 400
+
+            # Define the OCR script path
+            ocr_script = os.path.join(os.path.dirname(__file__), ocr_scripts[game])
+
+            # Run the OCR script and capture JSON output
+            process = subprocess.run(
+                ["python", ocr_script, "-f", file_path],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+
+            # Extract JSON output from stdout
+            ocr_output = process.stdout.strip()
+            ocr_data = json.loads(ocr_output)
+            
+            
+            # Format the output to include all required attributes
+            formatted_data = {
+                "image_url": file_url,
+                "game": game,  # Assuming the game is Valorant for this OCR
+                "week": week,  # Week will need to be added manually in the ModifyPage
+                "school": school,  # School will need to be added manually in the ModifyPage
+                "opponent_school": opponent_school,  # Opponent will need to be added manually in the ModifyPage
+                "map": ocr_data.get("map", ""),
+                "code": ocr_data.get("code", ""),
+                "squad_placed": ocr_data.get("squad_placed", ""),
+                "players": ocr_data.get("players", []),
+            }
+
+            return jsonify(formatted_data), 200
+
+        except FileNotFoundError:
+            return jsonify({"error": "OCR output file not found"}), 500
+        except json.JSONDecodeError:
+            return jsonify({"error": "Failed to decode OCR output"}), 500
+        except subprocess.CalledProcessError as e:
+            print(f"OCR script error: {e.stderr}")
+            return jsonify({"error": "OCR processing failed"}), 500
 
 @upload_bp.route('/upload_match', methods=['POST', 'PUT'])
 def upload_match():
