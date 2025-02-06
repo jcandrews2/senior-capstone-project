@@ -38,6 +38,7 @@ const UploadPage = () => {
     formData.append("file", file);
     formData.append("game", game);
     formData.append("week", week);
+    formData.append("game_number", game_number);
     formData.append("school", school);
     formData.append("opponent_school", opponent_school);
 
