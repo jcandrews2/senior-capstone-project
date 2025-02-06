@@ -42,13 +42,11 @@ def get_upload(videogame):
 @upload_bp.route('/upload_file', methods=['POST'])
 def upload_file():
 
-        ocr_scripts = {
-            'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
-            'apex-legends': "../ocr/Apex/ApexFuncs.py",
-
     ocr_scripts = {
         'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
         'apex-legends': "../ocr/Apex/ApexFuncs.py",
+
+   
     }
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
