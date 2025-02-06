@@ -226,7 +226,7 @@ def main():
         strip_h = h - 30
         strip = img_rgb[strip_y:strip_y + strip_h, strip_x:strip_x + strip_w]
         team = team_read(strip)
-        print(team)
+        #print(team)
 
         #cv.imshow(f'OCR ROI {agent}', strip)
         #cv.waitKey(0)
