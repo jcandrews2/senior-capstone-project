@@ -132,12 +132,33 @@ def upload_match():
                     INSERT INTO apex_picture (
                         game_id, game_number, week_number, picture)
                     VALUES (%s, %s, %s, %s);
-                    """,
-                
+                    """, 
             }
-
+            
+            if game == "rocket-league":
+                    cursor.execute(
+                        picture_queries[game],
+                    (
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                    )
+                )
+            elif game == "valorant":
+                cursor.execute(
+                        picture_queries[game],
+                        (
+                            game_id, data.get("game_number"), data.get("week"), data["school"],
+                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                        )
+                    )
+            elif game == "apex-legends":
+                cursor.execute(
+                        picture_queries[game],
+                        game_id, data.get("game_number"), data.get("week"), data["school"],
+                        data["image_url"]
+                    )
             # Insert player data
-            print (data["opponent_school"])
+            print (data.get("game_number"))
             
             school_index = 0
             school = ""
@@ -225,28 +246,7 @@ def upload_match():
                 #if one update
                 
                 #runs picture query for the appropriate game
-            if game == "rocket-league":
-                    cursor.execute(
-                        picture_queries[game],
-                    (
-                        game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                    )
-                )
-            elif game == "valorant":
-                cursor.execute(
-                        picture_queries[game],
-                        (
-                            game_id, data.get("game_number"), data.get("week"), data["school"],
-                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                        )
-                    )
-            elif game == "apex-legends":
-                cursor.execute(
-                        picture_queries[game],
-                        game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["image_url"]
-                    )
+           
             
             conn.commit()  # 🔹 Save changes
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
