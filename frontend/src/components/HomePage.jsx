@@ -76,11 +76,7 @@ const HomePage = () => {
     >
       <div
         className={`${
-          videogame === "val"
-            ? "bg-[url(./media/Valorant.jpeg)]"
-            : videogame === "rl"
-              ? "bg-[url(./media/Rocket_League.jpeg)]"
-              : "bg-[url(./media/Apex_Legends.jpeg)]"
+          videogame
         } absolute left-0 top-0 z-0 h-full w-full bg-cover bg-center opacity-40`}
       ></div>
 
