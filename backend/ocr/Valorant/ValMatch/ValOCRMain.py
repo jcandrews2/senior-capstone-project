@@ -17,7 +17,7 @@ import sys
 #4. Winning Team is responisble for uploading screenshots
 #5. If abnormal data is detected (e.g. 0 ACS, 0/0/0 KDA, 0 Econ Rating), uploader will be required to verify the data
 
-def team_read(image, threshold=65):
+def team_read(image):
     image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
     #Calculate average intensity of the red and green channels
