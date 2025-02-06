@@ -71,7 +71,7 @@ def upload_file():
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
-            game_number: game_number
+            "game_number": game_number
         }
 
         return jsonify(formatted_data), 200
@@ -192,7 +192,7 @@ def upload_match():
                             player["acs"], player["kills"], player["deaths"],
                             player["assists"], player["econ"], player["fb"],
                             player["plants"], player["defuses"], player["agent"], data["map"],
-                            data.get("did_win"), data.get("game_number"), data.get("week")
+                            data.get("did_win", "1"), data.get("game_number", "1"), data.get("week", "1")
                         )   
                     )
                 elif game == "apex-legends":
