@@ -55,15 +55,13 @@ const ModifyPage = () => {
   // 🔹 Submit the modified data to the backend
   const handleGame = async () => {
     setLoading(true);
-    setError("");
-
     try {
       const response = await fetch(API_ENDPOINTS.uploadMatch, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
         alert("Data submitted successfully!");
         navigate("/");
@@ -77,34 +75,8 @@ const ModifyPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  // 🔹 Submit the modified data to the backend
-  const handleWeekAndSeason = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch(API_ENDPOINTS.updateWeekAndSeason, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert("Data submitted successfully!");
-        navigate("/");
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || "Failed to submit data.");
-      }
-    } catch (err) {
-      console.error("Error submitting data:", err);
-      setError("An error occurred while submitting the data.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading)
     return (
@@ -267,7 +239,7 @@ const ModifyPage = () => {
       {/* 🔹 Submit Button */}
       <button
         className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
-        onClick={handleGame()}
+        onClick={handleGame}
       >
         {loading ? "Submitting..." : "Submit"}
       </button>

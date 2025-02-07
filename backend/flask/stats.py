@@ -46,6 +46,7 @@ def get_match_stats(videogame):
                 WHERE week_number = %s AND w_school = %s
                 GROUP BY game_id
                 ORDER BY game_number
+
             """,
             "player_query": """
                 SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb, plants, defuses

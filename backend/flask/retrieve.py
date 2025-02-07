@@ -57,6 +57,7 @@ def get_match_images():
                 "school": row[3],
                 "image_url": row[4],
             }
+
             for row in results
         ]
 

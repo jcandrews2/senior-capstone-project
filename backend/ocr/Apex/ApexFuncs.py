@@ -30,8 +30,10 @@ def apex_OCR(img_file):
            "players" : []
            }
 
-    log = [['.', '.' ,'.'], ['.' ,'.','.'], ['.', '.' ,'.']]
-
+    # log = [['.', '.' ,'.'], ['.' ,'.','.'], ['.', '.' ,'.']]
+    log = []
+    for k in KAKs:
+        log.append(['.' for i in range(len(k))])
 
     for index, val in enumerate(KAKs):
         val = val.replace('_', '/')
@@ -46,7 +48,7 @@ def apex_OCR(img_file):
 
     for i in range(3):
         # out["players"].append({"kak" : KAKs[i], "damage": DDs[i]})
-        out['players'].append({'player_name':'_',
+        out['players'].append({'name':'_',
                                 'kills':log[i][0],
                                 'assists':log[i][1],
                                 'knocks':log[i][2],
