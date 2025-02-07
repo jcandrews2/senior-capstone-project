@@ -29,7 +29,7 @@ const UploadPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!file || !game || !week || !school || !opponent_school) {
+    if (!file || !game || !week || !school || !opponent_school || !game_number) {
       alert("Please fill all the fields and upload a file.");
       return;
     }
@@ -38,6 +38,7 @@ const UploadPage = () => {
     formData.append("file", file);
     formData.append("game", game);
     formData.append("week", week);
+    formData.append("game_number", game_number);
     formData.append("school", school);
     formData.append("opponent_school", opponent_school);
 

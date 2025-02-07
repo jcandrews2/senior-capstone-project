@@ -9,21 +9,20 @@ def login():
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
-    data = request.get_json()  # Parse the JSON body of the request
+    data = request.get_json() 
     username = data.get('username')
     password = data.get('password')
 
-    print(username, password)
     try: 
         cursor.execute( 
-            "SELECT * from Users WHERE username = %s", (username,)
+            "SELECT * from users WHERE username = %s", (username,)
         )
 
         user = cursor.fetchone()
 
         if user: 
             if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')): 
-                return jsonify({"username": user["username"], "isAdmin": bool(user["is_admin"])}, 200)
+                return jsonify({"username": user["username"], "school": user["school"], "isAdmin": bool(user["is_admin"])}, 200)
 
             else: 
                 return jsonify({"error": "Invalid credentials"}), 401

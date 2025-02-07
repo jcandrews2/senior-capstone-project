@@ -1,4 +1,5 @@
 import React from "react";
+import DisputeModal from "./DisputeModal";
 
 const MatchCard = (props) => {
   const { match, videogame } = props;
@@ -14,26 +15,42 @@ const MatchCard = (props) => {
         return (
           <div key={index} className="mb-8">
             {isApex ? (
-              <h3 className="p-4 text-2xl font-bold text-white">
-                {"Game " +
-                  gameStats.gameNumber +
-                  ": " +
-                  gameStats.points +
-                  " Points"}
-              </h3>
+              <div className="flex justify-between">
+                <h3 className="p-4 text-2xl font-bold text-white">
+                  {"Game " +
+                    gameStats.gameNumber +
+                    ": " +
+                    gameStats.points +
+                    " Points"}
+                </h3>
+                <DisputeModal
+                  gameStats={gameStats}
+                  teamStats={teamStats}
+                  opponentStats={opponentStats}
+                  isApex={isApex}
+                />
+              </div>
             ) : (
-              <h3 className="p-4 text-2xl font-bold text-white">
-                {"Game " +
-                  gameStats.gameNumber +
-                  ": " +
-                  gameStats.school +
-                  " " +
-                  gameStats.teamScore +
-                  " - " +
-                  gameStats.opponentScore +
-                  " " +
-                  gameStats.opponent}
-              </h3>
+              <div className="flex justify-between">
+                <h3 className="p-4 text-2xl font-bold text-white">
+                  {"Game " +
+                    gameStats.gameNumber +
+                    ": " +
+                    gameStats.school +
+                    " " +
+                    gameStats.teamScore +
+                    " - " +
+                    gameStats.opponentScore +
+                    " " +
+                    gameStats.opponent}
+                </h3>
+                <DisputeModal
+                  gameStats={gameStats}
+                  teamStats={teamStats}
+                  opponentStats={opponentStats}
+                  isApex={isApex}
+                />
+              </div>
             )}
 
             <div className="overflow-x-scroll">
@@ -41,9 +58,9 @@ const MatchCard = (props) => {
                 <thead>
                   <tr className="text-white">
                     {teamStats.length > 0 &&
-                      Object.keys(teamStats[0]).map((header, idx) => (
+                      Object.keys(teamStats[0]).map((header, index) => (
                         <th
-                          key={idx}
+                          key={index}
                           className="border-b border-custom-off-white bg-custom-gray p-4"
                         >
                           {header.toUpperCase()}
@@ -53,13 +70,13 @@ const MatchCard = (props) => {
                 </thead>
 
                 <tbody>
-                  {teamStats.map((player, idx) => (
-                    <tr key={`team-${idx}`}>
+                  {teamStats.map((player, index) => (
+                    <tr key={`team-${index}`}>
                       {Object.values(player).map((stat, i) => (
                         <td
-                          key={`team-${idx}-stat-${i}`}
+                          key={`team-${index}-stat-${i}`}
                           className={`${
-                            idx % 2 === 0
+                            index % 2 === 0
                               ? "bg-custom-light-gray"
                               : "bg-custom-gray"
                           } border-y border-custom-off-white p-4`}

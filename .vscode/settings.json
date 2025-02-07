@@ -1,4 +1,5 @@
 {
   "jira-plugin.workingProject": "",
-  "cSpell.words": ["checkpw"]
+  "cSpell.words": ["checkpw", "gamertags"],
+  "python.analysis.extraPaths": ["./backend/flask"]
 }
