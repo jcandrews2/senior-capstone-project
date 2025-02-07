@@ -35,9 +35,9 @@ def team_read(image):
 
 def main():
     #usr for vm, homebrew for mac, program files for Windows
-    pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # For VM
+    #pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # For VM
     #pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract' # For Mac
-    #pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' # For Windows
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' # For Windows
 
     parser = argparse.ArgumentParser(
                         prog='Valorant OCR',
@@ -61,7 +61,7 @@ def main():
     img_rgb = cv.resize(img_rgb, (1920, 1080))
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     #                               Agent, ACS, Kills, Deaths, Assists,  Econ,  FB,   P,  D
-    players = defaultdict(lambda: ('Agent', '0', '0', '0', '0', '0', '0', '0', '0'))
+    players = defaultdict(lambda: ('Agent', '0', '0', '0', '0', '0', '0', '0', '0', 'Team'))
     img_map = img_gray[115:145, 60:240]
     img_map = cv.adaptiveThreshold(
         img_map, 
@@ -279,7 +279,7 @@ def main():
         ocr_s1 = pytesseract.image_to_string(img_score1, config=config1).replace('\n', '')
         #print(f"OCR Stats for {ocr_name.split(' ')[0]} on {agent}: {ocr_acs.strip()}, {ocr_kills.strip()}, {ocr_deaths.strip()}, {ocr_assists.strip()}, {ocr_econ.strip()}, {ocr_fb.strip()}, {ocr_p.strip()}, {ocr_d.strip()}")
         #Update player stats, using 0 if not found
-        _, current_acs, current_kills, current_deaths, current_assists, current_econ, current_fb, current_p, current_d = players[ocr_name.split(' ')[0]]
+        _, current_acs, current_kills, current_deaths, current_assists, current_econ, current_fb, current_p, current_d, _ = players[ocr_name.split(' ')[0]]
         if ocr_acs.strip():
             current_acs = ocr_acs.strip()
 
