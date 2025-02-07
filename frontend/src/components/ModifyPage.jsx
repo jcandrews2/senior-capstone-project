@@ -61,7 +61,7 @@ const ModifyPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Data submitted successfully!");
         navigate("/");
@@ -75,8 +75,7 @@ const ModifyPage = () => {
     } finally {
       setLoading(false);
     }
-  }
-
+  };
 
   if (loading)
     return (
@@ -110,14 +109,14 @@ const ModifyPage = () => {
         <p className="text-white">No image available</p>
       )}
 
-      {/* 🔹 Display error messages if any */}
+      {/* Display error messages if any */}
       {error && (
         <div className="mb-6 w-3/4 rounded bg-red-100 p-4 text-red-700">
           {error}
         </div>
       )}
 
-      {/* 🔹 Editable Match Info */}
+      {/* Editable Match Info */}
       <div className="mb-8 w-3/4 rounded-md bg-custom-gray p-6 text-white shadow-lg">
         <h2 className="mb-4 text-2xl font-semibold">Game Details</h2>
 
@@ -158,7 +157,7 @@ const ModifyPage = () => {
               value={formData.map}
               placeholder="Map"
               className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-              readOnly
+              // readOnly
             />
           )}
 
@@ -168,13 +167,13 @@ const ModifyPage = () => {
                 type="text"
                 value={formData.code}
                 className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                readOnly
+                // readOnly
               />
               <input
                 type="text"
                 value={formData.squad_placed}
                 className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                readOnly
+                // readOnly
               />
             </>
           )}
@@ -183,31 +182,31 @@ const ModifyPage = () => {
             type="text"
             value={formData.school}
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            // readOnly
           />
           <input
             type="text"
             value={formData.opponent_school}
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            // readOnly
           />
 
           <input
             type="text"
             value={formData.w_points}
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            // readOnly
           />
           <input
             type="text"
             value={formData.l_points}
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            // readOnly
           />
         </div>
       </div>
 
-      {/* 🔹 Editable Player Data */}
+      {/* Editable Player Data */}
       <div className="w-3/4">
         <h2 className="mb-4 text-2xl font-semibold text-white">Player Stats</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -236,7 +235,7 @@ const ModifyPage = () => {
         </div>
       </div>
 
-      {/* 🔹 Submit Button */}
+      {/* Submit Button */}
       <button
         className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
         onClick={handleGame}
