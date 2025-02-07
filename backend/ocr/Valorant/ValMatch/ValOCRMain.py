@@ -17,7 +17,6 @@ import sys
 #4. Winning Team is responisble for uploading screenshots
 #5. If abnormal data is detected (e.g. 0 ACS, 0/0/0 KDA, 0 Econ Rating), uploader will be required to verify the data
 
-
 def team_read(image):
     image_rgb = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
@@ -33,7 +32,6 @@ def team_read(image):
     if red_ratio > green_ratio:
         return "L"
     return "W"
-
 
 def main():
     #usr for vm, homebrew for mac, program files for Windows
@@ -232,6 +230,7 @@ def main():
         strip = img_rgb[strip_y:strip_y + strip_h, strip_x:strip_x + strip_w]
         team = team_read(strip)
         #print(team)
+
         #cv.imshow(f'OCR ROI {agent}', strip)
         #cv.waitKey(0)
 
