@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from "../config";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [school, setSchool] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
