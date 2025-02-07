@@ -325,7 +325,7 @@ def upload_match():
                         """)
                     cursor.execute(f"""UPDATE val_season
                         SET val_season.team_losses =(
-                        SELECT COUNT(*) 
+                        SELECT COUNT(*)
                         FROM val_week
                         WHERE val_week.did_win = 0 and val_week.player_name = '{player["name"]}'
                         )
@@ -352,7 +352,7 @@ def upload_match():
                         SET val_season.team_losses =(
                         SELECT COUNT(*) 
                         FROM val_week
-                        WHERE val_week.did_win = 0 and val_week.player_name = 'p1'
+                        WHERE val_week.did_win = 0 and val_week.player_name = '{player["name"]}'
                         )
                         WHERE val_season.player_name = '{player["name"]}';
                         """)
