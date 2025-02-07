@@ -148,7 +148,7 @@ def get_match_stats(videogame):
                             "school": school,
                             "points": game_points,
                             "gameNumber": game["game_number"],
-                            "game_id": game['game_id']
+                            "gameID": game['game_id']
                         },
                         "teamStats": team_stats,
                     }
@@ -197,7 +197,7 @@ def get_match_stats(videogame):
                             "teamScore": game["w_points"],
                             "opponentScore": game["l_points"],
                             "gameNumber": game["game_number"],
-                            "game_id": game['game_id']
+                            "gameID": game['game_id']
                         },
                         "teamStats": team_stats,
                         "opponentStats": opponent_stats

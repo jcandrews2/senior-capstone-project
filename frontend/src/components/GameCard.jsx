@@ -5,6 +5,8 @@ const GameCard = (props) => {
   const { match, videogame, week } = props;
   const isApex = videogame === "apex";
 
+  console.log(videogame, week);
+
   return (
     <div className="w-full rounded-md p-8 font-lato text-custom-off-white">
       {match.games.map((game, index) => {
