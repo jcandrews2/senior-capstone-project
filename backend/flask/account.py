@@ -44,7 +44,7 @@ def accounts():
     elif request.method == 'POST':
 
         data = request.get_json()
-        school = data.get('shool')
+        school = data.get('shool') # I wonder who spelled this wrong
         username = data.get('username')
         password = bcrypt.hashpw(data.get('password').encode('utf-8'), bcrypt.gensalt()).decode('UTF-8')
 
