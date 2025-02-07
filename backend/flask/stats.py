@@ -5,13 +5,16 @@ from db import get_db_connection
 
 stats_bp = Blueprint('stats', __name__)
 
-@stats_bp.route('/stats/<videogame>', methods=['GET'])
-def get_game_stats(videogame):
+@stats_bp.route('/match_stats/<videogame>', methods=['GET'])
+def get_match_stats(videogame):
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     data = request.args.get('week')
     week = unquote(data)
+
+    if week == 'avg':
+        return jsonify({"message": "bad request"}), 400
 
     # Queries for getting matchup list
     matchup_queries = { 
@@ -33,7 +36,7 @@ def get_game_stats(videogame):
             "player_query": """
                 SELECT school, player_name AS `player`, score, goals, assists, saves, shots
                 FROM rl_game
-                WHERE game_id = %s;
+                WHERE game_id = %s
             """
         },
         "val": {
@@ -42,12 +45,12 @@ def get_game_stats(videogame):
                 FROM val_picture
                 WHERE week_number = %s AND w_school = %s
                 GROUP BY game_id
-                ORDER BY game_number;
+                ORDER BY game_number
             """,
             "player_query": """
                 SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb, plants, defuses
                 FROM val_game
-                WHERE game_id = %s;
+                WHERE game_id = %s
             """
         },
         "apex": {
@@ -56,14 +59,20 @@ def get_game_stats(videogame):
                 FROM apex_picture
                 WHERE week_number = %s AND school = %s
                 GROUP BY game_id
-                ORDER BY game_number;
+                ORDER BY game_number
             """,
             "player_query": """
                 SELECT school, player_name AS `player`, placement, kills, assists, knocks, damage
                 FROM apex_game
-                WHERE game_id = %s AND school = %s;
+                WHERE game_id = %s AND school = %s
             """
         }
+    }
+
+    week_queries = { 
+        "rl": "SELECT school, player_name AS `player`, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg FROM rl_week WHERE week_number = %s AND (school = %s OR school = %s)",
+        "val": "SELECT school, player_name AS `player`, week_cs_avg, week_kills_avg, week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg FROM val_week WHERE week_number = %s AND (school = %s OR school = %s)",
+        "apex": "SELECT school, player_name AS `player`,  week_kills_avg, week_assists_avg, week_knocks_avg, week_damage_avg, week_kills, week_assists, week_knocks, week_damage, week_score FROM apex_week WHERE week_number = %s AND school = %s"
     }
 
     try:
@@ -83,15 +92,17 @@ def get_game_stats(videogame):
                 # Get the school
                 school = matchup['school']
 
+                # Get weekly stats
+                cursor.execute(week_queries[videogame], (week, school))
+                week_stats = cursor.fetchall()
+
                 match_data = { 
                     "match" : { 
                         "school": school,
                         "points" : 0,
                         "games": []
                     },
-                    "average" : { 
-                        # will put weekly avg here
-                    }
+                    "week" : week_stats
                 }
                 
                 cursor.execute(game_queries[videogame]["game_query"], (week, school))
@@ -130,7 +141,7 @@ def get_game_stats(videogame):
                         team_stats.append(player)
 
                     match_points += game_points
-       
+    
                         
                     game_data = {
                         "gameStats": {
@@ -149,6 +160,10 @@ def get_game_stats(videogame):
                 # Get the matchup
                 school, opponent = matchup['school'], matchup['opponent']
 
+                # Get weekly stats
+                cursor.execute(week_queries[videogame], (week, school, opponent))
+                week_stats = cursor.fetchall()
+
                 # Format the match data
                 match_data = { 
                     "match" : { 
@@ -158,9 +173,7 @@ def get_game_stats(videogame):
                         "opponentScore": matchup["opponent_score"],
                         "games": []
                     },
-                   "average" : { 
-                        # will put weekly avg here
-                    }
+                "week" : week_stats
                 }
                 
                 # Get the match's games
@@ -196,6 +209,46 @@ def get_game_stats(videogame):
 
         return jsonify(response)
     
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+    
+    finally:
+        cursor.close()
+        conn.close()
+
+@stats_bp.route('/season_stats/<videogame>', methods=['GET'])
+def get_season_stats(videogame):
+    conn = get_db_connection()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    data = request.args.get('week')
+    week = unquote(data)
+
+    if week != 'avg': 
+        return jsonify({"message": "bad request"}), 400
+
+    try:
+        cursor.execute("SELECT DISTINCT school FROM users;")
+        schools = cursor.fetchall()
+
+        season_queries = { 
+            "rl":  "SELECT school, player_name AS `player`, season_score_avg, season_goals_avg, season_assists_avg, season_saves_avg, season_shots_avg FROM rl_season WHERE school = %s",
+            "val": "SELECT school, player_name AS `player`, season_cs_avg, season_kills_avg, season_deaths_avg, season_assists_avg, season_econ_avg, season_fb_avg, season_plants_avg, season_defuses_avg FROM val_season WHERE school = %s",
+            "apex": "SELECT school, player_name AS `player`, season_kills_avg, season_assists_avg, season_knocks_avg, season_damage_avg, total_kills, total_assists, total_damage, total_score FROM apex_season WHERE school = %s"
+        }
+        
+        response = []
+        for school in schools:
+                school_name = school.get("school")
+                if school_name != "None":
+                    cursor.execute(season_queries[videogame], (school_name,))
+                    results = cursor.fetchall()
+                    response.append({"school": school_name, "players": results})
+            
+        return jsonify(response), 200
+
+
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500

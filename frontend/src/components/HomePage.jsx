@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import MatchCard from "./MatchCard";
+import GameCard from "./GameCard";
+import SeasonCard from "./SeasonCard";
 import PlayerReport from "./PlayerReport";
 import { IoSearch } from "react-icons/io5";
 import { API_ENDPOINTS } from "../config";
@@ -9,6 +10,7 @@ const HomePage = () => {
   const [week, setWeek] = useState("1");
   const [matchReports, setMatchReports] = useState([]);
   const [playerReports, setPlayerReports] = useState([]);
+  const [seasonReports, setSeasonReports] = useState([]);
   const [activeMatch, setActiveMatch] = useState(null);
   const searchInput = useRef();
 
@@ -24,10 +26,10 @@ const HomePage = () => {
     setActiveMatch(activeMatch === index ? null : index);
   };
 
-  const handleGetPlayerReports = useCallback(async () => {
+  const handleGetPlayerStats = useCallback(async () => {
     try {
       const response = await fetch(
-        API_ENDPOINTS.handleGetPlayerReports(videogame, week),
+        API_ENDPOINTS.handleGetPlayerStats(videogame, week),
       );
 
       if (response.ok) {
@@ -42,10 +44,10 @@ const HomePage = () => {
     }
   }, [videogame]);
 
-  const handleGetMatchReports = useCallback(async () => {
+  const handleGetMatchStats = useCallback(async () => {
     try {
       const response = await fetch(
-        API_ENDPOINTS.getGameReports(videogame, week),
+        API_ENDPOINTS.handleGetMatchStats(videogame, week),
       );
 
       if (response.ok) {
@@ -60,9 +62,37 @@ const HomePage = () => {
     }
   }, [videogame, week]);
 
+  const handleGetSeasonStats = useCallback(async () => {
+    try {
+      const response = await fetch(
+        API_ENDPOINTS.handleGetSeasonStats(videogame, week),
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setSeasonReports(data);
+      } else {
+        setSeasonReports([]);
+        console.error("No stats found.");
+      }
+    } catch (error) {
+      console.error("Error fetching game stats:", error);
+    }
+  }, [videogame, week]);
+
   useEffect(() => {
-    handleGetMatchReports();
-  }, [videogame, week, handleGetMatchReports, handleGetPlayerReports]);
+    if (week !== "avg") {
+      handleGetMatchStats();
+    } else {
+      handleGetSeasonStats();
+    }
+  }, [
+    videogame,
+    week,
+    handleGetMatchStats,
+    handleGetPlayerStats,
+    handleGetSeasonStats,
+  ]);
 
   return (
     <div
@@ -104,7 +134,7 @@ const HomePage = () => {
               />
               <IoSearch
                 className="absolute right-4 top-5 h-auto w-12 cursor-pointer"
-                onClick={() => handleGetPlayerReports}
+                onClick={() => handleGetPlayerStats}
               />
             </div>
           </div>
@@ -124,7 +154,9 @@ const HomePage = () => {
 
         <div className="w-full">
           <div className="flex justify-between">
-            <h2 className="py-8 text-2xl font-semibold">Match Stats</h2>
+            <h2 className="py-8 text-2xl font-semibold">
+              {week !== "avg" ? "Match Stats" : "Season Stats"}
+            </h2>
             <select
               className="my-4 rounded-md border border-custom-off-white bg-custom-gray text-white"
               onChange={handleWeekChange}
@@ -136,56 +168,132 @@ const HomePage = () => {
               <option value="4">Week 4</option>
               <option value="5">Week 5</option>
               <option value="6">Week 6</option>
-              <option value="avg">Averages</option>
+              <option value="avg">Season</option>
             </select>
           </div>
+          {week !== "avg" ? (
+            <div className="z-30 w-full">
+              {matchReports.length > 0 ? (
+                matchReports.map((matchReport, index) => (
+                  <>
+                    <div className="py-8">
+                      <button
+                        className="h-20 w-full cursor-pointer rounded-md bg-custom-gray text-custom-off-white"
+                        onClick={() => toggleActiveMatch(index)}
+                      >
+                        {videogame === "apex" ? (
+                          <h2 className="p-4 text-center text-3xl font-bold text-white">
+                            {matchReport.match.school +
+                              " " +
+                              matchReport.match.points +
+                              " Points"}
+                          </h2>
+                        ) : (
+                          <h2 className="p-4 text-center text-3xl font-bold text-white">
+                            {matchReport.match.school +
+                              " " +
+                              matchReport.match.teamScore +
+                              " - " +
+                              matchReport.match.opponentScore +
+                              " " +
+                              matchReport.match.opponent}
+                          </h2>
+                        )}
+                      </button>
 
-          <div className="z-30 w-full">
-            {matchReports.length > 0 ? (
-              matchReports.map((matchReport, index) => (
+                      {activeMatch === index && (
+                        <div className="bg-custom-gray">
+                          <GameCard
+                            match={matchReport.match}
+                            videogame={videogame}
+                          />
+
+                          <div className="p-8">
+                            <h3 className="p-4 text-2xl font-bold text-white">
+                              Weekly Stats
+                            </h3>
+                            <div className="overflow-x-auto text-custom-off-white">
+                              <table className="w-full table-auto text-left">
+                                <thead>
+                                  <tr className="text-white">
+                                    {matchReport.week.length > 0 &&
+                                      Object.keys(matchReport.week[0]).map(
+                                        (header, index) => (
+                                          <th
+                                            key={index}
+                                            className="border-b border-custom-off-white bg-custom-gray p-4"
+                                          >
+                                            {header.toUpperCase()}
+                                          </th>
+                                        ),
+                                      )}
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  {matchReport.week.map((player, index) => (
+                                    <tr key={`team-${index}`}>
+                                      {Object.values(player).map(
+                                        (stat, idx) => (
+                                          <td
+                                            key={`team-${index}-stat-${idx}`}
+                                            className={`${
+                                              index % 2 === 0
+                                                ? "bg-custom-light-gray"
+                                                : "bg-custom-gray"
+                                            } border-y border-custom-off-white p-4`}
+                                          >
+                                            {stat}
+                                          </td>
+                                        ),
+                                      )}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ))
+              ) : (
+                <div className="w-full rounded-md bg-custom-gray">
+                  <h3 className="p-12 text-center text-xl font-bold">
+                    Nothing to see here...
+                  </h3>
+                </div>
+              )}
+            </div>
+          ) : seasonReports.length > 0 ? (
+            seasonReports.map((seasonReport, index) => (
+              <>
                 <div className="py-8">
                   <button
                     className="h-20 w-full cursor-pointer rounded-md bg-custom-gray text-custom-off-white"
                     onClick={() => toggleActiveMatch(index)}
                   >
-                    {videogame === "apex" ? (
-                      <h2 className="p-4 text-center text-3xl font-bold text-white">
-                        {matchReport.match.school +
-                          " " +
-                          matchReport.match.points +
-                          " Points"}
-                      </h2>
-                    ) : (
-                      <h2 className="p-4 text-center text-3xl font-bold text-white">
-                        {matchReport.match.school +
-                          " " +
-                          matchReport.match.teamScore +
-                          " - " +
-                          matchReport.match.opponentScore +
-                          " " +
-                          matchReport.match.opponent}
-                      </h2>
-                    )}
+                    <h2 className="p-4 text-center text-3xl font-bold text-white">
+                      {seasonReport.school}
+                    </h2>
                   </button>
 
                   {activeMatch === index && (
-                    <div>
-                      <MatchCard
-                        match={matchReport.match}
-                        videogame={videogame}
-                      />
+                    <div className="bg-custom-gray">
+                      <SeasonCard players={seasonReport.players} />
                     </div>
                   )}
                 </div>
-              ))
-            ) : (
-              <div className="w-full rounded-md bg-custom-gray">
-                <h3 className="p-12 text-center text-xl font-bold">
-                  Nothing to see here...
-                </h3>
-              </div>
-            )}
-          </div>
+              </>
+            ))
+          ) : (
+            <div className="w-full rounded-md bg-custom-gray">
+              <h3 className="p-12 text-center text-xl font-bold">
+                Nothing to see here...
+              </h3>
+            </div>
+          )}
         </div>
       </div>
     </div>

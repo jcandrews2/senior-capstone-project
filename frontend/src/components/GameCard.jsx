@@ -1,12 +1,12 @@
 import React from "react";
 import DisputeModal from "./DisputeModal";
 
-const MatchCard = (props) => {
+const GameCard = (props) => {
   const { match, videogame } = props;
   const isApex = videogame === "apex";
 
   return (
-    <div className="mb-16 w-full rounded-md bg-custom-gray p-8 font-lato text-custom-off-white">
+    <div className="w-full rounded-md p-8 font-lato text-custom-off-white">
       {match.games.map((game, index) => {
         const gameStats = game.gameStats;
         const teamStats = game.teamStats || [];
@@ -53,7 +53,7 @@ const MatchCard = (props) => {
               </div>
             )}
 
-            <div className="overflow-x-scroll">
+            <div className="overflow-x-auto">
               <table className="w-full table-auto text-left">
                 <thead>
                   <tr className="text-white">
@@ -72,9 +72,9 @@ const MatchCard = (props) => {
                 <tbody>
                   {teamStats.map((player, index) => (
                     <tr key={`team-${index}`}>
-                      {Object.values(player).map((stat, i) => (
+                      {Object.values(player).map((stat, idx) => (
                         <td
-                          key={`team-${index}-stat-${i}`}
+                          key={`team-${idx}-stat-${idx}`}
                           className={`${
                             index % 2 === 0
                               ? "bg-custom-light-gray"
@@ -88,13 +88,13 @@ const MatchCard = (props) => {
                   ))}
 
                   {!isApex &&
-                    opponentStats.map((player, idx) => (
-                      <tr key={`opponent-${idx}`}>
-                        {Object.values(player).map((stat, i) => (
+                    opponentStats.map((player, index) => (
+                      <tr key={`opponent-${index}`}>
+                        {Object.values(player).map((stat, idx) => (
                           <td
-                            key={`opponent-${idx}-stat-${i}`}
+                            key={`opponent-${idx}-stat-${idx}`}
                             className={`${
-                              idx % 2 === 0
+                              index % 2 === 0
                                 ? "bg-custom-gray"
                                 : "bg-custom-light-gray"
                             } border-y border-custom-off-white p-4`}
@@ -114,4 +114,4 @@ const MatchCard = (props) => {
   );
 };
 
-export default MatchCard;
+export default GameCard;
