@@ -3,6 +3,35 @@ from db import get_db_connection
 
 disputes_bp = Blueprint("disputes", __name__)
 
+# Submit a dispute
+@disputes_bp.route("/submit_dispute/<videogame>", methods=["POST"])
+def submit_dispute(videogame):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.get_json()
+    game_id = data.get('game_id')
+    username = data.get('username')
+    school = data.get('school')
+    comment = data.get('comment')
+    week_number = data.get('week_number')
+    game_number = data.get('game_number')
+
+    try:
+        cursor.execute("INSERT INTO disputes (game_id, username, school, comment, videogame, week_number, game_number) VALUES (%s, %s, %s, %s, %s, %s, %s)", (game_id, username, school, comment, videogame, week_number, game_number))
+        
+        return jsonify({"message": "Dispute submitted successfully"}), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
 # Fetch all disputes grouped by game
 @disputes_bp.route("/get_all_disputes", methods=["GET"])
 def get_all_disputes():
@@ -12,7 +41,7 @@ def get_all_disputes():
     try:
         query = """
         SELECT 
-            d.game_id, d.username, d.school, d.comment, d.game, d.week_number, d.game_number, 
+            d.game_id, d.username, d.school, d.comment, d.videogame, d.week_number, d.game_number, 
             g.map, g.code, g.school AS game_school, g.opponent
         FROM disputes d
         JOIN games g ON d.game_id = g.id

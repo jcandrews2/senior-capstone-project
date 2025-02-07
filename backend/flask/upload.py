@@ -10,6 +10,7 @@ import uuid
 
 
 
+
 upload_bp = Blueprint('upload', __name__)
 
 @upload_bp.route('/upload_file', methods=['POST'])
@@ -137,7 +138,7 @@ def upload_match():
                 "valorant": """
                     INSERT INTO val_picture (game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-                    """,
+                """,
                     "apex-legends": """
                     INSERT INTO apex_picture (
                         game_id, game_number, week_number, picture)
@@ -263,7 +264,9 @@ def upload_match():
                 #runs picture query for the appropriate game
            
             
+
             conn.commit()  # Save changes
+
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
         
         except Exception as e:
