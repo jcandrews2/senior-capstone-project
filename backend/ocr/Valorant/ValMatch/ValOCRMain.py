@@ -36,7 +36,7 @@ def team_read(image):
 def main():
     #usr for vm, homebrew for mac, program files for Windows
     pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # For VM
-    #pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract' # For Mac
+    # pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract' # For Mac
     #pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' # For Windows
 
     parser = argparse.ArgumentParser(
