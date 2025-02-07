@@ -206,6 +206,7 @@ const HomePage = () => {
                           <GameCard
                             match={matchReport.match}
                             videogame={videogame}
+                            week={week}
                           />
 
                           <div className="p-8">

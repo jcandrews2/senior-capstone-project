@@ -14,6 +14,8 @@ const API_ENDPOINTS = {
   updateWeekAndSeason: `${API_BASE_URL}/update_week_and_season`,
   getAllDisputes: `${API_BASE_URL}/get_all_disputes`,
   resolveDispute: (gameId) => `${API_BASE_URL}/resolve_dispute/${gameId}`,
+  handleSubmitDispute: (videogame) =>
+    `${API_BASE_URL}/submit_dispute/${videogame}`,
   handleLogin: () => `${API_BASE_URL}/login`,
   handleGetAccounts: () => `${API_BASE_URL}/accounts`,
   handleCreateAccount: () => `${API_BASE_URL}/accounts`,

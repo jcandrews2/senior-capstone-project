@@ -2,14 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { IoMdClose } from "react-icons/io";
 import { API_ENDPOINTS } from "../config";
+import { useAuth } from "./AuthContext";
 
 const DisputeModal = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [picture, setPicture] = useState("");
-
   const commentInput = useRef();
 
-  const { gameStats, teamStats, opponentStats, isApex } = props;
+  const { loggedIn, username, school } = useAuth();
+  const { gameStats, teamStats, opponentStats, videogame, week, isApex } =
+    props;
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -31,6 +33,33 @@ const DisputeModal = (props) => {
   // useEffect(() => {
   //   handleGetPicture();
   // }, []);
+
+  const handleSubmitDispute = async () => {
+    try {
+      const response = await fetch(
+        API_ENDPOINTS.handleSubmitDispute(videogame),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            game_id: gameStats.gameID,
+            username: username,
+            school: school,
+            comment: commentInput.current.value,
+            week_number: week,
+            game_number: gameStats.gameNumber,
+          }),
+        },
+      );
+      if (response.ok) {
+        alert("Dispute submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Error submitting dispute:", error);
+    }
+  };
 
   // remove background scrolling if it's open
   useEffect(() => {
@@ -151,24 +180,36 @@ const DisputeModal = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="p-4">
-                <h2 className="pt-8 text-2xl font-semibold">See an error? </h2>
-                <ul className="list-disc p-4 pl-5 text-custom-off-white">
-                  <li>Submit a stat dispute</li>
-                  <li>Mention the error in a comment</li>
-                  <li>An admin will review it and make changes as needed</li>
-                </ul>
 
-                <input
-                  type="text"
-                  placeholder="Comment"
-                  ref={commentInput}
-                  className="my-4 w-full rounded-md p-8"
-                />
-              </div>
-              <button className="m-2 bg-custom-gold px-8 py-2 font-bold text-black">
-                Submit
-              </button>
+              {loggedIn && (
+                <>
+                  <div className="p-4">
+                    <h2 className="pt-8 text-2xl font-semibold">
+                      See an error?
+                    </h2>
+                    <ul className="list-disc p-4 pl-5 text-custom-off-white">
+                      <li>Submit a stat dispute</li>
+                      <li>Mention the error in a comment</li>
+                      <li>
+                        An admin will review it and make changes as needed
+                      </li>
+                    </ul>
+
+                    <input
+                      type="text"
+                      placeholder="Comment"
+                      ref={commentInput}
+                      className="my-4 w-full rounded-md p-8"
+                    />
+                  </div>
+                  <button
+                    className="m-2 bg-custom-gold px-8 py-2 font-bold text-black"
+                    onClick={() => handleSubmitDispute()}
+                  >
+                    Submit
+                  </button>
+                </>
+              )}
             </div>
           </div>,
           document.body,

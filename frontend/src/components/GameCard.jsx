@@ -2,7 +2,7 @@ import React from "react";
 import DisputeModal from "./DisputeModal";
 
 const GameCard = (props) => {
-  const { match, videogame } = props;
+  const { match, videogame, week } = props;
   const isApex = videogame === "apex";
 
   return (
@@ -27,6 +27,8 @@ const GameCard = (props) => {
                   gameStats={gameStats}
                   teamStats={teamStats}
                   opponentStats={opponentStats}
+                  videogame={videogame}
+                  week={week}
                   isApex={isApex}
                 />
               </div>
@@ -48,6 +50,8 @@ const GameCard = (props) => {
                   gameStats={gameStats}
                   teamStats={teamStats}
                   opponentStats={opponentStats}
+                  videogame={videogame}
+                  week={week}
                   isApex={isApex}
                 />
               </div>
