@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import ManageAccounts from "./ManageAccounts";
@@ -54,6 +54,8 @@ const ProfilePage = () => {
           <input
             type="text"
             placeholder="Username"
+            minlength="5"
+            maxlength="20"
             ref={usernameInput}
             className="my-4 w-1/2 p-4"
           ></input>
@@ -61,6 +63,8 @@ const ProfilePage = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
+              minlength="5"
+              maxlength="40"
               ref={passwordInput}
               className="w-full p-4"
             ></input>
