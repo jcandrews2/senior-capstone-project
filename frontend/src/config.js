@@ -1,6 +1,6 @@
-// const API_BASE_URL = "http://40.85.147.30:8080";
+const API_BASE_URL = "http://40.85.147.30:8080";
 // For local testing uncomment this and comment the above line
-const API_BASE_URL = "http://127.0.0.1:8080";
+// const API_BASE_URL = "http://127.0.0.1:8080";
 
 const API_ENDPOINTS = {
   handleGetPlayerStats: (videogame, playerName) =>
