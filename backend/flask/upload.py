@@ -15,22 +15,11 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
 @upload_bp.route('/get_upload/<videogame>', methods=['GET'])
 def get_upload(videogame): 
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
     data = request.args.get('game_id')
     game_id = unquote(data)
 
-    picture_queries = { 
-        "rl": "SELECT picture FROM rl_picture WHERE game_id = %s",
-        "val": "SELECT picture FROM val_picture WHERE game_id = %s",
-        "apex": "SELECT picture FROM apex_picture WHERE game_id = %s"
-    }
-
     try:
-        cursor.execute(picture_queries[videogame], (game_id,)) 
-
-        file_name = cursor.fetchone()[0]
+        file_name = game_id + ".png"
         print(file_name)
         file_path = os.path.join(UPLOAD_FOLDER, file_name)
         print(file_path)
@@ -42,10 +31,6 @@ def get_upload(videogame):
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500
-    
-    finally:
-        cursor.close()
-        conn.close()
 
 
 @upload_bp.route('/upload_file', methods=['POST'])
