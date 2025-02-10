@@ -1,5 +1,5 @@
 {
-  "name": "SCAC Esports Statistics Tracker",
+  "name": "scac-esports-statistics-tracker",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
