@@ -17,7 +17,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex min-h-dvh w-full justify-center bg-custom-gray">
+    <div className="flex min-h-dvh w-full justify-center bg-custom-blue py-16">
       {loggedIn ? (
         <div className="flex flex-col items-center">
           <div className="border-b border-custom-off-white p-8">
@@ -50,14 +50,14 @@ const ProfilePage = () => {
         </div>
       ) : (
         <div className="flex w-1/2 flex-col items-center">
-          <h1 className="p-8 text-3xl font-semibold"> Login </h1>
+          <h1 className="py-8 text-3xl font-semibold"> Login </h1>
           <input
             type="text"
             placeholder="Username"
             minlength="5"
             maxlength="20"
             ref={usernameInput}
-            className="my-4 w-1/2 p-4"
+            className="my-4 w-1/2 p-4 text-black"
           ></input>
           <div className="relative my-4 w-1/2 text-black">
             <input
@@ -68,6 +68,7 @@ const ProfilePage = () => {
               ref={passwordInput}
               className="w-full p-4"
             ></input>
+
             {showPassword ? (
               <IoEyeSharp
                 className="absolute right-4 top-1/2 translate-y-[-50%] transform cursor-pointer"
@@ -81,7 +82,7 @@ const ProfilePage = () => {
             )}
           </div>
           <button
-            className="m-8 bg-custom-off-white px-8 py-2 font-bold text-black hover:bg-custom-gold"
+            className="m-8 bg-custom-gold px-8 py-2 font-bold text-black"
             onClick={() =>
               handleLogin(
                 usernameInput.current.value,

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_from_directory
 import pymysql
 from db import get_db_connection
 import os
@@ -8,13 +8,49 @@ import uuid
 import json
 import uuid
 
-
-
-
 upload_bp = Blueprint('upload', __name__)
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
+
+@upload_bp.route('/get_upload/<videogame>', methods=['GET'])
+def get_upload(videogame): 
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.args.get('game_id')
+    game_id = unquote(data)
+
+    picture_queries = { 
+        "rl": "SELECT picture FROM rl_picture WHERE game_id = %s",
+        "val": "SELECT picture FROM val_picture WHERE game_id = %s",
+        "apex": "SELECT picture FROM apex_picture WHERE game_id = %s"
+    }
+
+    try:
+        cursor.execute(picture_queries[videogame], (game_id,)) 
+
+        file_name = cursor.fetchone()[0]
+        print(file_name)
+        file_path = os.path.join(UPLOAD_FOLDER, file_name)
+        print(file_path)
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found on server"}), 404
+        
+        return send_from_directory(UPLOAD_FOLDER, file_name)
+        
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+    
+    finally:
+        cursor.close()
+        conn.close()
+
 
 @upload_bp.route('/upload_file', methods=['POST'])
 def upload_file():
+
     ocr_scripts = {
         'valorant': "../ocr/Valorant/ValMatch/ValOCRMain.py",
         'apex-legends': "../ocr/Apex/ApexFuncs.py",
@@ -36,7 +72,6 @@ def upload_file():
         return jsonify({"error": f"OCR not supported for game: {game}"}), 400
 
     # Save the uploaded file
-    UPLOAD_FOLDER = 'uploads/'
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
     # Generate a **unique** filename to prevent overwriting (UUID + original extension)

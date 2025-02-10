@@ -3,16 +3,20 @@ import { Link } from "react-router-dom";
 import { MdLock } from "react-icons/md";
 import { useAuth } from "./AuthContext";
 
-const NavigationPage = ({ setHamburgerMenu }) => {
+const NavigationPage = ({ hamburgerMenu, setHamburgerMenu }) => {
   const { loggedIn } = useAuth();
 
   return (
-    <div className="fixed left-0 top-[7rem] z-40 flex h-dvh w-full justify-center bg-custom-gray">
+    <div
+      className={`absolute left-0 top-[7rem] z-40 flex h-dvh w-full justify-center overflow-hidden bg-custom-gray transition-all duration-[500ms] ease-in-out ${
+        hamburgerMenu ? "max-h-[2000px]" : "max-h-0"
+      }`}
+    >
       <div className="py-24">
         <div className="flex flex-col items-center border-r border-custom-off-white px-8">
           <h6> STATS </h6>
           <Link
-            className="p-8 text-5xl text-custom-off-white hover:text-custom-gold"
+            className="cursor-pointer p-8 text-5xl text-custom-off-white hover:text-custom-gold"
             to="/"
             onClick={() => setHamburgerMenu(false)}
           >

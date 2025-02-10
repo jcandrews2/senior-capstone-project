@@ -11,7 +11,7 @@ const DesktopNavbar = () => {
   return (
     <nav className="sticky top-0 z-50 flex h-[7rem] items-center justify-between bg-custom-dark-gray">
       <Link
-        className="p-4 px-8 font-racing text-4xl font-extrabold text-custom-off-white hover:text-custom-gold"
+        className="cursor-pointer p-4 px-8 font-racing text-4xl font-extrabold text-custom-off-white hover:text-custom-gold"
         to="/"
         onClick={() => setHamburgerMenu(false)}
       >
@@ -25,11 +25,14 @@ const DesktopNavbar = () => {
           toggle={setHamburgerMenu}
         />
         <Link to="/profile">
-          <CgProfile className="h-auto w-16 p-4 text-custom-off-white" />
+          <CgProfile className="h-auto w-16 cursor-pointer p-4 text-custom-off-white" />
         </Link>
       </div>
 
-      {hamburgerMenu && <NavigationPage setHamburgerMenu={setHamburgerMenu} />}
+      <NavigationPage
+        hamburgerMenu={hamburgerMenu}
+        setHamburgerMenu={setHamburgerMenu}
+      />
     </nav>
   );
 };

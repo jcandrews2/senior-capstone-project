@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
+import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import ModifyAccount from "./ModifyAccount";
 import { API_ENDPOINTS } from "../config";
 
 const ManageAccounts = () => {
   const [accounts, setAccounts] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
   const usernameInput = useRef();
   const passwordInput = useRef();
   const schoolInput = useRef();
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleGetAccounts = async () => {
     try {
@@ -60,23 +66,43 @@ const ManageAccounts = () => {
         <input
           type="text"
           placeholder="School"
+          minlength="5"
+          maxlength="20"
           ref={schoolInput}
-          className="m-8 w-full border border-black p-4"
+          className="my-4 w-full p-4 text-black"
         ></input>
         <input
           type="text"
           placeholder="Username"
+          minlength="5"
+          maxlength="20"
           ref={usernameInput}
-          className="m-8 w-full border border-black p-4"
+          className="my-4 w-full p-4 text-black"
         ></input>
-        <input
-          type="text"
-          placeholder="Password"
-          ref={passwordInput}
-          className="m-8 w-full border border-black p-4"
-        ></input>
+        <div className="relative my-4 w-full text-black">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            minlength="5"
+            maxlength="40"
+            ref={passwordInput}
+            className="w-full p-4"
+          ></input>
+
+          {showPassword ? (
+            <IoEyeSharp
+              className="absolute right-4 top-1/2 translate-y-[-50%] transform cursor-pointer"
+              onClick={toggleShowPassword}
+            />
+          ) : (
+            <IoEyeOffSharp
+              className="absolute right-4 top-1/2 translate-y-[-50%] transform cursor-pointer"
+              onClick={toggleShowPassword}
+            />
+          )}
+        </div>
         <button
-          className="m-2 bg-custom-off-white px-8 py-2 font-bold text-black hover:bg-custom-gold"
+          className="m-8 bg-custom-gold px-8 py-2 font-bold text-black"
           onClick={handleCreateAccount}
         >
           Enter
@@ -86,13 +112,16 @@ const ManageAccounts = () => {
       {accounts.length > 0 ? (
         <>
           <h1 className="p-8 text-3xl font-semibold">Modify Accounts</h1>
-          {accounts.map((account, index) => (
-            <ModifyAccount
-              key={index}
-              username={account.username}
-              handleGetAccounts={handleGetAccounts}
-            />
-          ))}
+
+          <div className="rounded-md bg-custom-gray">
+            {accounts.map((account, index) => (
+              <ModifyAccount
+                key={index}
+                username={account.username}
+                handleGetAccounts={handleGetAccounts}
+              />
+            ))}
+          </div>
         </>
       ) : null}
     </>
