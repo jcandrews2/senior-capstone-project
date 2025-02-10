@@ -23,36 +23,36 @@ const ModifyPage = () => {
     l_points: "",
   };
 
-  const file = location.state?.file || null; // 🔹 File object passed from UploadPage
+  const file = location.state?.file || null;
   const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
 
-  // 🔹 Generate a preview of the image either from file (frontend) or from backend URL
+  // Generate a preview of the image either from file (frontend) or from backend URL
   useEffect(() => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
     } else if (formData.image_url) {
-      setImagePreview(API_ENDPOINTS.baseURL + formData.image_url); // 🔹 Load image from backend
+      setImagePreview(API_ENDPOINTS.baseURL + formData.image_url);
     }
   }, [file, formData.image_url]);
 
-  // 🔹 Update handler for editable fields in player stats
-  const handleInputChange = (event, index, key) => {
+  // Update handler for editable fields
+  const handleInputChange = (event, key) => {
+    setFormData({ ...formData, [key]: event.target.value });
+  };
+
+  // Update handler for player stats
+  const handlePlayerChange = (event, index, key) => {
     const updatedPlayers = [...formData.players];
     updatedPlayers[index][key] = event.target.value;
     setFormData({ ...formData, players: updatedPlayers });
   };
 
-  // 🔹 Update handler for dropdowns (e.g., game, week)
-  const handleDropdownChange = (event, key) => {
-    setFormData({ ...formData, [key]: event.target.value });
-  };
-
-  // 🔹 Submit the modified data to the backend
+  // Submit modified data to the backend
   const handleGame = async () => {
     setLoading(true);
     try {
@@ -61,7 +61,7 @@ const ModifyPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Data submitted successfully!");
         navigate("/");
@@ -75,8 +75,7 @@ const ModifyPage = () => {
     } finally {
       setLoading(false);
     }
-  }
-
+  };
 
   if (loading)
     return (
@@ -110,14 +109,14 @@ const ModifyPage = () => {
         <p className="text-white">No image available</p>
       )}
 
-      {/* 🔹 Display error messages if any */}
+      {/* Display error messages if any */}
       {error && (
         <div className="mb-6 w-3/4 rounded bg-red-100 p-4 text-red-700">
           {error}
         </div>
       )}
 
-      {/* 🔹 Editable Match Info */}
+      {/* Editable Match Info */}
       <div className="mb-8 w-3/4 rounded-md bg-custom-gray p-6 text-white shadow-lg">
         <h2 className="mb-4 text-2xl font-semibold">Game Details</h2>
 
@@ -125,7 +124,7 @@ const ModifyPage = () => {
           <select
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             value={formData.game}
-            onChange={(e) => handleDropdownChange(e, "game")}
+            onChange={(e) => handleInputChange(e, "game")}
           >
             <option value="rocket-league">Rocket League</option>
             <option value="valorant">Valorant</option>
@@ -135,7 +134,7 @@ const ModifyPage = () => {
           <select
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             value={formData.week}
-            onChange={(e) => handleDropdownChange(e, "week")}
+            onChange={(e) => handleInputChange(e, "week")}
           >
             <option value="1">Week 1</option>
             <option value="2">Week 2</option>
@@ -145,69 +144,56 @@ const ModifyPage = () => {
           <select
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             value={formData.game_number}
-            onChange={(e) => handleDropdownChange(e, "game_number")}
+            onChange={(e) => handleInputChange(e, "game_number")}
           >
             <option value="1">Game 1</option>
             <option value="2">Game 2</option>
             <option value="3">Game 3</option>
           </select>
 
-          {formData.game === "valorant" && (
-            <input
-              type="text"
-              value={formData.map}
-              placeholder="Map"
-              className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-              readOnly
-            />
-          )}
-
-          {formData.game === "apex-legends" && (
-            <>
-              <input
-                type="text"
-                value={formData.code}
-                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                readOnly
-              />
-              <input
-                type="text"
-                value={formData.squad_placed}
-                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                readOnly
-              />
-            </>
-          )}
+          <input
+            type="text"
+            value={formData.map}
+            placeholder="Map"
+            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+            onChange={(e) => handleInputChange(e, "map")}
+          />
 
           <input
             type="text"
             value={formData.school}
+            placeholder="School"
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            onChange={(e) => handleInputChange(e, "school")}
           />
+
           <input
             type="text"
             value={formData.opponent_school}
+            placeholder="Opponent School"
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            onChange={(e) => handleInputChange(e, "opponent_school")}
           />
 
           <input
             type="text"
             value={formData.w_points}
+            placeholder="Winning Points"
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            onChange={(e) => handleInputChange(e, "w_points")}
           />
+
           <input
             type="text"
             value={formData.l_points}
+            placeholder="Losing Points"
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            readOnly
+            onChange={(e) => handleInputChange(e, "l_points")}
           />
         </div>
       </div>
 
-      {/* 🔹 Editable Player Data */}
+      {/* Editable Player Data */}
       <div className="w-3/4">
         <h2 className="mb-4 text-2xl font-semibold text-white">Player Stats</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -225,9 +211,8 @@ const ModifyPage = () => {
                   <input
                     type="text"
                     value={value}
-                    onChange={(e) => handleInputChange(e, index, key)}
+                    onChange={(e) => handlePlayerChange(e, index, key)}
                     className="w-full rounded-md border border-custom-off-white bg-custom-gray p-2 text-white"
-                    readOnly={["name", "agent", "map"].includes(key)}
                   />
                 </div>
               ))}
@@ -236,7 +221,6 @@ const ModifyPage = () => {
         </div>
       </div>
 
-      {/* 🔹 Submit Button */}
       <button
         className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
         onClick={handleGame}

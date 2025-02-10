@@ -30,6 +30,7 @@ def team_read(image):
     total = red_avg + green_avg
     red_ratio = red_avg / total
     green_ratio = green_avg / total
+
     return "L" if red_ratio > green_ratio else "W"
 
 def load_image(img_path):
@@ -63,6 +64,7 @@ def preprocess_image(img_rgb):
         tuple: A tuple containing the grayscale image and the preprocessed map region.
     """
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+
     img_map = img_gray[115:145, 60:240]
     img_map = cv.adaptiveThreshold(img_map, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, -2)
     img_map = cv.resize(img_map, None, fx=4, fy=4, interpolation=cv.INTER_CUBIC)
@@ -284,6 +286,7 @@ def main():
         strip_fb = strip_stats[:, 560:620]
         strip_p = strip_stats[:, 700:780]
         strip_d = strip_stats[:, 780:]
+
 
         ocr_name, ocr_acs, ocr_kills, ocr_deaths, ocr_assists, ocr_econ, ocr_fb, ocr_p, ocr_d = perform_ocr(strip_gray, strip_acs, strip_kills, strip_deaths, strip_assists, strip_econ, strip_fb, strip_p, strip_d)
 

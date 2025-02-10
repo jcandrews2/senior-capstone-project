@@ -140,10 +140,9 @@ def upload_match():
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                 """,
                     "apex-legends": """
-                    INSERT INTO apex_picture (
-                        game_id, game_number, week_number, picture)
-                    VALUES (%s, %s, %s, %s);
-                    """, 
+                    INSERT INTO apex_picture (game_id, game_number, week_number, school, picture)
+                    VALUES (%s, %s, %s, %s, %s);
+                """, 
             }
             
             # insert queries for picture tables
@@ -224,9 +223,9 @@ def upload_match():
                 cursor.execute(f"""SELECT COUNT(*) from val_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
                 
                 #returns if it is zero or one in a tuple format. only need the first item
-                is_exists = cursor.fetchone()
+                is_week_exists = cursor.fetchone()
                 #if zero insert
-                if is_exists[0] == 0 and game == "valorant":
+                if is_week_exists[0] == 0 and game == "valorant":
                     cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
                                 week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg, team_score)
                         SELECT week_number, school, player_name, AVG(combat_score), AVG(kills),
@@ -243,7 +242,170 @@ def upload_match():
                         SET val_week.opponent = '{o_school}'
                         WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                         """)
+
+                #if returns a one, means its already in the week table so update.
+                if is_week_exists[0] == 1 and game == "valorant":
+                    cursor.execute(f"""UPDATE val_week 
+                        SET val_week.team_score = ( 
+                        SELECT sum(did_win) FROM val_game WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} ) 
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]};
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_cs_avg = (
+                        SELECT AVG(combat_score) FROM val_game
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} ) 
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_kills_avg = (
+                        SELECT AVG(kills) 
+                        FROM val_game 
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} )
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]};
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_deaths_avg = (
+                        SELECT AVG(deaths) FROM val_game
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} ) 
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_assists_avg = (
+                        SELECT AVG(assists)
+                        FROM val_game
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} )
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_econ_avg = (
+                        SELECT AVG(econ) FROM val_game
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} )
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ; 
+                        """)
+                    cursor.execute(f"""UPDATE val_week 
+                        SET val_week.week_fb_avg = (
+                        SELECT AVG(fb) FROM val_game 
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} )
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_plants_avg = (
+                        SELECT AVG(plants)
+                        FROM val_game 
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} ) 
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.week_defuses_avg = ( 
+                        SELECT AVG(defuses)
+                        FROM val_game
+                        WHERE val_game.player_name = '{player["name"]}' AND val_game.week_number = {data["week"]} )
+                        WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]} ;
+                        """)
+                    cursor.execute(f"""UPDATE val_week
+                        SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
+                        WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
+                        """)
                 
+                #check to see if this player is in the season table    
+                cursor.execute(f"""SELECT COUNT(*) from val_season where player_name="{player["name"]}";""")
+                is_season_exists = cursor.fetchone()
+                print(is_season_exists)
+                
+                #will return a 0 or 1 based on if its the game.
+                #if not in the season table then insert
+                if is_season_exists[0] == 0 and game == "valorant":
+                    cursor.execute(f"""INSERT INTO val_season(school, player_name, season_cs_avg, season_kills_avg, season_deaths_avg, season_assists_avg, season_econ_avg, season_fb_avg, season_plants_avg, season_defuses_avg, team_wins)
+                        SELECT  school, player_name, AVG(week_cs_avg), AVG(week_kills_avg), AVG(week_deaths_avg), AVG(week_assists_avg), AVG(week_econ_avg), AVG(week_fb_avg), AVG(week_plants_avg), AVG(week_defuses_avg), sum(did_win)
+                        FROM val_week
+                        WHERE player_name='{player["name"]}' 
+                        GROUP BY player_name;
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.team_losses =(
+                        SELECT COUNT(*)
+                        FROM val_week
+                        WHERE val_week.did_win = 0 and val_week.player_name = '{player["name"]}'
+                        )
+                        WHERE val_season.player_name = '{player["name"]}';
+                        """)
+                
+                #if already in the season table then update
+                if is_season_exists[0] == 1 and game == "valorant":
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_cs_avg = (
+                        SELECT AVG(week_cs_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.team_wins = (
+                        SELECT sum(did_win)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.team_losses =(
+                        SELECT COUNT(*) 
+                        FROM val_week
+                        WHERE val_week.did_win = 0 and val_week.player_name = '{player["name"]}')
+                        WHERE val_season.player_name = '{player["name"]}';
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_kills_avg = (
+                        SELECT AVG(week_kills_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_deaths_avg = (
+                        SELECT AVG(week_deaths_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_assists_avg = (
+                        SELECT AVG(week_assists_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_econ_avg = (
+                        SELECT AVG(week_econ_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_fb_avg = (
+                        SELECT AVG(week_fb_avg) FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_plants_avg = (
+                        SELECT AVG(week_plants_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    cursor.execute(f"""UPDATE val_season
+                        SET val_season.season_defuses_avg = (
+                        SELECT AVG(week_defuses_avg)
+                        FROM val_week
+                        WHERE val_week.player_name = '{player["name"]}' )
+                        WHERE val_season.player_name = '{player["name"]}'
+                        """)
+                    
+
+
+                    
+            #updates the opponent score for the week. Needs to be done at the end so the rest of the data can be populated    
             for player in data["players"]:
                 if player["school"] == "W":
                     o_school = data["opponent_school"]
