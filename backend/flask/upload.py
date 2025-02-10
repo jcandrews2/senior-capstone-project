@@ -308,7 +308,7 @@ def upload_match():
                 #check to see if this player is in the season table    
                 cursor.execute(f"""SELECT COUNT(*) from val_season where player_name="{player["name"]}";""")
                 is_season_exists = cursor.fetchone()
-                print(is_season_exists)x
+                print(is_season_exists)
                 
                 #will return a 0 or 1 based on if its the game.
                 #if not in the season table then insert
