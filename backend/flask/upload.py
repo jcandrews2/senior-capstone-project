@@ -313,6 +313,7 @@ def upload_match():
                 #check to see if this player is in the season table    
                 cursor.execute(f"""SELECT COUNT(*) from val_season where player_name="{player["name"]}";""")
                 is_season_exists = cursor.fetchone()
+                print(is_season_exists)
                 
                 #will return a 0 or 1 based on if its the game.
                 #if not in the season table then insert
@@ -352,8 +353,7 @@ def upload_match():
                         SET val_season.team_losses =(
                         SELECT COUNT(*) 
                         FROM val_week
-                        WHERE val_week.did_win = 0 and val_week.player_name = '{player["name"]}'
-                        )
+                        WHERE val_week.did_win = 0 and val_week.player_name = '{player["name"]}')
                         WHERE val_season.player_name = '{player["name"]}';
                         """)
                     cursor.execute(f"""UPDATE val_season
