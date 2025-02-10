@@ -136,16 +136,11 @@ def upload_match():
                 "valorant": """
                     INSERT INTO val_picture (game_id, game_number, week_number, w_school, l_school, w_points, l_points, picture)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-
-
-            # Insert player data into **game tables**
-
-                    """,
+                """,
                     "apex-legends": """
-                    INSERT INTO apex_picture (
-                        game_id, game_number, week_number, picture)
+                    INSERT INTO apex_picture (game_id, game_number, week_number, picture)
                     VALUES (%s, %s, %s, %s);
-                    """, 
+                """, 
             }
             
             # insert queries for picture tables
@@ -313,7 +308,7 @@ def upload_match():
                 #check to see if this player is in the season table    
                 cursor.execute(f"""SELECT COUNT(*) from val_season where player_name="{player["name"]}";""")
                 is_season_exists = cursor.fetchone()
-                print(is_season_exists)
+                print(is_season_exists)x
                 
                 #will return a 0 or 1 based on if its the game.
                 #if not in the season table then insert
