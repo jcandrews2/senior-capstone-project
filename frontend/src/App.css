@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Racing+Sans+One&display=swap');
 
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    overflow: auto;
+}
+
+:root {
+    color-scheme: dark;
+}
+
 .app { 
     display: flex;
     flex-direction: column;
@@ -20,4 +34,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .apex { 
     background-image: url("./images/Apex_Legends.jpeg");
+}
+
+input { 
+    background-color: white;
+}
+
+select { 
+    cursor: pointer;
 }

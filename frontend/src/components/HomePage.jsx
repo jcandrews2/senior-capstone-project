@@ -3,6 +3,7 @@ import GameCard from "./GameCard";
 import SeasonCard from "./SeasonCard";
 import PlayerReport from "./PlayerReport";
 import { IoSearch } from "react-icons/io5";
+import { IoMdClose } from "react-icons/io";
 import { API_ENDPOINTS } from "../config";
 
 const HomePage = () => {
@@ -16,6 +17,8 @@ const HomePage = () => {
 
   const handleVideogameChange = (event) => {
     setVideogame(event.target.value);
+    setPlayerReports([]);
+    searchInput.current.value = "";
   };
 
   const handleWeekChange = (event) => {
@@ -29,14 +32,17 @@ const HomePage = () => {
   const handleGetPlayerStats = useCallback(async () => {
     try {
       const response = await fetch(
-        API_ENDPOINTS.handleGetPlayerStats(videogame, week),
+        API_ENDPOINTS.handleGetPlayerStats(
+          videogame,
+          searchInput.current.value,
+        ),
       );
 
       if (response.ok) {
         const data = await response.json();
         setPlayerReports(data);
       } else {
-        console.error("Couldn't find any stats for this player.");
+        alert("Couldn't find any stats for this player.");
         setPlayerReports([]);
       }
     } catch (error) {
@@ -55,7 +61,7 @@ const HomePage = () => {
         setMatchReports(data);
       } else {
         setMatchReports([]);
-        console.error("No stats found.");
+        console.error("No match stats found.");
       }
     } catch (error) {
       console.error("Error fetching game stats:", error);
@@ -73,7 +79,7 @@ const HomePage = () => {
         setSeasonReports(data);
       } else {
         setSeasonReports([]);
-        console.error("No stats found.");
+        console.error("No season stats found.");
       }
     } catch (error) {
       console.error("Error fetching game stats:", error);
@@ -90,8 +96,8 @@ const HomePage = () => {
     videogame,
     week,
     handleGetMatchStats,
-    handleGetPlayerStats,
     handleGetSeasonStats,
+    handleGetPlayerStats,
   ]);
 
   return (
@@ -102,21 +108,26 @@ const HomePage = () => {
           : videogame === "rl"
             ? "bg-custom-RL"
             : "bg-custom-Apex"
-      } relative flex min-h-dvh justify-center p-8`}
+      } relative flex min-h-dvh w-full justify-center`}
     >
       <div
         className={`${
           videogame
-        } absolute left-0 top-0 z-0 h-full w-full bg-cover bg-center opacity-40`}
+        } absolute left-0 top-0 h-full w-full bg-cover bg-center opacity-30 ${
+          videogame === "val"
+            ? "bg-custom-Val"
+            : videogame === "rl"
+              ? "bg-custom-RL"
+              : "bg-custom-Apex"
+        }`}
       ></div>
-
-      <div className="relative z-10 flex w-3/4 flex-col items-center">
-        <div className="w-full py-16 text-white">
+      <div className="z-10 flex w-3/4 flex-col items-center py-16">
+        <div className="w-full pb-8 text-white">
           <h1 className="py-8 text-3xl font-semibold"> Search </h1>
 
           <div className="flex rounded-md bg-custom-gray p-4">
             <select
-              className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
+              className="mr-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
               onChange={handleVideogameChange}
               value={videogame}
             >
@@ -129,28 +140,47 @@ const HomePage = () => {
               <input
                 type="text"
                 placeholder="Find a player's stats by name"
-                className="h-full w-full rounded-md border border-black p-4"
+                minlength="1"
+                maxlength="50"
+                className="h-full w-full rounded-md p-4"
                 ref={searchInput}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleGetPlayerStats();
+                  }
+                }}
               />
-              <IoSearch
-                className="absolute right-4 top-5 h-auto w-12 cursor-pointer"
-                onClick={() => handleGetPlayerStats}
-              />
+
+              {playerReports.length > 0 ? (
+                <IoMdClose
+                  className="absolute right-4 top-5 h-auto w-12 cursor-pointer"
+                  onClick={() => setPlayerReports([])}
+                />
+              ) : (
+                <IoSearch
+                  className="absolute right-4 top-5 h-auto w-12 cursor-pointer"
+                  onClick={handleGetPlayerStats}
+                />
+              )}
             </div>
           </div>
         </div>
 
-        {playerReports.length > 0 ? (
-          <div className="w-full">
-            <h2 className="py-8 text-2xl font-semibold">Player Stats</h2>
-            <div className="z-30 w-full rounded-md bg-custom-gray">
+        <div
+          className={`w-full overflow-hidden transition-all duration-[500ms] ease-in-out ${
+            playerReports.length > 0 ? "max-h-[2000px]" : "max-h-0"
+          }`}
+        >
+          <h2 className="py-8 text-2xl font-semibold">Player Stats</h2>
+          <div className="z-30 w-full rounded-md bg-custom-gray">
+            {playerReports.length > 0 ? (
               <PlayerReport
                 player={searchInput.current.value}
                 playerReports={playerReports}
               />
-            </div>
+            ) : null}
           </div>
-        ) : null}
+        </div>
 
         <div className="w-full">
           <div className="flex justify-between">
@@ -158,7 +188,7 @@ const HomePage = () => {
               {week !== "avg" ? "Match Stats" : "Season Stats"}
             </h2>
             <select
-              className="my-4 rounded-md border border-custom-off-white bg-custom-gray text-white"
+              className="my-6 rounded-md border border-custom-off-white bg-custom-gray text-white"
               onChange={handleWeekChange}
               value={week}
             >
@@ -176,20 +206,20 @@ const HomePage = () => {
               {matchReports.length > 0 ? (
                 matchReports.map((matchReport, index) => (
                   <>
-                    <div className="py-8">
+                    <div className="mb-4 rounded-md bg-custom-gray">
                       <button
-                        className="h-20 w-full cursor-pointer rounded-md bg-custom-gray text-custom-off-white"
+                        className="h-20 w-full cursor-pointer text-custom-off-white"
                         onClick={() => toggleActiveMatch(index)}
                       >
                         {videogame === "apex" ? (
-                          <h2 className="p-4 text-center text-3xl font-bold text-white">
+                          <h2 className="p-4 text-center text-3xl font-bold">
                             {matchReport.match.school +
                               " " +
                               matchReport.match.points +
                               " Points"}
                           </h2>
                         ) : (
-                          <h2 className="p-4 text-center text-3xl font-bold text-white">
+                          <h2 className="p-4 text-center text-3xl font-bold">
                             {matchReport.match.school +
                               " " +
                               matchReport.match.teamScore +
@@ -200,62 +230,63 @@ const HomePage = () => {
                           </h2>
                         )}
                       </button>
+                      <div
+                        className={`overflow-hidden transition-all duration-[500ms] ease-in-out ${
+                          activeMatch === index
+                            ? "max-h-[2000px] opacity-100"
+                            : "max-h-0 opacity-0"
+                        }`}
+                      >
+                        <GameCard
+                          match={matchReport.match}
+                          videogame={videogame}
+                          week={week}
+                        />
 
-                      {activeMatch === index && (
-                        <div className="bg-custom-gray">
-                          <GameCard
-                            match={matchReport.match}
-                            videogame={videogame}
-                            week={week}
-                          />
+                        <div className="p-8">
+                          <h3 className="p-4 text-2xl font-bold text-white">
+                            Weekly Stats
+                          </h3>
+                          <div className="overflow-x-auto text-custom-off-white">
+                            <table className="w-full table-auto text-left">
+                              <thead>
+                                <tr className="text-white">
+                                  {matchReport.week.length > 0 &&
+                                    Object.keys(matchReport.week[0]).map(
+                                      (header, index) => (
+                                        <th
+                                          key={index}
+                                          className="border-b border-custom-off-white bg-custom-gray p-4"
+                                        >
+                                          {header.toUpperCase()}
+                                        </th>
+                                      ),
+                                    )}
+                                </tr>
+                              </thead>
 
-                          <div className="p-8">
-                            <h3 className="p-4 text-2xl font-bold text-white">
-                              Weekly Stats
-                            </h3>
-                            <div className="overflow-x-auto text-custom-off-white">
-                              <table className="w-full table-auto text-left">
-                                <thead>
-                                  <tr className="text-white">
-                                    {matchReport.week.length > 0 &&
-                                      Object.keys(matchReport.week[0]).map(
-                                        (header, index) => (
-                                          <th
-                                            key={index}
-                                            className="border-b border-custom-off-white bg-custom-gray p-4"
-                                          >
-                                            {header.toUpperCase()}
-                                          </th>
-                                        ),
-                                      )}
+                              <tbody>
+                                {matchReport.week.map((player, index) => (
+                                  <tr key={`team-${index}`}>
+                                    {Object.values(player).map((stat, idx) => (
+                                      <td
+                                        key={`team-${index}-stat-${idx}`}
+                                        className={`${
+                                          index % 2 === 0
+                                            ? "bg-custom-light-gray"
+                                            : "bg-custom-gray"
+                                        } border-y border-custom-off-white p-4`}
+                                      >
+                                        {stat}
+                                      </td>
+                                    ))}
                                   </tr>
-                                </thead>
-
-                                <tbody>
-                                  {matchReport.week.map((player, index) => (
-                                    <tr key={`team-${index}`}>
-                                      {Object.values(player).map(
-                                        (stat, idx) => (
-                                          <td
-                                            key={`team-${index}-stat-${idx}`}
-                                            className={`${
-                                              index % 2 === 0
-                                                ? "bg-custom-light-gray"
-                                                : "bg-custom-gray"
-                                            } border-y border-custom-off-white p-4`}
-                                          >
-                                            {stat}
-                                          </td>
-                                        ),
-                                      )}
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         </div>
-                      )}
+                      </div>
                     </div>
                   </>
                 ))
@@ -270,9 +301,9 @@ const HomePage = () => {
           ) : seasonReports.length > 0 ? (
             seasonReports.map((seasonReport, index) => (
               <>
-                <div className="py-8">
+                <div className="py-2">
                   <button
-                    className="h-20 w-full cursor-pointer rounded-md bg-custom-gray text-custom-off-white"
+                    className="w-full cursor-pointer rounded-md bg-custom-gray text-custom-off-white"
                     onClick={() => toggleActiveMatch(index)}
                   >
                     <h2 className="p-4 text-center text-3xl font-bold text-white">
@@ -280,11 +311,15 @@ const HomePage = () => {
                     </h2>
                   </button>
 
-                  {activeMatch === index && (
-                    <div className="bg-custom-gray">
-                      <SeasonCard players={seasonReport.players} />
-                    </div>
-                  )}
+                  <div
+                    className={`overflow-hidden transition-all duration-[500ms] ease-in-out ${
+                      activeMatch === index
+                        ? "max-h-[2000px] opacity-100"
+                        : "max-h-0 opacity-100"
+                    }`}
+                  >
+                    <SeasonCard players={seasonReport.players} />
+                  </div>
                 </div>
               </>
             ))

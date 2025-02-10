@@ -6,7 +6,6 @@ import { useAuth } from "./AuthContext";
 
 const DisputeModal = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [picture, setPicture] = useState("");
   const commentInput = useRef();
 
   const { loggedIn, username, school } = useAuth();
@@ -16,23 +15,6 @@ const DisputeModal = (props) => {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-
-  // const handleGetPicture = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       API_ENDPOINTS.handleGetPicture(gameStats.game_id),
-  //     );
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setPicture(data);
-  //     }
-  //   } catch (error) {}
-  // };
-
-  // useEffect(() => {
-  //   handleGetPicture();
-  // }, []);
 
   const handleSubmitDispute = async () => {
     try {
@@ -95,7 +77,13 @@ const DisputeModal = (props) => {
 
               {/* Image */}
               <div className="w-full p-4">
-                <img src="/game_reports/0.png" alt="End Game Report" />
+                <img
+                  src={API_ENDPOINTS.handleGetPicture(
+                    videogame,
+                    gameStats.gameID,
+                  )}
+                  alt="End Game Report"
+                />
               </div>
 
               {/* Table */}

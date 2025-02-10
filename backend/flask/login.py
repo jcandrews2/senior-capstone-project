@@ -4,7 +4,7 @@ import bcrypt
 from db import get_db_connection
 
 login_bp = Blueprint('login', __name__)
-@login_bp.route('/login', methods=['GET', 'POST'])
+@login_bp.route('/login', methods=['POST'])
 def login():
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)

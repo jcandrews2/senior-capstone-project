@@ -30,6 +30,8 @@ export const AuthProvider = ({ children }) => {
         if (data[0]["isAdmin"]) {
           setIsAdmin(true);
         }
+      } else {
+        alert("No account found with these credentials.");
       }
     } catch (error) {
       console.error("Invalid credentials.", error);
