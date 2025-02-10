@@ -6,6 +6,8 @@ import subprocess
 from urllib.parse import unquote
 import uuid
 import json
+import uuid
+
 
 
 
@@ -424,7 +426,9 @@ def upload_match():
                 #runs picture query for the appropriate game
            
             
-            conn.commit()  # 🔹 Save changes
+
+            conn.commit()  # Save changes
+
             return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
         
         except Exception as e:

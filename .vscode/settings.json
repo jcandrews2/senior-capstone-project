@@ -1,5 +1,9 @@
 {
   "jira-plugin.workingProject": "",
+<<<<<<< Updated upstream
   "cSpell.words": ["checkpw", "gamertags"],
   "python.analysis.extraPaths": ["./backend/flask"]
+=======
+  "cSpell.words": ["checkpw", "gamertags"]
+>>>>>>> Stashed changes
 }

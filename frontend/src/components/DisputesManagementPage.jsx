@@ -7,69 +7,31 @@ const DisputesManagementPage = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchDisputes = async () => {
-  //     try {
-  //       const response = await fetch(API_ENDPOINTS.getAllDisputes);
-  //       const data = await response.json();
-  //       setDisputes(data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error("Error fetching disputes:", error);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchDisputes();
-  // }, []);
-
-  // 🔹 Mock Data for UI Testing
+  // Fetch disputes from backend
   useEffect(() => {
-    const mockDisputes = [
-      {
-        gameId: 1,
-        gameType: "Valorant",
-        map: "Ascent",
-        week: "Week 1",
-        school: "Colorado College",
-        opponent: "School B",
-        disputes: [
-          "Player stats are incorrect.",
-          "Wrong ACS values recorded for some players.",
-        ],
-      },
-      {
-        gameId: 2,
-        gameType: "Rocket League",
-        map: "Champions Field",
-        week: "Week 2",
-        school: "School C",
-        opponent: "School D",
-        disputes: ["Incorrect goal count for Team C."],
-      },
-      {
-        gameId: 3,
-        gameType: "Apex Legends",
-        code: "ACD123",
-        week: "Week 3",
-        school: "School X",
-        opponent: "School Y",
-        disputes: ["Squad placement data mismatch.", "Wrong damage stats."],
-      },
-    ];
+    const fetchDisputes = async () => {
+      try {
+        const response = await fetch(API_ENDPOINTS.getAllDisputes);
+        if (!response.ok) throw new Error("Failed to fetch disputes");
 
-    setTimeout(() => {
-      setDisputes(mockDisputes);
-      setLoading(false);
-    }, 1000);
+        const data = await response.json();
+        setDisputes(data);
+      } catch (error) {
+        console.error("Error fetching disputes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDisputes();
   }, []);
 
-  // Function to review a dispute (navigate to Modify Page)
+  // Review dispute (navigate to Modify Page)
   const handleReview = (gameId) => {
     navigate("/modify", { state: { gameId } });
   };
 
-  // Function to resolve a dispute
+  // Resolve dispute (remove from UI & database)
   const handleResolve = async (gameId) => {
     try {
       const response = await fetch(API_ENDPOINTS.resolveDispute(gameId), {
@@ -114,16 +76,20 @@ const DisputesManagementPage = () => {
               {game.gameType} - {game.map || game.code}
             </h2>
             <p className="text-custom-off-white">
-              {game.school} vs {game.opponent} | Week: {game.week}
+              {game.school} vs {game.opponent} | {game.week} | Game{" "}
+              {game.game_number}
             </p>
 
             {/* Dispute Comments Section */}
             <div className="mt-4 rounded-md bg-custom-light-gray p-4">
               <h3 className="text-lg font-semibold">Dispute Comments:</h3>
               <ul className="list-disc pl-4">
-                {game.disputes.map((comment, index) => (
+                {game.disputes.map((dispute, index) => (
                   <li key={index} className="text-white">
-                    {comment}
+                    <strong>
+                      {dispute.username} ({dispute.school}):
+                    </strong>{" "}
+                    {dispute.comment}
                   </li>
                 ))}
               </ul>
