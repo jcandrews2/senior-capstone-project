@@ -29,7 +29,14 @@ const UploadPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!file || !game || !week || !school || !opponent_school || !game_number) {
+    if (
+      !file ||
+      !game ||
+      !week ||
+      !school ||
+      !opponent_school ||
+      !game_number
+    ) {
       alert("Please fill all the fields and upload a file.");
       return;
     }
@@ -118,7 +125,7 @@ const UploadPage = () => {
               value={school}
               onChange={(e) => setSchool(e.target.value)}
             >
-              <option value="">Select School</option>
+              <option value="">Select Winning School</option>
               <option value="school-a">School A</option>
               <option value="school-b">School B</option>
               <option value="school-c">School C</option>
@@ -129,7 +136,7 @@ const UploadPage = () => {
               value={opponent_school}
               onChange={(e) => setOpponentSchool(e.target.value)}
             >
-              <option value="">Select Opponent School</option>
+              <option value="">Select Losing School</option>
               <option value="school-a">School A</option>
               <option value="school-b">School B</option>
               <option value="school-c">School C</option>
