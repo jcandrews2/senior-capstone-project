@@ -51,21 +51,21 @@ def get_all_disputes():
             picture_table = ""
 
             # Determine the correct picture table based on game type
-            if videogame == "valorant":
+            if videogame == "val":
                 picture_table = "val_picture"
                 query = f"""
                 SELECT game_id, game_number, week_number, w_school AS school, l_school AS opponent, w_points, l_points, picture 
                 FROM {picture_table} 
                 WHERE game_id = %s
                 """
-            elif videogame == "rocket-league":
+            elif videogame == "rl":
                 picture_table = "rl_picture"
                 query = f"""
                 SELECT game_id, game_number, week_number, w_school AS school, l_school AS opponent, w_points, l_points, picture 
                 FROM {picture_table} 
                 WHERE game_id = %s
                 """
-            elif videogame == "apex-legends":
+            elif videogame == "apex":
                 picture_table = "apex_picture"
                 query = f"""
                 SELECT game_id, game_number, week_number, school, picture 
