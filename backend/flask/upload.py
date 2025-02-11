@@ -191,8 +191,8 @@ def upload_match():
             points = 0
             damage = 0
             for player in data["players"]:
-                damage += player["damage"]
-                points += player["kills"]
+                damage += int(player["damage"])
+                points += int(player["kills"])
                 
             points += math.floor(damage/200)
             
