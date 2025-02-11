@@ -63,7 +63,7 @@ def get_match_stats(videogame):
                 ORDER BY game_number
             """,
             "player_query": """
-                SELECT school, player_name AS `player`, placement, kills, assists, knocks, damage
+                SELECT school, player_name AS `player`, placement, kills, assists, knocks, damage, score
                 FROM apex_game
                 WHERE game_id = %s AND school = %s
             """
@@ -109,52 +109,32 @@ def get_match_stats(videogame):
                 cursor.execute(game_queries[videogame]["game_query"], (week, school))
                 games = cursor.fetchall()
 
-                match_points = 0
+               
                 for game in games: 
 
                     cursor.execute(game_queries[videogame]["player_query"], (game['game_id'], school))
                     player_stats = cursor.fetchall()
 
-                    game_points = 0
+                    
                     team_stats = []
 
                     for player in player_stats: 
-                        if player['placement'] == 1: 
-                            game_points += 12
-                        elif player['placement'] == 2: 
-                            game_points += 9
-                        elif player['placement'] == 3: 
-                            game_points += 7
-                        elif player['placement'] == 4:
-                            game_points += 5 
-                        elif player['placement'] == 5: 
-                            game_points += 4
-                        elif player['placement'] <= 7: 
-                            game_points += 3
-                        elif player['placement'] <= 10: 
-                            game_points += 2
-                        elif player['placement'] <= 15: 
-                            game_points += 1
-
-                        game_points += player['kills']
-                        game_points += player['damage'] % 200
-                        
                         team_stats.append(player)
 
-                    match_points += game_points
     
                         
                     game_data = {
                         "gameStats": {
                             "school": school,
-                            "points": game_points,
+                            "points": player_stats['score'],
                             "gameNumber": game["game_number"],
                             "gameID": game['game_id']
                         },
                         "teamStats": team_stats,
                     }
-
-                    match_data["match"]['points'] = match_points
+                    
+                    match_data["match"]['points'] = week_stats["week_score"]
+                    #match_data["match"]['points'] = match_points
                     match_data["match"]['games'].append(game_data)
 
             else: 
