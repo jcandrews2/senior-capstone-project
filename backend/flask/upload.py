@@ -323,75 +323,75 @@ def upload_match():
                         SET apex_season.season_kills_avg = (
                         SELECT AVG(week_kills_avg)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE Apex_season.player_name = 'Hotwing' ; 
+                        WHERE apex_season.player_name = '{player["name"]}' ; 
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.season_knocks_avg = (
                         SELECT AVG(week_knocks_avg)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ; 
+                        WHERE apex_season.player_name = '{player["name"]}' ; 
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.season_damage_avg = (
                         SELECT AVG(week_damage_avg)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ; 
+                        WHERE apex_season.player_name = '{player["name"]}' ; 
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.season_assists_avg = (
                         SELECT AVG(week_assists_avg)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' 
+                        WHERE apex_season.player_name = '{player["name"]}' 
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.total_assists = (
                         SELECT SUM(week_assists)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ;
+                        WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
                         cursor.execute(f"""
                         UPDATE apex_season
                         SET apex_season.total_knocks = (
                         SELECT SUM(week_knocks)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ;
+                        WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.total_damage = (
                         SELECT SUM(week_damage)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ;
+                        WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
                         cursor.execute(f"""
                         UPDATE apex_season
                         SET apex_season.total_score = (
                         SELECT SUM(week_score)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ;
+                        WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.total_kills = (
                         SELECT SUM(week_kills)
                         FROM apex_week
-                        WHERE apex_week.player_name = 'Hotwing'
+                        WHERE apex_week.player_name = '{player["name"]}'
                         )
-                        WHERE apex_season.player_name = 'Hotwing' ;
+                        WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
 
 
