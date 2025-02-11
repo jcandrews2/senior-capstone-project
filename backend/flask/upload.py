@@ -6,6 +6,7 @@ import subprocess
 import uuid
 import json
 import uuid
+import math
 
 upload_bp = Blueprint('upload', __name__)
 
@@ -186,8 +187,19 @@ def upload_match():
                         data["image_url"]
                     )
                 )
+            #insert score per game
+            points = 0
+            damage = 0
+            for player in data[player]:
+                damage += player["damage"]
+                points += player["kills"]
                 
-            # Insert player data
+            points += math.floor(damage/200)
+            
+            cursor.execute(f"""select placement from apex_game where week_number ={data["week"]} AND game_number = {data["game_number"]} GROUP BY school """)
+            placement = cursor.fetchone
+            print(placement)
+            # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
 
