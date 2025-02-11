@@ -49,7 +49,7 @@ def get_match_stats(videogame):
 
             """,
             "player_query": """
-                SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb, plants, defuses, agent, map
+                SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb AS `first bloods`, plants, defuses, agent, map
                 FROM val_game
                 WHERE game_id = %s
             """
@@ -72,8 +72,8 @@ def get_match_stats(videogame):
 
     week_queries = { 
         "rl": "SELECT school, player_name AS `player`, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg FROM rl_week WHERE week_number = %s AND (school = %s OR school = %s)",
-        "val": "SELECT school, player_name AS `player`, week_cs_avg, week_kills_avg, week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg FROM val_week WHERE week_number = %s AND (school = %s OR school = %s)",
-        "apex": "SELECT school, player_name AS `player`,  week_kills_avg AS `average week kills`, week_assists_avg, week_knocks_avg, week_damage_avg, week_kills, week_assists, week_knocks, week_damage, week_score FROM apex_week WHERE week_number = %s AND school = %s"
+        "val": "SELECT school, player_name AS `player`, week_cs_avg AS `average combat score`, week_kills_avg AS `average kills`, week_deaths_avg AS `average deaths`, week_assists_avg AS `average assists`, week_econ_avg AS `average econ`, week_fb_avg AS `average first bloods`, week_plants_avg AS `average plants`, week_defuses_avg AS `average defuses` FROM val_week WHERE week_number = %s AND (school = %s OR school = %s)",
+        "apex": "SELECT school, player_name AS `player`,  week_kills_avg AS `average kills`, week_assists_avg AS `average assists` , week_knocks_avg AS `average knocks`, week_damage_avg AS `average damage`, week_kills AS `total kills`, week_assists AS `total assists`, week_knocks AS `total knocks`, week_damage AS `total damage`, week_score FROM apex_week WHERE week_number = %s AND school = %s"
     }
 
     try:
