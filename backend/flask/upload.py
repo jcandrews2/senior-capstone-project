@@ -198,7 +198,7 @@ def upload_match():
             
             cursor.execute(f"""SELECT placement from apex_game where week_number ={data["week"]} AND game_number = {data["game_number"]} GROUP BY school """)
             placement = cursor.fetchone()
-            print(placement[0])
+            print(placement)
             # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
