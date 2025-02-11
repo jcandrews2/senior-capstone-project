@@ -103,3 +103,24 @@ def accounts():
             conn.commit()
             cursor.close()
             conn.close()
+
+@account_bp.route('/get_admin_info', methods=['GET'])
+def get_admin_info():
+    conn = get_db_connection()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    try: 
+        cursor.execute ( 
+            "SELECT school, username FROM users WHERE is_admin = 1"
+        )
+
+        admin_info = cursor.fetchone()
+
+        return jsonify({"email": admin_info['school'], "username": admin_info['username']}), 200
+
+    except Exception as e: 
+        return jsonify({"error": str(e)}), 500
+    
+    finally: 
+        cursor.close()
+        conn.close()

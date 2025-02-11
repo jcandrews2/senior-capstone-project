@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./components/HomePage";
 import UploadPage from "./components/UploadPage";
-import RankingPage from "./components/RankingPage";
+import RankingsPage from "./components/RankingsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ModifyPage from "./components/ModifyPage";
 import Footer from "./components/Footer";
@@ -17,7 +17,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/rankings" element={<RankingPage />} />
+        <Route path="/rankings" element={<RankingsPage />} />
         <Route
           path="/upload"
           element={<ProtectedRoute page={<UploadPage />} />}

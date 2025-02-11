@@ -2,7 +2,7 @@
 //const API_BASE_URL = "https://40.85.147.30:8080";
 
 // AFKVM
-// const API_BASE_URL = "http://128.85.24.19:8080";
+const API_BASE_URL = "http://128.85.24.19:8080";
 
 // AFKVM2
 // const API_BASE_URL = "https://20.9.135.136:8080";
@@ -38,8 +38,10 @@ const API_ENDPOINTS = {
     `${API_BASE_URL}/roster/${videogame}?school=${encodeURIComponent(school)}`,
   handleDeleteRoster: (videogame) => `${API_BASE_URL}/roster/${videogame}`,
   handleGetSchools: () => `${API_BASE_URL}/schools`,
-  handleGetPicture: (videogame, game_id) =>
-    `${API_BASE_URL}/get_upload/${videogame}?game_id=${encodeURIComponent(game_id)}`,
+  handleGetPicture: (game_id) => `${API_BASE_URL}/get_upload/${game_id}`,
+  handleForgotPassword: () => `${API_BASE_URL}/send`,
+  handleGetAdminInfo: () => `${API_BASE_URL}/get_admin_info`,
+  handleGetRankings: (videogame) => `${API_BASE_URL}/get_rankings/${videogame}`,
 };
 
 export { API_BASE_URL, API_ENDPOINTS };
