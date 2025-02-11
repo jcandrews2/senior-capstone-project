@@ -78,10 +78,7 @@ const DisputeModal = (props) => {
               {/* Image */}
               <div className="w-full p-4">
                 <img
-                  src={API_ENDPOINTS.handleGetPicture(
-                    videogame,
-                    gameStats.gameID,
-                  )}
+                  src={API_ENDPOINTS.handleGetPicture(gameStats.gameID)}
                   alt="End Game Report"
                 />
               </div>

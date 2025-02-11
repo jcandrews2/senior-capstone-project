@@ -3,7 +3,6 @@ import pymysql
 from db import get_db_connection
 import os
 import subprocess
-from urllib.parse import unquote
 import uuid
 import json
 import uuid
@@ -12,11 +11,8 @@ upload_bp = Blueprint('upload', __name__)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
 
-@upload_bp.route('/get_upload/<videogame>', methods=['GET'])
-def get_upload(videogame): 
-
-    data = request.args.get('game_id')
-    game_id = unquote(data)
+@upload_bp.route('/get_upload/<game_id>', methods=['GET'])
+def get_upload(game_id): 
 
     try:
         file_name = game_id + ".png"
