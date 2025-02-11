@@ -493,7 +493,7 @@ def upload_match():
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.total_placements_8_10 = ( 
                         SELECT SUM(week_placements_8_10) F
-                        ROM apex_week 
+                        FROM apex_week 
                         WHERE apex_week.player_name = '{player["name"]}' ) 
                         WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
