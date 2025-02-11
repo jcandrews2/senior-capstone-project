@@ -95,7 +95,7 @@ def upload_file():
             "opponent_school": opponent_school,  # Opponent will need to be added manually in the ModifyPage
             "map": ocr_data.get("map", ""),
             "code": ocr_data.get("code", ""),
-            "squad_placed": ocr_data.get("placement", ""),
+            "squad_placed": ocr_data.get("squad_placed", ""),
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
@@ -144,8 +144,8 @@ def upload_match():
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
                 "apex-legends": """
-                    INSERT INTO apex_game (game_id, school, player_name, kills, assists, knocks, damage, placement, game_number, week_number)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    INSERT INTO apex_game (game_id, school, player_name, kills, assists, knocks, damage, score, placement, game_number, week_number)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
             }
             
@@ -201,7 +201,7 @@ def upload_match():
                             (
                             game_id, data["school"], player["name"],
                             player["kills"], player["assists"], player["knocks"],
-                            player["damage"], data.get("placement"),
+                            player["damage"], player["score"], player["placement"],
                             data.get("game_number"), data.get("week")
                             )  
                         )
@@ -294,11 +294,99 @@ def upload_match():
                         WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ; 
                         """)
                 #TODO: NEED TO UPDATE PLACEMENTS
-                #TODO: NEED TO CALCULATE SCORE POINTS
+                #TODO: NEED TO CALCULATE SCORE PO
                 #game_points = 0
                 #if player["placement"] == 1:
                 
-                
+                    #check to see if in season table
+                    cursor.execute(f"""SELECT COUNT(*) from apex_season where player_name="{player["name"]}";""")
+                    is_season_exists = cursor.fetchone()
+
+                    #if doesnt exist
+                    if is_season_exists == 0:
+                        cursor.execute(f"""INSERT INTO apex_season(school, player_name, season_kills_avg, season_assists_avg, season_knocks_avg, season_damage_avg, total_kills, total_assists, total_knocks, total_damage, total_score, total_placements_1, total_placements_2, total_placements_3, total_placements_4, total_placements_5, total_placements_6_7, total_placements_8_10, total_placements_11_15)
+                            SELECT school, player_name, AVG(week_kills_avg), AVG(week_assists_avg), AVG(week_knocks_avg), AVG(week_damage_avg), SUM(week_kills), SUM(week_assists), SUM(week_knocks), SUM(week_damage), SUM(week_score), SUM(week_placements_1), SUM(week_placements_2), SUM(week_placements_3), SUM(week_placements_4), SUM(week_placements_5), SUM(week_placements_6_7), SUM(week_placements_8_10),   SUM(week_placements_11_15)
+                            FROM apex_week
+                            WHERE player_name='{player["name"]}';
+                            """)
+                    #if it does exist then update
+                    if is_season_exists == 1:
+                        cursor.execute(f"""UPDATE apex_sseason
+                        SET apex_season.season_kills_avg = (
+                        SELECT AVG(week_kills_avg)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE Apex_season.player_name = 'Hotwing' ; 
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.season_knocks_avg = (
+                        SELECT AVG(week_knocks_avg)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ; 
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.season_damage_avg = (
+                        SELECT AVG(week_damage_avg)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ; 
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.season_assists_avg = (
+                        SELECT AVG(week_assists_avg)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' 
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.total_assists = (
+                        SELECT SUM(week_assists)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ;
+                        """)
+                        cursor.execute(f"""
+                        UPDATE apex_season
+                        SET apex_season.total_knocks = (
+                        SELECT SUM(week_knocks)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.total_damage = (
+                        SELECT SUM(week_damage)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ;
+                        """)
+                        cursor.execute(f"""
+                        UPDATE apex_season
+                        SET apex_season.total_score = (
+                        SELECT SUM(week_score)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.total_kills = (
+                        SELECT SUM(week_kills)
+                        FROM apex_week
+                        WHERE apex_week.player_name = 'Hotwing'
+                        )
+                        WHERE apex_season.player_name = 'Hotwing' ;
+                        """)
+
+
                     
                 elif game == "rocket-league":
                     cursor.execute(
