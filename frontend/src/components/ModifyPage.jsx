@@ -95,7 +95,7 @@ const ModifyPage = () => {
     <div className="flex min-h-screen flex-col items-center justify-center bg-custom-blue p-8">
       <h1 className="mb-8 text-4xl font-bold text-white">Modify Game Data</h1>
 
-      {/* 🔹 Display the uploaded image from file or backend URL */}
+      {/* Display the uploaded image from file or backend URL */}
       {imagePreview ? (
         <div className="mb-6 w-3/4">
           <h2 className="text-xl font-semibold text-white">Uploaded Image</h2>
@@ -130,7 +130,6 @@ const ModifyPage = () => {
             <option value="valorant">Valorant</option>
             <option value="apex-legends">Apex Legends</option>
           </select>
-
           <select
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             value={formData.week}
@@ -140,7 +139,6 @@ const ModifyPage = () => {
             <option value="2">Week 2</option>
             <option value="3">Week 3</option>
           </select>
-
           <select
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             value={formData.game_number}
@@ -150,15 +148,24 @@ const ModifyPage = () => {
             <option value="2">Game 2</option>
             <option value="3">Game 3</option>
           </select>
-
-          <input
-            type="text"
-            value={formData.map}
-            placeholder="Map"
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            onChange={(e) => handleInputChange(e, "map")}
-          />
-
+          {formData.game == "valorant" && (
+            <input
+              type="text"
+              value={formData.map}
+              placeholder="Map"
+              className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+              onChange={(e) => handleInputChange(e, "map")}
+            />
+          )}
+          {formData.game == "apex-legends" && (
+            <input
+              type="text"
+              value={formData.squad_placed}
+              placeholder="Squad Placement"
+              className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+              onChange={(e) => handleInputChange(e, "squad_placed")}
+            />
+          )}
           <input
             type="text"
             value={formData.school}
@@ -166,7 +173,6 @@ const ModifyPage = () => {
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             onChange={(e) => handleInputChange(e, "school")}
           />
-
           <input
             type="text"
             value={formData.opponent_school}
@@ -174,22 +180,24 @@ const ModifyPage = () => {
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             onChange={(e) => handleInputChange(e, "opponent_school")}
           />
-
-          <input
-            type="text"
-            value={formData.w_points}
-            placeholder="Winning Points"
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            onChange={(e) => handleInputChange(e, "w_points")}
-          />
-
-          <input
-            type="text"
-            value={formData.l_points}
-            placeholder="Losing Points"
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            onChange={(e) => handleInputChange(e, "l_points")}
-          />
+          {formData.game == "valorant" && (
+            <div>
+              <input
+                type="text"
+                value={formData.w_points}
+                placeholder="Winning Points"
+                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                onChange={(e) => handleInputChange(e, "w_points")}
+              />
+              <input
+                type="text"
+                value={formData.l_points}
+                placeholder="Losing Points"
+                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                onChange={(e) => handleInputChange(e, "l_points")}
+              />
+            </div>
+          )}
         </div>
       </div>
 
