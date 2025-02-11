@@ -121,6 +121,8 @@ def get_match_stats(videogame):
                     for player in player_stats: 
                         team_stats.append(player)
                         
+                        print(player)
+                        
                     game_data = {
                         "gameStats": {
                             "school": school,
@@ -131,6 +133,7 @@ def get_match_stats(videogame):
                         "teamStats": team_stats,
                     }
                     
+                    print(week_stats)
                     match_data["match"]['points'] = week_stats["week_score"]
                     #match_data["match"]['points'] = match_points
                     match_data["match"]['games'].append(game_data)

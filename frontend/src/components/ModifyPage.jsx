@@ -149,7 +149,7 @@ const ModifyPage = () => {
             <option value="2">Game 2</option>
             <option value="3">Game 3</option>
           </select>
-          {formData.game == "valorant" && (
+          {formData.game === "valorant" && (
             <input
               type="text"
               value={formData.map}
@@ -158,7 +158,7 @@ const ModifyPage = () => {
               onChange={(e) => handleInputChange(e, "map")}
             />
           )}
-          {formData.game == "apex-legends" && (
+          {formData.game === "apex-legends" && (
             <input
               type="text"
               value={formData.squad_placed}
@@ -174,7 +174,7 @@ const ModifyPage = () => {
             className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
             onChange={(e) => handleInputChange(e, "school")}
           />
-          {formData.game == "valorant" && (
+          {formData.game === "valorant" && (
             <input
               type="text"
               value={formData.opponent_school}
@@ -183,7 +183,7 @@ const ModifyPage = () => {
               onChange={(e) => handleInputChange(e, "opponent_school")}
             />
           )}
-          {formData.game == "valorant" && (
+          {formData.game === "valorant" && (
             <div>
               <input
                 type="text"
