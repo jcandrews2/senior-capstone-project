@@ -197,7 +197,7 @@ def upload_match():
                     cursor.execute(
                         game_queries[game],
                         (
-                            game_id, school, player["name"],
+                            game_id, data["school"], player["name"],
                             player["kills"], player["assists"], player["knocks"],
                             player["damage"], player["score"], player["placement"],
                             data.get("game_number"), data.get("week")
@@ -207,7 +207,7 @@ def upload_match():
                         cursor.execute(
                             game_queries[game],
                             (
-                                game_id, school, player["name"],
+                                game_id, data["school"], player["name"],
                                 player["score"], player["goals"], player["assists"],
                                 player["saves"], player["shots"], 
                                 data.get("did_win"), data.get("game_number"), data.get("week")
