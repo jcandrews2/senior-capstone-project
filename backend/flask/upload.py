@@ -209,7 +209,7 @@ def upload_match():
                             (
                             game_id, data["school"], player["name"],
                             player["kills"], player["assists"], player["knocks"],
-                            player["damage"], 0, data.get("placement"),
+                            player["damage"], 0, data.get("squad_placed"),
                             data.get("game_number"), data.get("week")
                             )  
                         )
