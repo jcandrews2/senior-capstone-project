@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+import pymysql
 from db import get_db_connection
 
 disputes_bp = Blueprint("disputes", __name__)
@@ -36,15 +37,15 @@ def submit_dispute(videogame):
 @disputes_bp.route("/get_all_disputes", methods=["GET"])
 def get_all_disputes():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)  # Ensure dictionary cursor
 
     try:
         query = """
         SELECT 
-            d.game_id, d.username, d.school, d.comment, d.videogame, d.week_number, d.game_number, 
+            d.game_id, d.username, d.school AS submitter_school, d.comment, d.videogame, d.week_number, d.game_number,
             g.map, g.code, g.school AS game_school, g.opponent
         FROM disputes d
-        JOIN games g ON d.game_id = g.id
+        JOIN games g ON d.game_id = g.game_id
         """
         cursor.execute(query)
         disputes = cursor.fetchall()
@@ -56,7 +57,7 @@ def get_all_disputes():
             if game_id not in games:
                 games[game_id] = {
                     "gameId": game_id,
-                    "gameType": row["game"],
+                    "gameType": row["videogame"],
                     "map": row["map"],
                     "code": row["code"],
                     "school": row["game_school"],
@@ -68,7 +69,7 @@ def get_all_disputes():
             games[game_id]["disputes"].append(
                 {
                     "username": row["username"],
-                    "school": row["school"],
+                    "school": row["submitter_school"],
                     "comment": row["comment"],
                 }
             )
@@ -82,6 +83,7 @@ def get_all_disputes():
     finally:
         cursor.close()
         conn.close()
+
 
 # Resolve a dispute (delete by game_id)
 @disputes_bp.route("/resolve_dispute/<int:game_id>", methods=["POST"])

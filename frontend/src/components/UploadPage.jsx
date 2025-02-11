@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../config";
 
@@ -9,8 +9,29 @@ const UploadPage = () => {
   const [game_number, setGameNumber] = useState("");
   const [school, setSchool] = useState("");
   const [opponent_school, setOpponentSchool] = useState("");
+  const [schools, setSchools] = useState([]); // Store fetched schools
   const [loading, setLoading] = useState(false);
+  const [loadingSchools, setLoadingSchools] = useState(true); // Loading state for schools
   const navigate = useNavigate();
+
+  // Fetch school names from the backend
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await fetch(API_ENDPOINTS.handleGetSchools());
+        if (!response.ok) throw new Error("Failed to fetch schools");
+
+        const schoolList = await response.json();
+        setSchools(schoolList);
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      } finally {
+        setLoadingSchools(false);
+      }
+    };
+
+    fetchSchools();
+  }, []);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -87,6 +108,7 @@ const UploadPage = () => {
             </ul>
           </div>
           <div className="flex justify-between rounded-md bg-custom-gray p-4 text-white">
+            {/* Game Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
               value={game}
@@ -98,6 +120,7 @@ const UploadPage = () => {
               <option value="apex-legends">Apex Legends</option>
             </select>
 
+            {/* Week Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
               value={week}
@@ -109,6 +132,7 @@ const UploadPage = () => {
               <option value="3">Week 3</option>
             </select>
 
+            {/* Game Number Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
               value={game_number}
@@ -120,30 +144,47 @@ const UploadPage = () => {
               <option value="3">Game 3</option>
             </select>
 
+            {/* Winning School Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
               value={school}
               onChange={(e) => setSchool(e.target.value)}
+              disabled={loadingSchools}
             >
               <option value="">Select Winning School</option>
-              <option value="school-a">School A</option>
-              <option value="school-b">School B</option>
-              <option value="school-c">School C</option>
+              {loadingSchools ? (
+                <option>Loading...</option>
+              ) : (
+                schools.map((school) => (
+                  <option key={school} value={school}>
+                    {school}
+                  </option>
+                ))
+              )}
             </select>
 
+            {/* Losing School Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
               value={opponent_school}
               onChange={(e) => setOpponentSchool(e.target.value)}
+              disabled={loadingSchools}
             >
               <option value="">Select Losing School</option>
-              <option value="school-a">School A</option>
-              <option value="school-b">School B</option>
-              <option value="school-c">School C</option>
+              {loadingSchools ? (
+                <option>Loading...</option>
+              ) : (
+                schools.map((school) => (
+                  <option key={school} value={school}>
+                    {school}
+                  </option>
+                ))
+              )}
             </select>
           </div>
         </div>
 
+        {/* File Upload */}
         <div
           className="m-8 flex h-48 w-full flex-col items-center justify-center rounded-md border-2 border-dashed border-custom-off-white bg-custom-gray text-white"
           onDrop={handleDrop}
@@ -173,6 +214,7 @@ const UploadPage = () => {
           )}
         </div>
 
+        {/* Submit Button */}
         <button
           className={`m-2 bg-custom-off-white px-8 py-2 font-bold text-black transition hover:bg-custom-gold ${
             loading
