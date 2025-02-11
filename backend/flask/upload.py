@@ -144,8 +144,8 @@ def upload_match():
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
                 "apex-legends": """
-                    INSERT INTO apex_game (game_id, school, player_name, kills, assists, knocks, damage, score, placement, game_number, week_number)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    INSERT INTO apex_game (game_id, school, player_name, kills, assists, knocks, damage, placement, game_number, week_number)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
             }
             
@@ -201,7 +201,7 @@ def upload_match():
                             (
                             game_id, data["school"], player["name"],
                             player["kills"], player["assists"], player["knocks"],
-                            player["damage"], player["score"], player["placement"],
+                            player["damage"], data.get("placement"),
                             data.get("game_number"), data.get("week")
                             )  
                         )
