@@ -95,7 +95,7 @@ def get_match_stats(videogame):
 
                 # Get weekly stats
                 cursor.execute(week_queries[videogame], (week, school))
-                week_stats = cursor.fetchone()
+                week_stats = cursor.fetchall()
 
                 match_data = { 
                     "match" : { 
@@ -103,7 +103,7 @@ def get_match_stats(videogame):
                         "points" : 0,
                         "games": []
                     },
-                    "week" : week_stats
+                    "week" : [week_stats]
                 }
                 
                 cursor.execute(game_queries[videogame]["game_query"], (week, school))
