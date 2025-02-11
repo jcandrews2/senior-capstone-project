@@ -189,38 +189,38 @@ def upload_match():
                         data["image_url"]
                     )
                 )
-            #insert score per game
-            points = 0
-            damage = 0
-            for player in data["players"]:
-                damage += int(player["damage"])
-                points += int(player["kills"])
-                
-            points += math.floor(damage/200)
-            
-            placement = int(data.get("squad_placed"))
-            if placement == 1:
-                points += 12
-            elif placement == 2:
-                points += 9
-            elif placement == 3:
-                points += 7
-            elif placement == 4:
-                points += 5
-            elif placement == 5:
-                points += 4
-            elif placement == 6 or 7:
-                points += 3
-            elif placement == 8 or 9 or 10:
-                points += 2
-            elif placement == 11 or 12 or 13 or 14 or 15:
-                points += 1
+
             
             # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
-
                 if game == "apex-legends":
+                    #insert score per game
+                    points = 0
+                    damage = 0
+                    for player in data["players"]:
+                        damage += int(player["damage"])
+                        points += int(player["kills"])
+                        
+                    points += math.floor(damage/200)
+                    
+                    placement = int(data.get("squad_placed"))
+                    if placement == 1:
+                        points += 12
+                    elif placement == 2:
+                        points += 9
+                    elif placement == 3:
+                        points += 7
+                    elif placement == 4:
+                        points += 5
+                    elif placement == 5:
+                        points += 4
+                    elif placement == 6 or 7:
+                        points += 3
+                    elif placement == 8 or 9 or 10:
+                        points += 2
+                    elif placement == 11 or 12 or 13 or 14 or 15:
+                        points += 1
                     cursor.execute(
                         game_queries[game],
                             (
