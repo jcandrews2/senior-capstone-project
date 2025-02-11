@@ -454,7 +454,7 @@ def upload_match():
                         SET apex_season.total_placements_1 = ( 
                         SELECT SUM(week_placements_1) FROM apex_week 
                         WHERE apex_week.player_name = '{player["name"]}' ) 
-                        HERE apex_season.player_name = '{player["name"]}' ;
+                        WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
                         cursor.execute(f"""UPDATE apex_season
                         SET apex_season.total_placements_2 = ( 
