@@ -140,7 +140,7 @@ def get_match_stats(videogame):
                         game_points += player['damage'] % 200
                         
                         team_stats.append(player)
-                        
+
                     match_points += game_points
     
                         

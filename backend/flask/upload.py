@@ -62,7 +62,8 @@ def upload_file():
     file.save(file_path)
 
     # Generate a **correct** public URL for the uploaded image
-    file_url = f"{UPLOAD_FOLDER}{unique_filename}"
+    base_url = request.host_url.rstrip('/')  # Ensures no double slashes
+    file_url = f"{base_url}/{UPLOAD_FOLDER}{unique_filename}"
 
     try:
         # Define the OCR script path
