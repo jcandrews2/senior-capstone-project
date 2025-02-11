@@ -196,7 +196,7 @@ def upload_match():
                 
             points += math.floor(damage/200)
             
-            placement = data.get("squad_placed")
+            placement = int(data.get("squad_placed"))
             if placement == 1:
                 points += 12
             elif placement == 2:
