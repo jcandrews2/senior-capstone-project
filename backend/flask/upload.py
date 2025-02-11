@@ -196,25 +196,121 @@ def upload_match():
             for player in data["players"]:
 
                 if game == "apex-legends":
-                        cursor.execute(
-                            game_queries[game],
+                    cursor.execute(
+                        game_queries[game],
                             (
-                                game_id, data["school"], player["name"],
-                                player["kills"], player["assists"], player["knocks"],
-                                player["damage"], player["score"], player["placement"],
-                                data.get("game_number"), data.get("week")
-                            )   
+                            game_id, data["school"], player["name"],
+                            player["kills"], player["assists"], player["knocks"],
+                            player["damage"], player["score"], player["placement"],
+                            data.get("game_number"), data.get("week")
+                            )  
                         )
+                    
+                    #check to see if this player exists in the table
+                    cursor.execute(f"""SELECT COUNT(*) from apex_week where player_name="{player["name"]}" and week_number ={data["week"]};""")
+                    is_week_exists = cursor.fetchone()
+                    
+                    #if 0, it doesnt exist, so insert
+                    if is_week_exists[0] == 0:
+                        cursor.execute(f"""INSERT INTO apex_week(week_number, school, player_name, week_kills_avg, week_assists_avg, week_knocks_avg, week_damage_avg, week_kills, week_assists, week_knocks, week_damage, week_score, week_placements_1, week_placements_2, week_placements_3, week_placements_4, week_placements_5, week_placements_6_7, week_placements_8_10, week_placements_11_15)
+                            SELECT week_number, school, player_name, AVG(kills), AVG(assists), AVG(knocks), AVG(damage), SUM(kills), SUM(assists), SUM(knocks), SUM(damage), SUM(score), 0, 0, 0, 0, 0, 0, 0, 0
+                            FROM apex_game
+                            WHERE player_name='{player["name"]}' and week_number={data["week"]}
+                            GROUP BY week_number, school, player_name;
+                            """)
+                    
+                    #if 1, does exists and needs to be updated        
+                    if is_week_exists[0] == 1:
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_kills_avg = (
+                        SELECT AVG(kills)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_assists_avg = (
+                        SELECT AVG(assists)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_knocks_avg = (
+                        SELECT AVG(knocks)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}' AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_damage_avg = (
+                        SELECT AVG(damage)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_kills = (
+                        SELECT SUM(kills)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_assists = (
+                        SELECT SUM(assists)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_knocks = (
+                        SELECT SUM(knocks)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_damage = (
+                        SELECT SUM(damage)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ; 
+                        """)
+                        cursor.execute(f"""UPDATE apex_week
+                        SET apex_week.week_score = (
+                        SELECT SUM(score)
+                        FROM apex_game
+                        WHERE apex_game.player_name = '{player["name"]}'  AND apex_game.week_number = {data["week"]}
+                        )
+                        WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ; 
+                        """)
+                #TODO: NEED TO UPDATE PLACEMENTS
+                #TODO: NEED TO CALCULATE SCORE POINTS
+                #game_points = 0
+                #if player["placement"] == 1:
+                
+                
+                    
                 elif game == "rocket-league":
-                            cursor.execute(
-                                game_queries[game],
-                                (
-                                    game_id, data["school"], player["name"],
-                                    player["score"], player["goals"], player["assists"],
-                                    player["saves"], player["shots"], 
-                                    data.get("did_win"), data.get("game_number"), data.get("week")
-                                )
-                            )
+                    cursor.execute(
+                        game_queries[game],
+                        (
+                            game_id, data["school"], player["name"],
+                            player["score"], player["goals"], player["assists"],
+                            player["saves"], player["shots"], 
+                            data.get("did_win"), data.get("game_number"), data.get("week")
+                        )
+                    )
+                    
                             
             #insert player game rows for valorant       
             if game == "valorant":
