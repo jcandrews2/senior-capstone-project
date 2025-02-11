@@ -233,7 +233,7 @@ const HomePage = () => {
                       <div
                         className={`overflow-hidden transition-all duration-[500ms] ease-in-out ${
                           activeMatch === index
-                            ? "max-h-[2000px] opacity-100"
+                            ? "max-h-[4000px] opacity-100"
                             : "max-h-0 opacity-0"
                         }`}
                       >
