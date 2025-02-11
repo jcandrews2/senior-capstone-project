@@ -6,6 +6,9 @@ import secrets
 app = Flask(__name__)
 app.json.sort_keys = False
 CORS(app)
+# Allow CORS for any domain
+# CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 # db config
 app.config['MYSQL_HOST'] = 'localhost'
