@@ -92,9 +92,7 @@ const DisputesManagementPage = () => {
             className="mb-6 w-3/4 rounded-lg bg-custom-gray p-4 text-white shadow-lg"
           >
             {/* Game Details */}
-            <h2 className="text-xl font-semibold">
-              {game.gameType} - {game.map || game.code || "N/A"}
-            </h2>
+            <h2 className="text-xl font-semibold">{game.gameType}</h2>
             <p className="text-custom-off-white">
               {game.school} vs {game.opponent || "N/A"} | {game.week} | Game{" "}
               {game.game_number}
@@ -103,8 +101,7 @@ const DisputesManagementPage = () => {
             {/* Display Winning & Losing Points if available */}
             {game.w_points !== "" && game.l_points !== "" && (
               <p className="font-semibold text-custom-gold">
-                Score: {game.school} {game.w_points} - {game.l_points}{" "}
-                {game.opponent}
+                {game.school} {game.w_points} - {game.l_points} {game.opponent}
               </p>
             )}
 

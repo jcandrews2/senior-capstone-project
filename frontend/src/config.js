@@ -2,7 +2,7 @@
 //const API_BASE_URL = "https://40.85.147.30:8080";
 
 // AFKVM
-// const API_BASE_URL = "http://128.85.24.19:8080";
+//  const API_BASE_URL = "http://128.85.24.19:8080";
 
 // AFKVM2
 // const API_BASE_URL = "https://20.9.135.136:8080";
@@ -25,6 +25,8 @@ const API_ENDPOINTS = {
   uploadMatch: `${API_BASE_URL}/upload_match`,
   updateWeekAndSeason: `${API_BASE_URL}/update_week_and_season`,
   getAllDisputes: `${API_BASE_URL}/get_all_disputes`,
+  getPlayers: (gameType, gameId) =>
+    `${API_BASE_URL}/get_players/${gameType}/${gameId}`,
   resolveDispute: (gameId) => `${API_BASE_URL}/resolve_dispute/${gameId}`,
   handleSubmitDispute: (videogame) =>
     `${API_BASE_URL}/submit_dispute/${videogame}`,
