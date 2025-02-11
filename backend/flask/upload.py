@@ -196,9 +196,24 @@ def upload_match():
                 
             points += math.floor(damage/200)
             
-            cursor.execute(f"""SELECT placement from apex_game where week_number ={data["week"]} AND game_number = {data["game_number"]} GROUP BY school """)
-            placement = cursor.fetchone()
-            print(placement)
+            placement = data.get("squad_placed")
+            if placement == 1:
+                points += 12
+            elif placement == 2:
+                points += 9
+            elif placement == 3:
+                points += 7
+            elif placement == 4:
+                points += 5
+            elif placement == 5:
+                points += 4
+            elif placement == 6 or 7:
+                points += 3
+            elif placement == 8 or 9 or 10:
+                points += 2
+            elif placement == 11 or 12 or 13 or 14 or 15:
+                points += 1
+            
             # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
@@ -209,7 +224,7 @@ def upload_match():
                             (
                             game_id, data["school"], player["name"],
                             player["kills"], player["assists"], player["knocks"],
-                            player["damage"], 0, data.get("squad_placed"),
+                            player["damage"], points, data.get("squad_placed"),
                             data.get("game_number"), data.get("week")
                             )  
                         )
