@@ -193,27 +193,31 @@ def upload_match():
                 
             # Insert player data
             print(data)
-            if game == "apex-legends":
-                    cursor.execute(
-                        game_queries[game],
-                        (
-                            game_id, data["school"], player["name"],
-                            player["kills"], player["assists"], player["knocks"],
-                            player["damage"], player["score"], player["placement"],
-                            data.get("game_number"), data.get("week")
-                        )   
-                    )
-            elif game == "rocket-league":
+            for player in data["players"]:
+
+                if game == "apex-legends":
                         cursor.execute(
                             game_queries[game],
                             (
                                 game_id, data["school"], player["name"],
-                                player["score"], player["goals"], player["assists"],
-                                player["saves"], player["shots"], 
-                                data.get("did_win"), data.get("game_number"), data.get("week")
-                            )
+                                player["kills"], player["assists"], player["knocks"],
+                                player["damage"], player["score"], player["placement"],
+                                data.get("game_number"), data.get("week")
+                            )   
                         )
-            elif game == "valorant":
+                elif game == "rocket-league":
+                            cursor.execute(
+                                game_queries[game],
+                                (
+                                    game_id, data["school"], player["name"],
+                                    player["score"], player["goals"], player["assists"],
+                                    player["saves"], player["shots"], 
+                                    data.get("did_win"), data.get("game_number"), data.get("week")
+                                )
+                            )
+                            
+            #insert player game rows for valorant       
+            if game == "valorant":
                 
                 school = ""
                 o_school =""
