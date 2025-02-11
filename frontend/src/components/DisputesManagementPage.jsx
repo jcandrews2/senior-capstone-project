@@ -45,6 +45,7 @@ const DisputesManagementPage = () => {
         alert("Dispute resolved successfully!");
       } else {
         alert("Failed to resolve dispute.");
+        console.error("Response error:", await response.text());
       }
     } catch (error) {
       console.error("Error resolving dispute:", error);
