@@ -213,7 +213,7 @@ def upload_match():
                 points += 2
             elif placement == 11 or 12 or 13 or 14 or 15:
                 points += 1
-            print(placement)
+            
             # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
@@ -318,6 +318,7 @@ def upload_match():
                         """)
                     
                     #update placements for week
+                    print(placement)
                     if placement == 1:
                         cursor.execute(f"""UPDATE apex_week 
                             SET week_placements_1 = week_placements_1 + 1
