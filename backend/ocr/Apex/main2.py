@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 
 
 
-print(apex_OCR('/Users/sham/Desktop/CP499/main_project/senior-capstone-project/backend/ocr/Apex/apex_ss/3.png'))
+print(apex_OCR('/Users/sham/Desktop/CP499/main_project/senior-capstone-project/backend/ocr/Apex/apex_ss/4.png'))
 # print(apex_OCR('apex_ss/6.png'))
 
 # i = cv2.imread('/Users/sham/Desktop/CP499/main_project/senior-capstone-project/backend/ocr/Apex/apex_ss/1.png')
