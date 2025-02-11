@@ -73,7 +73,7 @@ def get_match_stats(videogame):
     week_queries = { 
         "rl": "SELECT school, player_name AS `player`, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg FROM rl_week WHERE week_number = %s AND (school = %s OR school = %s)",
         "val": "SELECT school, player_name AS `player`, week_cs_avg, week_kills_avg, week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg FROM val_week WHERE week_number = %s AND (school = %s OR school = %s)",
-        "apex": "SELECT school, player_name AS `player`,  week_kills_avg, week_assists_avg, week_knocks_avg, week_damage_avg, week_kills, week_assists, week_knocks, week_damage, week_score FROM apex_week WHERE week_number = %s AND school = %s"
+        "apex": "SELECT school, player_name AS `player`,  week_kills_avg AS `average week kills`, week_assists_avg, week_knocks_avg, week_damage_avg, week_kills, week_assists, week_knocks, week_damage, week_score FROM apex_week WHERE week_number = %s AND school = %s"
     }
 
     try:
