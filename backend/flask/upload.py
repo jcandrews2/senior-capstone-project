@@ -316,10 +316,50 @@ def upload_match():
                         )
                         WHERE apex_week.player_name = '{player["name"]}' AND apex_week.week_number = {data["week"]} ; 
                         """)
-                #TODO: NEED TO UPDATE PLACEMENTS
-                #TODO: NEED TO CALCULATE SCORE PO
-                #game_points = 0
-                #if player["placement"] == 1:
+                    
+                    #update placements for week
+                    if placement == 1:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_1 = week_placements_1 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 2:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_2 = week_placements_2 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 3:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_3 = week_placements_3 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 4:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_4 = week_placements_4 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 5:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_5 = week_placements_5 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 6 or 7:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_6_7 = week_placements_6_7 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 8 or 9 or 10:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_8_10 = week_placements_8_10 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                    elif placement == 11 or 12 or 13 or 14 or 15:
+                        cursor.execute(f"""UPDATE apex_week 
+                            SET week_placements_11_15 = week_placements_11_15 + 1
+                            WHERE player_name = '{player["name"]}' AND week_number = {data["week"]} ;
+                            """)
+                
+             
                 
                     #check to see if in season table
                     cursor.execute(f"""SELECT COUNT(*) from apex_season where player_name="{player["name"]}";""")
@@ -408,7 +448,63 @@ def upload_match():
                         )
                         WHERE apex_season.player_name = '{player["name"]}' ;
                         """)
-
+                        
+                        #update season placements
+                        cursor.execute(f"""UPDATE apex_season 
+                        SET apex_season.total_placements_1 = ( 
+                        SELECT SUM(week_placements_1) FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        HERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.total_placements_2 = ( 
+                        SELECT SUM(week_placements_2) 
+                        FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season 
+                        SET apex_season.total_placements_3 = ( 
+                        SELECT SUM(week_placements_3) 
+                        FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season 
+                        SET apex_season.total_placements_4 = ( 
+                        SELECT SUM(week_placements_4) FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season 
+                        SET apex_season.total_placements_5 = ( 
+                        SELECT SUM(week_placements_5) 
+                        FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season 
+                        SET apex_season.total_placements_6_7 = ( 
+                        SELECT SUM(week_placements_6_7) 
+                        FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season
+                        SET apex_season.total_placements_8_10 = ( 
+                        SELECT SUM(week_placements_8_10) F
+                        ROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        cursor.execute(f"""UPDATE apex_season 
+                        SET apex_season.total_placements_11_15 = ( 
+                        SELECT SUM(week_placements_11_15) 
+                        FROM apex_week 
+                        WHERE apex_week.player_name = '{player["name"]}' ) 
+                        WHERE apex_season.player_name = '{player["name"]}' ;
+                        """)
+                        
 
                     
                 elif game == "rocket-league":
