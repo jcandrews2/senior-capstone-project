@@ -126,7 +126,7 @@ def get_match_stats(videogame):
                     game_data = {
                         "gameStats": {
                             "school": school,
-                            "points": int(player['score']),
+                            "points": player['score'],
                             "gameNumber": game["game_number"],
                             "gameID": game['game_id']
                         },
@@ -144,7 +144,7 @@ def get_match_stats(videogame):
 
                 # Get weekly stats
                 cursor.execute(week_queries[videogame], (week, school, opponent))
-                week_stats = cursor.fetchall()
+                week_stats = cursor.fetchone()
 
                 # Format the match data
                 match_data = { 
