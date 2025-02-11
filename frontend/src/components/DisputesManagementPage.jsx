@@ -26,9 +26,27 @@ const DisputesManagementPage = () => {
     fetchDisputes();
   }, []);
 
-  // Review dispute (navigate to Modify Page)
-  const handleReview = (gameId) => {
-    navigate("/modify", { state: { gameId } });
+  // Handle review/edit button click
+  const handleReview = async (game) => {
+    try {
+      // Use the existing game data (which has gameId, gameType, school, etc.)
+      // Now fetch the players info using the new API endpoint.
+      const response = await fetch(
+        API_ENDPOINTS.getPlayers(game.gameType, game.gameId),
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch players info");
+      }
+      const data = await response.json();
+      // Merge the players array into your game object.
+      const fullGameData = { ...game, players: data.players };
+
+      // Navigate to the modify page and pass the full game data.
+      navigate("/modify", { state: { ocrData: fullGameData } });
+    } catch (error) {
+      console.error("Error fetching full game details:", error);
+      alert("Could not load full game details. Please try again.");
+    }
   };
 
   // Resolve dispute (remove from UI & database)

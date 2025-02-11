@@ -1,71 +1,43 @@
 from flask import Blueprint, jsonify, request
+import pymysql
 from db import get_db_connection
 
-retrieve_bp = Blueprint('retrieve', __name__)
+retrieve_bp = Blueprint("retrieve", __name__)
 
-@retrieve_bp.route('/get_match_images', methods=['GET'])
-def get_match_images():
-    """Retrieve uploaded match images based on game, week, and school."""
-    
+@retrieve_bp.route("/get_players/<gameType>/<gameId>", methods=["GET"])
+def get_players(gameType, gameId):
     conn = get_db_connection()
-    cursor = conn.cursor()
-
-    game = request.args.get("game")
-    week_number = request.args.get("week_number")
-    school = request.args.get("school")
-    game_number = request.args.get("game_number")
-
-    if not game:
-        return jsonify({"error": "Game type is required"}), 400
-
-    picture_tables = {
-        "rocket-league": "rl_picture",
-        "valorant": "val_picture",
-        "apex-legends": "apex_picture"
-    }
-
-    if game not in picture_tables:
-        return jsonify({"error": f"Game '{game}' is not supported"}), 400
-
-    table_name = picture_tables[game]
-
-    query = f"SELECT game_id, game_number, week_number, school, picture FROM {table_name} WHERE 1=1"
-    params = []
-
-    if week_number:
-        query += " AND week_number = %s"
-        params.append(week_number)
-    if school:
-        query += " AND school = %s"
-        params.append(school)
-    if game_number:
-        query += " AND game_number = %s"
-        params.append(game_number)
-
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
-        cursor.execute(query, tuple(params))
-        results = cursor.fetchall()
+        if gameType == "val":
+            query = """
+                SELECT player_name as name, acs, kills, deaths, assists, econ, fb, plants, defuses, agent
+                FROM val_game
+                WHERE game_id = %s
+            """
+        elif gameType == "rl":
+            query = """
+                SELECT player_name as name, score, goals, assists, saves, shots
+                FROM rl_game
+                WHERE game_id = %s
+            """
+        elif gameType == "apex":
+            query = """
+                SELECT player_name as name, kills, assists, knocks, damage, placement
+                FROM apex_game
+                WHERE game_id = %s
+            """
+        else:
+            return jsonify({"error": "Invalid game type"}), 400
 
-        if not results:
-            return jsonify({"message": "No images found for the given filters"}), 404
-
-        image_data = [
-            {
-                "game_id": row[0],
-                "game_number": row[1],
-                "week_number": row[2],
-                "school": row[3],
-                "image_url": row[4],
-            }
-
-            for row in results
-        ]
-
-        return jsonify({"images": image_data}), 200
+        cursor.execute(query, (gameId,))
+        players = cursor.fetchall()
+        players_list = [dict(player) for player in players]
+        return jsonify({"players": players_list}), 200
 
     except Exception as e:
-        print(f"Error retrieving match images: {e}")
-        return jsonify({"error": "Failed to retrieve match images"}), 500
+        print("Error fetching players info:", e)
+        return jsonify({"error": str(e)}), 500
 
     finally:
         cursor.close()
