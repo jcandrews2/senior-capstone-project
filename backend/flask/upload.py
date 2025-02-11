@@ -185,9 +185,11 @@ def upload_match():
             elif game == "apex-legends":
                 cursor.execute(
                         picture_queries[game],
+                    (
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["image_url"]
                     )
+                )
                 
             # Insert player data
             print(data)
