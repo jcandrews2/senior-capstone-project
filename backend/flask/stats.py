@@ -132,7 +132,7 @@ def get_match_stats(videogame):
                         "teamStats": team_stats,
                     }
                     cursor.execute(f"""SELECT week_score from apex_week
-                                   WHERE week_number = {week} and school = {school}
+                                   WHERE week_number = {week} and school = '{school}'
                                    GROUP BY school;""")
                     print(cursor.fetchone())
                     
