@@ -120,13 +120,11 @@ def get_match_stats(videogame):
 
                     for player in player_stats: 
                         team_stats.append(player)
-
-    
                         
                     game_data = {
                         "gameStats": {
                             "school": school,
-                            "points": player_stats['score'],
+                            "points": int(player['score']),
                             "gameNumber": game["game_number"],
                             "gameID": game['game_id']
                         },
