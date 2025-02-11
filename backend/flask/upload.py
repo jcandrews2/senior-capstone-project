@@ -319,7 +319,7 @@ def upload_match():
                             """)
                     #if it does exist then update
                     if is_season_exists[0] == 1:
-                        cursor.execute(f"""UPDATE apex_sseason
+                        cursor.execute(f"""UPDATE apex_season
                         SET apex_season.season_kills_avg = (
                         SELECT AVG(week_kills_avg)
                         FROM apex_week
