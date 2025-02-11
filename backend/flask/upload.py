@@ -299,14 +299,14 @@ def upload_match():
                     is_season_exists = cursor.fetchone()
 
                     #if doesnt exist
-                    if is_season_exists == 0:
+                    if is_season_exists[0] == 0:
                         cursor.execute(f"""INSERT INTO apex_season(school, player_name, season_kills_avg, season_assists_avg, season_knocks_avg, season_damage_avg, total_kills, total_assists, total_knocks, total_damage, total_score, total_placements_1, total_placements_2, total_placements_3, total_placements_4, total_placements_5, total_placements_6_7, total_placements_8_10, total_placements_11_15)
                             SELECT school, player_name, AVG(week_kills_avg), AVG(week_assists_avg), AVG(week_knocks_avg), AVG(week_damage_avg), SUM(week_kills), SUM(week_assists), SUM(week_knocks), SUM(week_damage), SUM(week_score), SUM(week_placements_1), SUM(week_placements_2), SUM(week_placements_3), SUM(week_placements_4), SUM(week_placements_5), SUM(week_placements_6_7), SUM(week_placements_8_10),   SUM(week_placements_11_15)
                             FROM apex_week
                             WHERE player_name='{player["name"]}';
                             """)
                     #if it does exist then update
-                    if is_season_exists == 1:
+                    if is_season_exists[0] == 1:
                         cursor.execute(f"""UPDATE apex_sseason
                         SET apex_season.season_kills_avg = (
                         SELECT AVG(week_kills_avg)
