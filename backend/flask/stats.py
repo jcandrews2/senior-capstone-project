@@ -95,7 +95,7 @@ def get_match_stats(videogame):
 
                 # Get weekly stats
                 cursor.execute(week_queries[videogame], (week, school))
-                week_stats = cursor.fetchone()
+                week_stats = cursor.fetchall()
 
                 match_data = { 
                     "match" : { 
@@ -103,7 +103,7 @@ def get_match_stats(videogame):
                         "points" : 0,
                         "games": []
                     },
-                    "week" : [week_stats]
+                    "week" : week_stats
                 }
                 
                 cursor.execute(game_queries[videogame]["game_query"], (week, school))
@@ -121,7 +121,6 @@ def get_match_stats(videogame):
                     for player in player_stats: 
                         team_stats.append(player)
                         
-                        print(player)
                         
                     game_data = {
                         "gameStats": {
@@ -133,8 +132,7 @@ def get_match_stats(videogame):
                         "teamStats": team_stats,
                     }
                     
-                    print(week_stats)
-                    match_data["match"]['points'] = week_stats["week_score"]
+                    match_data["match"]['points'] = week_stats[0]["week_score"]
                     #match_data["match"]['points'] = match_points
                     match_data["match"]['games'].append(game_data)
 
