@@ -58,7 +58,8 @@ def upload_file():
 
     # Generate a **unique** filename to prevent overwriting (UUID + original extension)
     file_extension = os.path.splitext(file.filename)[1]
-    unique_filename = f"{uuid.uuid4()}{file_extension}"
+    game_id = uuid.uuid4()
+    unique_filename = f"{game_id}{file_extension}"
     file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
     file.save(file_path)
 
@@ -85,6 +86,7 @@ def upload_file():
         
         # Format the output to include all required attributes
         formatted_data = {
+            "game_id": game_id,
             "image_url": file_url,
             "game": game,  # Assuming the game is Valorant for this OCR
             "week": week,  # Week will need to be added manually in the ModifyPage
@@ -122,8 +124,8 @@ def upload_match():
             if game not in ["rocket-league", "valorant", "apex-legends"]:
                 return jsonify({"error": f"Game '{game}' is not supported"}), 400
 
-            # 🔹 Generate a new unique game_id if one isn't provided
-            game_id = data.get("game_id", str(uuid.uuid4()))
+            # Generate a new unique game_id if one isn't provided
+            game_id = data.get("game_id", "-1")
 
             # Ensure the image URL is correctly formatted
             image_url = data.get("image_url", "").strip()
