@@ -50,14 +50,7 @@ const UploadPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (
-      !file ||
-      !game ||
-      !week ||
-      !school ||
-      !opponent_school ||
-      !game_number
-    ) {
+    if (!file || !game || !week || !school || !game_number) {
       alert("Please fill all the fields and upload a file.");
       return;
     }
@@ -119,7 +112,6 @@ const UploadPage = () => {
               <option value="valorant">Valorant</option>
               <option value="apex-legends">Apex Legends</option>
             </select>
-
             {/* Week Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
@@ -131,7 +123,6 @@ const UploadPage = () => {
               <option value="2">Week 2</option>
               <option value="3">Week 3</option>
             </select>
-
             {/* Game Number Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
@@ -143,7 +134,6 @@ const UploadPage = () => {
               <option value="2">Game 2</option>
               <option value="3">Game 3</option>
             </select>
-
             {/* Winning School Selection */}
             <select
               className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
@@ -162,25 +152,26 @@ const UploadPage = () => {
                 ))
               )}
             </select>
-
             {/* Losing School Selection */}
-            <select
-              className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
-              value={opponent_school}
-              onChange={(e) => setOpponentSchool(e.target.value)}
-              disabled={loadingSchools}
-            >
-              <option value="">Select Losing School</option>
-              {loadingSchools ? (
-                <option>Loading...</option>
-              ) : (
-                schools.map((school) => (
-                  <option key={school} value={school}>
-                    {school}
-                  </option>
-                ))
-              )}
-            </select>
+            {game == "valorant" && (
+              <select
+                className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
+                value={opponent_school}
+                onChange={(e) => setOpponentSchool(e.target.value)}
+                disabled={loadingSchools}
+              >
+                <option value="">Select Losing School</option>
+                {loadingSchools ? (
+                  <option>Loading...</option>
+                ) : (
+                  schools.map((school) => (
+                    <option key={school} value={school}>
+                      {school}
+                    </option>
+                  ))
+                )}
+              </select>
+            )}
           </div>
         </div>
 
