@@ -9,7 +9,7 @@
 
 // for vercel
 // const API_BASE_URL = "https://20.9.135.136:443";
-const API_BASE_URL = "https://scacstats.westus2.cloudapp.azure.com:8080";
+const API_BASE_URL = "https://scacstats.westus2.cloudapp.azure.com:443";
 
 // For local testing uncomment this and comment the above line
 //const API_BASE_URL = "http://127.0.0.1:8080";
