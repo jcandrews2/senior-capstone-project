@@ -116,7 +116,7 @@ def get_all_disputes():
         cursor.close()
         conn.close()
 
-@disputes_bp.route("/resolve_dispute/<int:gameId>", methods=["POST"])
+@disputes_bp.route("/resolve_dispute/<string:gameId>", methods=["POST"])
 def resolve_dispute(gameId):
     conn = get_db_connection()
     cursor = conn.cursor()
