@@ -187,7 +187,7 @@ const DisputeModal = (props) => {
                       type="text"
                       placeholder="Comment"
                       ref={commentInput}
-                      className="my-4 w-full rounded-md p-8"
+                      className="my-4 w-full rounded-md p-8 text-black"
                     />
                   </div>
                   <button
