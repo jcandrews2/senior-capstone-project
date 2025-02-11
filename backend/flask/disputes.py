@@ -51,33 +51,31 @@ def get_all_disputes():
             game_table = ""
 
             # Determine the game table dynamically
-            if videogame == "valorant":
+            if videogame == "val":
                 game_table = "val_game"
-            elif videogame == "rocket-league":
+                query = f"SELECT game_id, map, school AS game_school, opponent FROM {game_table} WHERE game_id = %s"
+            elif videogame == "rl":
                 game_table = "rl_game"
-            elif videogame == "apex-legends":
+                query = f"SELECT game_id, school AS game_school, opponent FROM {game_table} WHERE game_id = %s"
+            elif videogame == "apex":
                 game_table = "apex_game"
+                query = f"SELECT game_id, school AS game_school, opponent FROM {game_table} WHERE game_id = %s"
             else:
                 continue  # Skip invalid games
 
             # Fetch game details from the appropriate table
-            query = f"""
-            SELECT game_id, map, code, school AS game_school, opponent 
-            FROM {game_table} 
-            WHERE game_id = %s
-            """
             cursor.execute(query, (game_id,))
             game_data = cursor.fetchone()
 
             if not game_data:
                 continue  # Skip disputes with no corresponding game
 
+            # If this game_id hasn't been added yet, initialize it
             if game_id not in games:
                 games[game_id] = {
                     "gameId": game_id,
                     "gameType": videogame,
-                    "map": game_data.get("map"),
-                    "code": game_data.get("code"),
+                    "map": game_data.get("map", ""),  # Only exists for Valorant
                     "school": game_data.get("game_school"),
                     "opponent": game_data.get("opponent"),
                     "week": f"Week {dispute['week_number']}",
@@ -85,6 +83,7 @@ def get_all_disputes():
                     "disputes": [],
                 }
 
+            # Append dispute comments under the correct game entry
             games[game_id]["disputes"].append(
                 {
                     "username": dispute["username"],
