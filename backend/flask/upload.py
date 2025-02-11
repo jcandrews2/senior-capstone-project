@@ -213,7 +213,7 @@ def upload_match():
                 points += 2
             elif placement == 11 or 12 or 13 or 14 or 15:
                 points += 1
-            
+            print(placement)
             # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
