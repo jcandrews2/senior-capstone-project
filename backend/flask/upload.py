@@ -95,7 +95,7 @@ def upload_file():
             "opponent_school": opponent_school,  # Opponent will need to be added manually in the ModifyPage
             "map": ocr_data.get("map", ""),
             "code": ocr_data.get("code", ""),
-            "squad_placed": ocr_data.get("squad_placed", ""),
+            "squad_placed": ocr_data.get("placement", ""),
             "w_points": ocr_data.get("w_points", ""),
             "l_points": ocr_data.get("l_points", ""),
             "players": ocr_data.get("players", []),
