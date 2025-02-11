@@ -8,7 +8,7 @@
 // const API_BASE_URL = "http://20.9.135.136:8080";
 
 // for vercel
-const API_BASE_URL = "https://20.9.135.136:443";
+const API_BASE_URL = "https://20.9.135.136:8080";
 
 // For local testing uncomment this and comment the above line
 //const API_BASE_URL = "http://127.0.0.1:8080";
