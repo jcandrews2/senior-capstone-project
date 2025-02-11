@@ -11,7 +11,7 @@ def schools():
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     try:
-        cursor.execute('SELECT school FROM users WHERE school != "None" GROUP BY school ')
+        cursor.execute('SELECT school FROM users WHERE is_admin = 0 GROUP BY school')
     
         schools = [school['school'] for school in cursor.fetchall()]
 

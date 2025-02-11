@@ -57,8 +57,8 @@ const ModifyAccount = (props) => {
           <input
             type="password"
             placeholder="Change Password"
-            minlength="5"
-            maxlength="40"
+            minLength="5"
+            maxLength="40"
             ref={passwordChangeInput}
             className="p-2"
           />

@@ -7,7 +7,7 @@ import { IoMdClose } from "react-icons/io";
 import { API_ENDPOINTS } from "../config";
 
 const HomePage = () => {
-  const [videogame, setVideogame] = useState("rl");
+  const [videogame, setVideogame] = useState("val");
   const [week, setWeek] = useState("1");
   const [matchReports, setMatchReports] = useState([]);
   const [playerReports, setPlayerReports] = useState([]);
@@ -140,8 +140,8 @@ const HomePage = () => {
               <input
                 type="text"
                 placeholder="Find a player's stats by name"
-                minlength="1"
-                maxlength="50"
+                minLength="1"
+                maxLength="50"
                 className="h-full w-full rounded-md p-4"
                 ref={searchInput}
                 onKeyDown={(e) => {

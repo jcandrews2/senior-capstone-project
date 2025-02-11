@@ -66,16 +66,16 @@ const ManageAccounts = () => {
         <input
           type="text"
           placeholder="School"
-          minlength="5"
-          maxlength="20"
+          minLength="5"
+          maxLength="20"
           ref={schoolInput}
           className="my-4 w-full p-4 text-black"
         ></input>
         <input
           type="text"
           placeholder="Username"
-          minlength="5"
-          maxlength="20"
+          minLength="5"
+          maxLength="20"
           ref={usernameInput}
           className="my-4 w-full p-4 text-black"
         ></input>
@@ -83,8 +83,8 @@ const ManageAccounts = () => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            minlength="5"
-            maxlength="40"
+            minLength="5"
+            maxLength="40"
             ref={passwordInput}
             className="w-full p-4"
           ></input>
