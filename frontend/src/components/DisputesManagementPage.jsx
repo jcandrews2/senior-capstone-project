@@ -70,15 +70,36 @@ const DisputesManagementPage = () => {
         disputes.map((game) => (
           <div
             key={game.gameId}
-            className="mb-6 w-3/4 rounded-lg bg-custom-gray p-4 text-white"
+            className="mb-6 w-3/4 rounded-lg bg-custom-gray p-4 text-white shadow-lg"
           >
+            {/* Game Details */}
             <h2 className="text-xl font-semibold">
-              {game.gameType} - {game.map || game.code}
+              {game.gameType} - {game.map || game.code || "N/A"}
             </h2>
             <p className="text-custom-off-white">
-              {game.school} vs {game.opponent} | {game.week} | Game{" "}
+              {game.school} vs {game.opponent || "N/A"} | {game.week} | Game{" "}
               {game.game_number}
             </p>
+
+            {/* Display Winning & Losing Points if available */}
+            {game.w_points !== "" && game.l_points !== "" && (
+              <p className="font-semibold text-custom-gold">
+                Score: {game.school} {game.w_points} - {game.l_points}{" "}
+                {game.opponent}
+              </p>
+            )}
+
+            {/* Image Preview */}
+            {game.image_url && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold">Match Screenshot:</h3>
+                <img
+                  src={game.image_url}
+                  alt="Game Screenshot"
+                  className="mt-2 w-full rounded-lg border border-custom-off-white shadow-lg"
+                />
+              </div>
+            )}
 
             {/* Dispute Comments Section */}
             <div className="mt-4 rounded-md bg-custom-light-gray p-4">

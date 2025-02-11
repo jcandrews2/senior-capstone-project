@@ -39,7 +39,7 @@ def get_all_disputes():
     cursor = conn.cursor(pymysql.cursors.DictCursor)  # Ensure dictionary cursor
 
     try:
-        # First, fetch all disputes
+        # Fetch all disputes from the disputes table
         cursor.execute("SELECT * FROM disputes")
         disputes = cursor.fetchall()
 
@@ -48,22 +48,34 @@ def get_all_disputes():
         for dispute in disputes:
             game_id = dispute["game_id"]
             videogame = dispute["videogame"]
-            game_table = ""
+            picture_table = ""
 
-            # Determine the game table dynamically
-            if videogame == "val":
-                game_table = "val_game"
-                query = f"SELECT game_id, map, school AS game_school, opponent FROM {game_table} WHERE game_id = %s"
-            elif videogame == "rl":
-                game_table = "rl_game"
-                query = f"SELECT game_id, school AS game_school, opponent FROM {game_table} WHERE game_id = %s"
-            elif videogame == "apex":
-                game_table = "apex_game"
-                query = f"SELECT game_id, school AS game_school, opponent FROM {game_table} WHERE game_id = %s"
+            # Determine the correct picture table based on game type
+            if videogame == "valorant":
+                picture_table = "val_picture"
+                query = f"""
+                SELECT game_id, game_number, week_number, w_school AS school, l_school AS opponent, w_points, l_points, picture 
+                FROM {picture_table} 
+                WHERE game_id = %s
+                """
+            elif videogame == "rocket-league":
+                picture_table = "rl_picture"
+                query = f"""
+                SELECT game_id, game_number, week_number, w_school AS school, l_school AS opponent, w_points, l_points, picture 
+                FROM {picture_table} 
+                WHERE game_id = %s
+                """
+            elif videogame == "apex-legends":
+                picture_table = "apex_picture"
+                query = f"""
+                SELECT game_id, game_number, week_number, school, picture 
+                FROM {picture_table} 
+                WHERE game_id = %s
+                """
             else:
                 continue  # Skip invalid games
 
-            # Fetch game details from the appropriate table
+            # Fetch game details from the appropriate `game_picture` table
             cursor.execute(query, (game_id,))
             game_data = cursor.fetchone()
 
@@ -75,11 +87,13 @@ def get_all_disputes():
                 games[game_id] = {
                     "gameId": game_id,
                     "gameType": videogame,
-                    "map": game_data.get("map", ""),  # Only exists for Valorant
-                    "school": game_data.get("game_school"),
-                    "opponent": game_data.get("opponent"),
-                    "week": f"Week {dispute['week_number']}",
-                    "game_number": dispute["game_number"],
+                    "school": game_data.get("school"),
+                    "opponent": game_data.get("opponent", ""),  # Apex does not have `opponent`
+                    "week": f"Week {game_data['week_number']}",
+                    "game_number": game_data["game_number"],
+                    "w_points": game_data.get("w_points", ""),
+                    "l_points": game_data.get("l_points", ""),
+                    "image_url": game_data.get("picture"),  # Stores the match screenshot
                     "disputes": [],
                 }
 
