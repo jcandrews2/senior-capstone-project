@@ -27,7 +27,8 @@ def apex_OCR(img_file):
         KAKs.append(read_KAK_crops(f'KAK_crops_temp/crop{i}.jpg'))
 
     out = {
-           "players" : []
+           "players" : [],
+           'placement': -1,
            }
 
     # log = [['.', '.' ,'.'], ['.' ,'.','.'], ['.', '.' ,'.']]
@@ -48,15 +49,12 @@ def apex_OCR(img_file):
 
     for i in range(3):
         # out["players"].append({"kak" : KAKs[i], "damage": DDs[i]})
-        out['players'].append({'name':'_',
+        out['players'].append({'name':-1,
                                 'kills':log[i][0],
                                 'assists':log[i][1],
                                 'knocks':log[i][2],
                                 'damage':DDs[i],
-                                'score':'_',
-                                'placement':'_',
-                                'game_number':'_',
-                                'week_number':'_'})
+                                })
     
     return out
 
