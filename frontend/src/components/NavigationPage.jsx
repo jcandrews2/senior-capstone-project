@@ -4,7 +4,7 @@ import { MdLock } from "react-icons/md";
 import { useAuth } from "./AuthContext";
 
 const NavigationPage = ({ hamburgerMenu, setHamburgerMenu }) => {
-  const { loggedIn } = useAuth();
+  const { loggedIn, isAdmin } = useAuth();
 
   return (
     <div
@@ -47,23 +47,12 @@ const NavigationPage = ({ hamburgerMenu, setHamburgerMenu }) => {
         <div className="flex p-8 text-custom-off-white hover:text-custom-gold">
           <Link
             className="pr-4 text-5xl"
-            to="/modify"
-            onClick={() => setHamburgerMenu(false)}
-          >
-            Modify
-          </Link>
-          {loggedIn ? null : <MdLock className="h-auto w-12" />}
-        </div>
-
-        <div className="flex p-8 text-custom-off-white hover:text-custom-gold">
-          <Link
-            className="pr-4 text-5xl"
             to="/disputes"
             onClick={() => setHamburgerMenu(false)}
           >
             Disputes
           </Link>
-          {loggedIn ? null : <MdLock className="h-auto w-12" />}
+          {loggedIn && isAdmin ? null : <MdLock className="h-auto w-12" />}
         </div>
       </div>
     </div>

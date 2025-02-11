@@ -31,7 +31,7 @@ const Roster = () => {
 
   return (
     <div className="flex flex-col items-center p-8">
-      <h1 className="pt-8 text-center text-3xl font-semibold">Roster</h1>
+      <h1 className="pt-8 text-center text-3xl font-semibold">Set Roster</h1>
       <select
         className="m-4 bg-custom-off-white px-8 py-2 font-bold text-black"
         onChange={handleVideogameChange}
@@ -106,7 +106,7 @@ const SetRoster = (props) => {
           <li>
             You still need to submit your
             {videogame === "rl"
-              ? "Rocket League "
+              ? " Rocket League "
               : videogame === "val"
                 ? " Valorant "
                 : " Apex Legends "}
