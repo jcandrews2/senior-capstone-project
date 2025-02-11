@@ -5,9 +5,9 @@ import secrets
 
 app = Flask(__name__)
 app.json.sort_keys = False
-# CORS(app)
+CORS(app)
 # Allow CORS for any domain
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+# CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 # db config
