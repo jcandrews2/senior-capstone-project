@@ -115,3 +115,25 @@ def get_all_disputes():
     finally:
         cursor.close()
         conn.close()
+
+@disputes_bp.route("/resolve_dispute/<int:gameId>", methods=["POST"])
+def resolve_dispute(gameId):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Delete the dispute related to the given gameId
+        cursor.execute("DELETE FROM disputes WHERE game_id = %s", (gameId,))
+        
+        # Commit changes
+        conn.commit()
+        
+        return jsonify({"message": "Dispute resolved successfully"}), 200
+
+    except Exception as e:
+        print(f"Error resolving dispute: {e}")
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
