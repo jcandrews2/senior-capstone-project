@@ -190,7 +190,7 @@ def upload_match():
             #insert score per game
             points = 0
             damage = 0
-            for player in data[player]:
+            for player in data["players"]:
                 damage += player["damage"]
                 points += player["kills"]
                 
