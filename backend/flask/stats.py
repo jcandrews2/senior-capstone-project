@@ -49,7 +49,7 @@ def get_match_stats(videogame):
 
             """,
             "player_query": """
-                SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb, plants, defuses
+                SELECT school, player_name AS `player`, combat_score AS `combat score` , kills, deaths, assists, econ, fb, plants, defuses, agent, map
                 FROM val_game
                 WHERE game_id = %s
             """

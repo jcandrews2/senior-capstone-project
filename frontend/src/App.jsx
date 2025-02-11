@@ -20,15 +20,20 @@ function App() {
         <Route path="/rankings" element={<RankingsPage />} />
         <Route
           path="/upload"
-          element={<ProtectedRoute page={<UploadPage />} />}
+          element={<ProtectedRoute page={<UploadPage />} isAdminPage={false} />}
         />
         <Route
           path="/disputes"
-          element={<ProtectedRoute page={<DisputesManagementPage />} />}
+          element={
+            <ProtectedRoute
+              page={<DisputesManagementPage />}
+              isAdminPage={true}
+            />
+          }
         />
         <Route
           path="/modify"
-          element={<ProtectedRoute page={<ModifyPage />} />}
+          element={<ProtectedRoute page={<ModifyPage />} isAdminPage={false} />}
         />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
