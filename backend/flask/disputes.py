@@ -33,44 +33,63 @@ def submit_dispute(videogame):
         conn.close()
 
 
-# Fetch all disputes grouped by game
 @disputes_bp.route("/get_all_disputes", methods=["GET"])
 def get_all_disputes():
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)  # Ensure dictionary cursor
 
     try:
-        query = """
-        SELECT 
-            d.game_id, d.username, d.school AS submitter_school, d.comment, d.videogame, d.week_number, d.game_number,
-            g.map, g.code, g.school AS game_school, g.opponent
-        FROM disputes d
-        JOIN games g ON d.game_id = g.game_id
-        """
-        cursor.execute(query)
+        # First, fetch all disputes
+        cursor.execute("SELECT * FROM disputes")
         disputes = cursor.fetchall()
 
-        # Group disputes by game
         games = {}
-        for row in disputes:
-            game_id = row["game_id"]
+
+        for dispute in disputes:
+            game_id = dispute["game_id"]
+            videogame = dispute["videogame"]
+            game_table = ""
+
+            # Determine the game table dynamically
+            if videogame == "valorant":
+                game_table = "val_game"
+            elif videogame == "rocket-league":
+                game_table = "rl_game"
+            elif videogame == "apex-legends":
+                game_table = "apex_game"
+            else:
+                continue  # Skip invalid games
+
+            # Fetch game details from the appropriate table
+            query = f"""
+            SELECT game_id, map, code, school AS game_school, opponent 
+            FROM {game_table} 
+            WHERE game_id = %s
+            """
+            cursor.execute(query, (game_id,))
+            game_data = cursor.fetchone()
+
+            if not game_data:
+                continue  # Skip disputes with no corresponding game
+
             if game_id not in games:
                 games[game_id] = {
                     "gameId": game_id,
-                    "gameType": row["videogame"],
-                    "map": row["map"],
-                    "code": row["code"],
-                    "school": row["game_school"],
-                    "opponent": row["opponent"],
-                    "week": f"Week {row['week_number']}",
-                    "game_number": row["game_number"],
+                    "gameType": videogame,
+                    "map": game_data.get("map"),
+                    "code": game_data.get("code"),
+                    "school": game_data.get("game_school"),
+                    "opponent": game_data.get("opponent"),
+                    "week": f"Week {dispute['week_number']}",
+                    "game_number": dispute["game_number"],
                     "disputes": [],
                 }
+
             games[game_id]["disputes"].append(
                 {
-                    "username": row["username"],
-                    "school": row["submitter_school"],
-                    "comment": row["comment"],
+                    "username": dispute["username"],
+                    "school": dispute["school"],
+                    "comment": dispute["comment"],
                 }
             )
 
@@ -79,28 +98,6 @@ def get_all_disputes():
     except Exception as e:
         print(f"Error fetching disputes: {e}")
         return jsonify({"error": "Failed to fetch disputes"}), 500
-
-    finally:
-        cursor.close()
-        conn.close()
-
-
-# Resolve a dispute (delete by game_id)
-@disputes_bp.route("/resolve_dispute/<int:game_id>", methods=["POST"])
-def resolve_dispute(game_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    try:
-        # Remove disputes for the given game ID
-        cursor.execute("DELETE FROM disputes WHERE game_id = %s", (game_id,))
-        conn.commit()
-
-        return jsonify({"message": "Dispute resolved successfully"}), 200
-
-    except Exception as e:
-        print(f"Error resolving dispute: {e}")
-        return jsonify({"error": "Failed to resolve dispute"}), 500
 
     finally:
         cursor.close()
