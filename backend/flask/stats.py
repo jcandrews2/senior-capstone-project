@@ -233,7 +233,8 @@ def get_season_stats(videogame):
                 school_name = school.get("school")
                 cursor.execute(f"""SELECT total_score from apex_season
                                    WHERE school = '{school}'
-                                   GROUP BY school;""")
+                                   GROUP BY school;
+                                """)
                 season_points = cursor.fetchone()["total_score"]
                 if school_name != "None":
                     cursor.execute(season_queries[videogame], (school_name,))
