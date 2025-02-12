@@ -533,10 +533,12 @@ def upload_match():
                         school = data["school"]
                         o_school = data["opponent_school"]
                         did_win = 1
-                    else:
+                    elif player["school" == "L"]:
                         school = data["opponent_school"] 
                         o_school = data["school"]
                         did_win = 0
+                    else:
+                        school = player["school"]
                     
                     cursor.execute(
                         game_queries[game],
