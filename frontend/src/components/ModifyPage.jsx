@@ -204,19 +204,21 @@ const ModifyPage = () => {
             />
           )}
 
-          {formData.game === "valorant" && (
+          {formData.game == "valorant" && (
             <div>
               <input
                 type="text"
                 value={formData.w_points}
+                placeholder="Winning Points"
                 className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                readOnly
+                onChange={(e) => handleInputChange(e, "w_points")}
               />
               <input
                 type="text"
                 value={formData.l_points}
+                placeholder="Losing Points"
                 className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                readOnly
+                onChange={(e) => handleInputChange(e, "l_points")}
               />
             </div>
           )}
