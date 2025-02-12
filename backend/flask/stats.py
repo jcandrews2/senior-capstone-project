@@ -125,7 +125,7 @@ def get_match_stats(videogame):
                                    WHERE week_number = {week} and school = '{school} and game_number ={game["game_number"]}'
                                    GROUP BY school;""")
                     game_points = cursor.fetchone()
-                    print(game_points + "hello")
+                    print(game_points)
                         
                     game_data = {
                         "gameStats": {
