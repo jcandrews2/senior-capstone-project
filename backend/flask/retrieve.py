@@ -8,16 +8,12 @@ retrieve_bp = Blueprint("retrieve", __name__)
 def get_players(gameType, gameId):
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    print("I am in the function")
     try:
         if gameType == "val":
-            # query = """
-            #     SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent
-            #     FROM val_game
-            #     WHERE game_id = %s
-            # """
             query = """
-            SELECT * FROM val_game WHERE game_id = %s
+                SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent
+                FROM val_game
+                WHERE game_id = %s
             """
         elif gameType == "rl":
             query = """
@@ -36,8 +32,6 @@ def get_players(gameType, gameId):
 
         cursor.execute(query, (gameId,))
         players = cursor.fetchall()
-        print("printing players:")
-        print(players)
         players_list = [dict(player) for player in players]
         print(players_list)
         return jsonify({"players": players_list}), 200
