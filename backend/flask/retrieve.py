@@ -11,10 +11,13 @@ def get_players(gameType, gameId):
     print("I am in the function")
     try:
         if gameType == "val":
+            # query = """
+            #     SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent
+            #     FROM val_game
+            #     WHERE game_id = %s
+            # """
             query = """
-                SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent
-                FROM val_game
-                WHERE game_id = %s
+            SELECT * FROM val_game WHERE game_id %s
             """
         elif gameType == "rl":
             query = """
