@@ -22,6 +22,7 @@ const ModifyPage = () => {
     did_win: "1",
     w_points: "",
     l_points: "",
+    disputes: [],
   };
 
   const file = location.state?.file || null;
@@ -116,6 +117,23 @@ const ModifyPage = () => {
       {error && (
         <div className="mb-6 w-3/4 rounded bg-red-100 p-4 text-red-700">
           {error}
+        </div>
+      )}
+
+      {/* Display disputes if any */}
+      {formData.disputes && formData.disputes.length > 0 && (
+        <div className="mb-6 w-3/4 rounded-md bg-red-100 p-4 text-red-700 shadow-lg">
+          <h2 className="text-xl font-semibold">Disputes:</h2>
+          <ul className="list-disc pl-4">
+            {formData.disputes.map((dispute, index) => (
+              <li key={index}>
+                <strong>
+                  {dispute.username} ({dispute.school}):
+                </strong>{" "}
+                {dispute.comment}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
