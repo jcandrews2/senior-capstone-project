@@ -203,6 +203,23 @@ const ModifyPage = () => {
               onChange={(e) => handleInputChange(e, "opponent_school")}
             />
           )}
+
+          {formData.game === "valorant" && (
+            <div>
+              <input
+                type="text"
+                value={formData.w_points}
+                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                readOnly
+              />
+              <input
+                type="text"
+                value={formData.l_points}
+                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                readOnly
+              />
+            </div>
+          )}
         </div>
       </div>
 
