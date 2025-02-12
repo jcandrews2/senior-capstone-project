@@ -38,8 +38,16 @@ const DisputesManagementPage = () => {
         throw new Error("Failed to fetch players info");
       }
       const data = await response.json();
+      const gameTypeDict = {
+        val: "valorant",
+        apex: "apex_legends",
+        rl: "rocket_league",
+      };
       // Merge the players array into your game object.
       const fullGameData = { ...game, players: data.players };
+      fullGameData["opponent_school"] = fullGameData["opponent"];
+      fullGameData["game"] = fullGameData[gameTypeDict["gameType"]];
+      fullGameData["game_id"] = fullGameData["gameId"];
 
       // Navigate to the modify page and pass the full game data.
       navigate("/modify", { state: { ocrData: fullGameData } });

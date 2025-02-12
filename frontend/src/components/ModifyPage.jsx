@@ -33,10 +33,12 @@ const ModifyPage = () => {
   // Generate a preview of the image either from file (frontend) or from backend URL
   useEffect(() => {
     if (file) {
+      // If navigated from UploadPage, use the uploaded file
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
     } else if (formData.game_id) {
+      // If navigated from Dispute Management Page, fetch image from backend
       setImagePreview(`${API_ENDPOINTS.handleGetPicture(formData.game_id)}`);
     }
   }, [file, formData.game_id]);
@@ -101,7 +103,7 @@ const ModifyPage = () => {
         <div className="mb-6 w-3/4">
           <h2 className="text-xl font-semibold text-white">Uploaded Image</h2>
           <img
-            src={API_ENDPOINTS.handleGetPicture(formData.game_id)}
+            src={imagePreview}
             alt="Uploaded Match Screenshot"
             className="mt-4 w-full rounded-lg border-2 border-custom-off-white shadow-lg"
           />
@@ -183,24 +185,6 @@ const ModifyPage = () => {
               onChange={(e) => handleInputChange(e, "opponent_school")}
             />
           )}
-          {formData.game === "valorant" && (
-            <div>
-              <input
-                type="text"
-                value={formData.w_points}
-                placeholder="Winning Points"
-                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                onChange={(e) => handleInputChange(e, "w_points")}
-              />
-              <input
-                type="text"
-                value={formData.l_points}
-                placeholder="Losing Points"
-                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                onChange={(e) => handleInputChange(e, "l_points")}
-              />
-            </div>
-          )}
         </div>
       </div>
 
@@ -231,13 +215,6 @@ const ModifyPage = () => {
           ))}
         </div>
       </div>
-
-      <button
-        className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
-        onClick={handleGame}
-      >
-        {loading ? "Submitting..." : "Submit"}
-      </button>
     </div>
   );
 };
