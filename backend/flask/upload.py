@@ -533,7 +533,7 @@ def upload_match():
                         school = data["school"]
                         o_school = data["opponent_school"]
                         did_win = 1
-                    elif player["school" == "L"]:
+                    else:
                         school = data["opponent_school"] 
                         o_school = data["school"]
                         did_win = 0
