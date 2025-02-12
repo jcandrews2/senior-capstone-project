@@ -132,7 +132,7 @@ const DisputesManagementPage = () => {
             <div className="mt-4 flex gap-4">
               <button
                 className="rounded-md bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-                onClick={() => handleReview(game.gameId)}
+                onClick={() => handleReview(game)}
               >
                 Review & Edit
               </button>

@@ -36,10 +36,10 @@ const ModifyPage = () => {
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
-    } else if (formData.image_url) {
-      setImagePreview(API_ENDPOINTS.baseURL + formData.image_url);
+    } else if (formData.game_id) {
+      setImagePreview(`${API_ENDPOINTS.handleGetPicture(formData.game_id)}`);
     }
-  }, [file, formData.image_url]);
+  }, [file, formData.game_id]);
 
   // Update handler for editable fields
   const handleInputChange = (event, key) => {
