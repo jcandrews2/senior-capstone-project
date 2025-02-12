@@ -34,6 +34,7 @@ from disputes import disputes_bp
 from roster import roster_bp
 from schools import schools_bp
 from rankings import rankings_bp
+from retrieve import retrieve_bp
 
 app.register_blueprint(login_bp)
 app.register_blueprint(account_bp)
@@ -44,6 +45,7 @@ app.register_blueprint(disputes_bp)
 app.register_blueprint(roster_bp)
 app.register_blueprint(schools_bp)
 app.register_blueprint(rankings_bp)
+app.register_blueprint(retrieve_bp)
 
 mail = Mail(app)
 
