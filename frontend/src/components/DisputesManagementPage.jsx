@@ -53,7 +53,7 @@ const DisputesManagementPage = () => {
         game: gameTypeDict[game.gameType] || game.gameType, // Convert short form to full game name
         game_id: game.gameId, // Ensure game_id is correctly mapped
       };
-      print(fullGameData)
+      console.log(fullGameData);
 
       // Navigate to Modify Page and pass the full game data
       navigate("/modify", { state: { ocrData: fullGameData } });
