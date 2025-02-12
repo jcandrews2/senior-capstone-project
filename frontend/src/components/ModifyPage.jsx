@@ -233,6 +233,14 @@ const ModifyPage = () => {
           ))}
         </div>
       </div>
+
+      {/* Submit Button */}
+      <button
+        className="mt-8 rounded-lg bg-custom-off-white px-6 py-3 text-black transition hover:bg-custom-gold"
+        onClick={handleGame}
+      >
+        {loading ? "Submitting..." : "Submit"}
+      </button>
     </div>
   );
 };
