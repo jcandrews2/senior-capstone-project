@@ -124,13 +124,13 @@ def get_match_stats(videogame):
                     cursor.execute(f"""SELECT week_score from apex_game
                                    WHERE week_number = {week} and school = '{school} and game_number ={game["game_number"]}'
                                    GROUP BY school;""")
-                    game_points = cursor.fetchone()["score"]
+                    game_points = cursor.fetchone()
                     
                         
                     game_data = {
                         "gameStats": {
                             "school": school,
-                            "points": game_points,
+                            "points": game_points["score"],
                             "gameNumber": game["game_number"],
                             "gameID": game['game_id']
                         },
@@ -139,9 +139,9 @@ def get_match_stats(videogame):
                     cursor.execute(f"""SELECT week_score from apex_week
                                    WHERE week_number = {week} and school = '{school}'
                                    GROUP BY school;""")
-                    week_points = cursor.fetchone()["week_score"]
+                    week_points = cursor.fetchone()
                     
-                    match_data["match"]['points'] = week_points
+                    match_data["match"]['points'] = week_points["week_score"]
                     #match_data["match"]['points'] = match_points
                     match_data["match"]['games'].append(game_data)
 
