@@ -2,7 +2,7 @@
 //const API_BASE_URL = "https://40.85.147.30:8080";
 
 // AFKVM
-  const API_BASE_URL = "http://128.85.24.19:8080";
+const API_BASE_URL = "http://128.85.24.19:8080";
 
 // AFKVM2
 // const API_BASE_URL = "https://20.9.135.136:8080";

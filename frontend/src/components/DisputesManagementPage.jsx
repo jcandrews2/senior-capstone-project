@@ -104,16 +104,14 @@ const DisputesManagementPage = () => {
             )}
 
             {/* Image Preview */}
-            {game.image_url && (
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold">Match Screenshot:</h3>
-                <img
-                  src={game.image_url}
-                  alt="Game Screenshot"
-                  className="mt-2 w-full rounded-lg border border-custom-off-white shadow-lg"
-                />
-              </div>
-            )}
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Match Screenshot:</h3>
+              <img
+                src={API_ENDPOINTS.handleGetPicture(game.gameId)}
+                alt="Game Screenshot"
+                className="mt-2 w-full rounded-lg border border-custom-off-white shadow-lg"
+              />
+            </div>
 
             {/* Dispute Comments Section */}
             <div className="mt-4 rounded-md bg-custom-light-gray p-4">
