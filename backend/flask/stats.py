@@ -120,9 +120,7 @@ def get_match_stats(videogame):
 
                     for player in player_stats: 
                         team_stats.append(player)
-                    print(week)
-                    print(school)
-                    print(game["game_number"])
+                    
                     cursor.execute(f"""SELECT score from apex_game
                                    WHERE week_number = {week} and school = '{school}' and game_number ={game["game_number"]}
                                    GROUP BY school;""")

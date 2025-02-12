@@ -245,7 +245,7 @@ const HomePage = () => {
 
                         <div className="p-8">
                           <h3 className="p-4 text-2xl font-bold text-white">
-                            {"Weekly Stats: " + matchReport.match.points}
+                            {"Weekly Stats: " + matchReport.match.points + " Points"}
                           </h3>
                           <div className="overflow-x-auto text-custom-off-white">
                             <table className="w-full table-auto text-left">

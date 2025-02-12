@@ -54,7 +54,7 @@ def get_all_disputes():
             if videogame == "val":
                 picture_table = "val_picture"
                 query = f"""
-                SELECT game_id, game_number, week_number, w_school AS school, l_school AS opponent, w_points, l_points, picture 
+                SELECT game_id, game_number, week_number, w_school AS school, l_school AS opponent, w_points, l_points, picture
                 FROM {picture_table} 
                 WHERE game_id = %s
                 """
