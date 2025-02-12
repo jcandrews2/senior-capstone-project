@@ -106,7 +106,7 @@ const DisputesManagementPage = () => {
             {/* Game Details */}
             <h2 className="text-xl font-semibold">{game.gameType}</h2>
             <p className="text-custom-off-white">
-              {game.school} vs {game.opponent || "N/A"} | {game.week} | Game{" "}
+              {game.school} vs {game.opponent || "N/A"} | Week{" "} {game.week} | Game{" "}
               {game.game_number}
             </p>
 

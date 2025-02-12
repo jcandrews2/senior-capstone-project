@@ -89,7 +89,7 @@ def get_all_disputes():
                     "gameType": videogame,
                     "school": game_data.get("school"),
                     "opponent": game_data.get("opponent", ""),  # Apex does not have `opponent`
-                    "week": f"Week {game_data['week_number']}",
+                    "week": game_data['week_number'],
                     "game_number": game_data["game_number"],
                     "w_points": game_data.get("w_points", ""),
                     "l_points": game_data.get("l_points", ""),
