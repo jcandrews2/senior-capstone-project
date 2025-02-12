@@ -33,6 +33,7 @@ def get_players(gameType, gameId):
         cursor.execute(query, (gameId,))
         players = cursor.fetchall()
         players_list = [dict(player) for player in players]
+        print(players_list)
         return jsonify({"players": players_list}), 200
 
     except Exception as e:
