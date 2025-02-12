@@ -29,8 +29,7 @@ const DisputesManagementPage = () => {
   // Handle review/edit button click
   const handleReview = async (game) => {
     try {
-      // Use the existing game data (which has gameId, gameType, school, etc.)
-      // Now fetch the players info using the new API endpoint.
+      // Fetch player information for the selected game
       const response = await fetch(
         API_ENDPOINTS.getPlayers(game.gameType, game.gameId),
       );
@@ -38,18 +37,24 @@ const DisputesManagementPage = () => {
         throw new Error("Failed to fetch players info");
       }
       const data = await response.json();
+
+      // Mapping short game codes to full names
       const gameTypeDict = {
         val: "valorant",
-        apex: "apex_legends",
-        rl: "rocket_league",
+        apex: "apex-legends",
+        rl: "rocket-league",
       };
-      // Merge the players array into your game object.
-      const fullGameData = { ...game, players: data.players };
-      fullGameData["opponent_school"] = fullGameData["opponent"];
-      fullGameData["game"] = fullGameData[gameTypeDict["gameType"]];
-      fullGameData["game_id"] = fullGameData["gameId"];
 
-      // Navigate to the modify page and pass the full game data.
+      // Construct the full game data object
+      const fullGameData = {
+        ...game,
+        players: data.players,
+        opponent_school: game.opponent, // Ensure opponent_school field is correctly populated
+        game: gameTypeDict[game.gameType] || game.gameType, // Convert short form to full game name
+        game_id: game.gameId, // Ensure game_id is correctly mapped
+      };
+
+      // Navigate to Modify Page and pass the full game data
       navigate("/modify", { state: { ocrData: fullGameData } });
     } catch (error) {
       console.error("Error fetching full game details:", error);
