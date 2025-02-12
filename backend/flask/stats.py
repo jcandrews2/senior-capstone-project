@@ -219,7 +219,7 @@ def get_season_stats(videogame):
         season_queries = { 
             "rl":  "SELECT school, player_name AS `player`, season_score_avg, season_goals_avg, season_assists_avg, season_saves_avg, season_shots_avg FROM rl_season WHERE school = %s",
             "val": "SELECT school, player_name AS `player`, season_cs_avg AS `combat score average`, season_kills_avg AS `average kills`, season_deaths_avg AS `average deaths`, season_assists_avg AS `average assists`, season_econ_avg AS `average econ`, season_fb_avg AS `first blood average`, season_plants_avg AS `average plants, season_defuses_avg AS `average defuses` FROM val_season WHERE school = %s",
-            "apex": "SELECT school, player_name AS `player`, season_kills_avg AS `average kills`, season_assists_avg AS 'average assists', season_knocks_avg AS 'average knocks' , season_damage_avg AS `average damage`, total_kills AS `total kills`, total_assists AS `total assists`, total_damage AS `total damage`, total_score FROM apex_season WHERE school = %s"
+            "apex": "SELECT school, player_name AS `player`, season_kills_avg AS `average kills`, season_assists_avg AS `average assists', season_knocks_avg AS 'average knocks' , season_damage_avg AS `average damage`, total_kills AS `total kills`, total_assists AS `total assists`, total_damage AS `total damage`, total_score FROM apex_season WHERE school = %s"
         }
         
         response = []
