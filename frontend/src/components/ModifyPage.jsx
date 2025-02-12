@@ -101,7 +101,7 @@ const ModifyPage = () => {
         <div className="mb-6 w-3/4">
           <h2 className="text-xl font-semibold text-white">Uploaded Image</h2>
           <img
-            src={imagePreview}
+            src={API_ENDPOINTS.handleGetPicture(formData.game_id)}
             alt="Uploaded Match Screenshot"
             className="mt-4 w-full rounded-lg border-2 border-custom-off-white shadow-lg"
           />
