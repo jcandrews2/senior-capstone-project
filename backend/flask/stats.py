@@ -226,11 +226,11 @@ def get_season_stats(videogame):
             "val": "SELECT school, player_name AS `player`, season_cs_avg AS `combat score average`, season_kills_avg AS `average kills`, season_deaths_avg AS `average deaths`, season_assists_avg AS `average assists`, season_econ_avg AS `average econ`, season_fb_avg AS `first blood average`, season_plants_avg AS `average plants`, season_defuses_avg AS `defuses` FROM val_season WHERE school = %s",
             "apex": "SELECT school, player_name AS `player`, season_kills_avg AS `average kills`, season_assists_avg AS `average assists`, season_knocks_avg AS `average knocks` , season_damage_avg AS `average damage`, total_kills AS `total kills`, total_assists AS `total assists`, total_damage AS `total damage`, total_score FROM apex_season WHERE school = %s"
         }
-        cursor.execute(f"""SELECT total_score from apex_season
-                                   WHERE school = '{school}'
-                                   GROUP BY school;""")
+        # cursor.execute(f"""SELECT total_score from apex_season
+        #                            WHERE school = '{school}'
+        #                            GROUP BY school;""")
         
-        season_points = cursor.fetchone()["total_score"]
+        # season_points = cursor.fetchone()["total_score"]
         response = []
         for school in schools:
                 school_name = school.get("school")
