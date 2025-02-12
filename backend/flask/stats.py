@@ -140,6 +140,7 @@ def get_match_stats(videogame):
                                    WHERE week_number = {week} and school = '{school}'
                                    GROUP BY school;""")
                     week_points = cursor.fetchone()
+                    print(week_points)
                     
                     match_data["match"]['points'] = week_points["week_score"]
                     #match_data["match"]['points'] = match_points
