@@ -17,7 +17,7 @@ def get_players(gameType, gameId):
             #     WHERE game_id = %s
             # """
             query = """
-            SELECT * FROM val_game WHERE game_id %s
+            SELECT * FROM val_game WHERE game_id = %s
             """
         elif gameType == "rl":
             query = """
