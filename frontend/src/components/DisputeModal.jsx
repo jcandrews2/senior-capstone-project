@@ -55,7 +55,7 @@ const DisputeModal = (props) => {
   return (
     <div className="z-50">
       <button
-        className="m-2 bg-custom-off-white px-8 py-2 font-bold text-black hover:bg-custom-gold"
+        className="m-2 bg-custom-gold px-8 py-2 font-bold text-black"
         onClick={toggleModal}
       >
         Review
@@ -66,10 +66,10 @@ const DisputeModal = (props) => {
           <div className="fixed left-0 top-0 z-50 flex h-full w-full justify-center overflow-y-auto bg-custom-gray">
             {/* Close */}
             <button
-              className="absolute right-4 top-4 bg-custom-off-white p-2 hover:bg-custom-gold"
+              className="absolute right-4 top-4 bg-custom-gold p-2"
               onClick={toggleModal}
             >
-              <IoMdClose size={32} />
+              <IoMdClose className="text-black" size={32} />
             </button>
 
             <div className="flex h-max w-3/4 flex-col items-center p-8">

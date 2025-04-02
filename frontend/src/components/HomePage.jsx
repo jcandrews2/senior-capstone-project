@@ -245,7 +245,11 @@ const HomePage = () => {
 
                         <div className="p-8">
                           <h3 className="p-4 text-2xl font-bold text-white">
-                            {"Weekly Stats: " + matchReport.match.points + " Points"}
+                            {videogame === "apex"
+                              ? "Weekly Stats: " +
+                                matchReport.match.points +
+                                " Points"
+                              : "Weekly Stats"}
                           </h3>
                           <div className="overflow-x-auto text-custom-off-white">
                             <table className="w-full table-auto text-left">
@@ -301,9 +305,9 @@ const HomePage = () => {
           ) : seasonReports.length > 0 ? (
             seasonReports.map((seasonReport, index) => (
               <>
-                <div className="py-2">
+                <div className="mb-4 rounded-md bg-custom-gray">
                   <button
-                    className="w-full cursor-pointer rounded-md bg-custom-gray text-custom-off-white"
+                    className="h-20 w-full cursor-pointer text-custom-off-white"
                     onClick={() => toggleActiveMatch(index)}
                   >
                     <h2 className="p-4 text-center text-3xl font-bold text-white">

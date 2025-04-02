@@ -7,6 +7,7 @@ import uuid
 import json
 import uuid
 import math
+import copy
 
 upload_bp = Blueprint('upload', __name__)
 
@@ -190,7 +191,6 @@ def upload_match():
                     )
                 )
 
-            
             # Insert player data for apex and RL
             print(data)
             for player in data["players"]:
@@ -198,9 +198,9 @@ def upload_match():
                     #insert score per game
                     points = 0
                     damage = 0
-                    for player in data["players"]:
-                        damage += int(player["damage"])
-                        points += int(player["kills"])
+                    for ply in data["players"]:
+                        damage += int(ply["damage"])
+                        points += int(ply["kills"])
                         
                     points += math.floor(damage/200)
                     

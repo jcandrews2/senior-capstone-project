@@ -219,7 +219,7 @@ def get_season_stats(videogame):
         return jsonify({"message": "bad request"}), 400
 
     try:
-        cursor.execute("SELECT DISTINCT school FROM users;")
+        cursor.execute("SELECT DISTINCT school, username FROM users;")
         schools = cursor.fetchall()
 
         season_queries = { 
@@ -231,7 +231,8 @@ def get_season_stats(videogame):
         response = []
         for school in schools:
                 school_name = school.get("school")
-                if school_name != "None":
+                username = school.get("username")
+                if username != "admin":
                     cursor.execute(season_queries[videogame], (school_name,))
                     results = cursor.fetchall()
                     response.append({"school": school_name, "players": results})
