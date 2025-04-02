@@ -12,15 +12,9 @@ CORS(app)
 
 # db config
 app.config['MYSQL_HOST'] = 'localhost'
-<<<<<<< HEAD
 app.config['MYSQL_USER'] = 'afk'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'afk'
-=======
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'AFK'
->>>>>>> 77b34033e663a2f3750fd7a43b90ade16fca543a
 
 # Configure Flask-Mail settings
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
