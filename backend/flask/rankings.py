@@ -10,7 +10,6 @@ def get_rankings(videogame):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     try:
-
         rankings_queries = { 
             "rl": 'SELECT school, season_wins_total AS `wins`, season_losses_total AS `losses` FROM rl_season GROUP BY school ORDER BY season_wins_total DESC',
             "val": 'SELECT school, team_wins AS `wins`, team_losses AS `losses` FROM val_season GROUP BY school ORDER BY team_wins DESC',

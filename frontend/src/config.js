@@ -12,7 +12,7 @@ const API_BASE_URL = "http://52.183.40.56:8080";
 // const API_BASE_URL = "https://scacstats.westus2.cloudapp.azure.com:443";
 
 // For local testing uncomment this and comment the above line
-//const API_BASE_URL = "http://127.0.0.1:8080";
+// const API_BASE_URL = "http://127.0.0.1:8080";
 
 const API_ENDPOINTS = {
   handleGetPlayerStats: (videogame, playerName) =>
