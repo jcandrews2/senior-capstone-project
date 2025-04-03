@@ -557,6 +557,8 @@ def upload_match():
                     #returns if it is zero or one in a tuple format. only need the first item
                     is_week_exists = cursor.fetchone()
                     #if zero insert
+
+
                     if is_week_exists[0] == 0 and game == "valorant":
                         cursor.execute(f"""INSERT INTO val_week(week_number, school, player_name, week_cs_avg, week_kills_avg,
                                     week_deaths_avg, week_assists_avg, week_econ_avg, week_fb_avg, week_plants_avg, week_defuses_avg, team_score)

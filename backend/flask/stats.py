@@ -43,7 +43,7 @@ def get_match_stats(videogame):
             "game_query": """
                 SELECT game_id, game_number, w_school, l_school, w_points, l_points
                 FROM val_picture
-                WHERE week_number = %s AND w_school = %s
+                WHERE week_number = %s AND (w_school = %s OR l_school = %s)
                 GROUP BY game_id
                 ORDER BY game_number
 
@@ -71,8 +71,8 @@ def get_match_stats(videogame):
     }
 
     week_queries = { 
-        "rl": "SELECT school, player_name AS `player`, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg FROM rl_week WHERE week_number = %s AND (school = %s OR school = %s)",
-        "val": "SELECT school, player_name AS `player`, week_cs_avg AS `average combat score`, week_kills_avg AS `average kills`, week_deaths_avg AS `average deaths`, week_assists_avg AS `average assists`, week_econ_avg AS `average econ`, week_fb_avg AS `average first bloods`, week_plants_avg AS `average plants`, week_defuses_avg AS `average defuses` FROM val_week WHERE week_number = %s AND (school = %s OR school = %s)",
+        "rl": "SELECT school, player_name AS `player`, week_score_avg, week_goals_avg, week_assists_avg, week_saves_avg, week_shots_avg FROM rl_week WHERE week_number = %s AND (school = %s OR school = %s) ORDER BY school",
+        "val": "SELECT school, player_name AS `player`, week_cs_avg AS `average combat score`, week_kills_avg AS `average kills`, week_deaths_avg AS `average deaths`, week_assists_avg AS `average assists`, week_econ_avg AS `average econ`, week_fb_avg AS `average first bloods`, week_plants_avg AS `average plants`, week_defuses_avg AS `average defuses` FROM val_week WHERE week_number = %s AND (school = %s OR school = %s) ORDER BY school",
         "apex": "SELECT school, player_name AS `player`,  week_kills_avg AS `average kills`, week_assists_avg AS `average assists` , week_knocks_avg AS `average knocks`, week_damage_avg AS `average damage`, week_kills AS `total kills`, week_assists AS `total assists`, week_knocks AS `total knocks`, week_damage AS `total damage` FROM apex_week WHERE week_number = %s AND school = %s"
     }
 
@@ -108,14 +108,12 @@ def get_match_stats(videogame):
                 
                 cursor.execute(game_queries[videogame]["game_query"], (week, school))
                 games = cursor.fetchall()
-
                
                 for game in games: 
 
                     cursor.execute(game_queries[videogame]["player_query"], (game['game_id'], school))
                     player_stats = cursor.fetchall()
 
-                    
                     team_stats = []
 
                     for player in player_stats: 
@@ -149,7 +147,7 @@ def get_match_stats(videogame):
             else: 
                 # Get the matchup
                 school, opponent = matchup['school'], matchup['opponent']
-
+                print(matchup)
                 # Get weekly stats
                 cursor.execute(week_queries[videogame], (week, school, opponent))
                 week_stats = cursor.fetchall()
@@ -167,7 +165,7 @@ def get_match_stats(videogame):
                 }
                 
                 # Get the match's games
-                cursor.execute(game_queries[videogame]["game_query"], (week, school))
+                cursor.execute(game_queries[videogame]["game_query"], (week, school, school))
                 games = cursor.fetchall()
 
                 # Go thru the games and get player data
@@ -182,8 +180,8 @@ def get_match_stats(videogame):
 
                     game_data = {
                         "gameStats": {
-                            "school": school,
-                            "opponent": opponent,
+                            "school": game['w_school'],
+                            "opponent": game["l_school"],
                             "teamScore": game["w_points"],
                             "opponentScore": game["l_points"],
                             "gameNumber": game["game_number"],

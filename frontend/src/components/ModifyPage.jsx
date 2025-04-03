@@ -30,19 +30,49 @@ const ModifyPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [roster, setRoster] = useState([]);
 
   // Generate a preview of the image either from file (frontend) or from backend URL
   useEffect(() => {
+    const getRoster = async () => {
+      let videogame =
+        formData.game === "valorant"
+          ? "val"
+          : formData.game === "apex-legends"
+            ? "apex"
+            : formData.game === "rocket-league"
+              ? "rl"
+              : null;
+
+      if (!videogame || !formData.school) return;
+
+      try {
+        const response = await fetch(
+          API_ENDPOINTS.handleGetRoster(videogame, formData.school),
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setRoster(data);
+        }
+      } catch (err) {
+        console.error("Error fetching roster:", err);
+      }
+    };
+
     if (file) {
-      // If navigated from UploadPage, use the uploaded file
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
     } else if (formData.game_id) {
-      // If navigated from Dispute Management Page, fetch image from backend
       setImagePreview(`${API_ENDPOINTS.handleGetPicture(formData.game_id)}`);
     }
-  }, [file, formData.game_id]);
+
+    if (formData.game_id) getRoster();
+  }, [file, formData.game_id, formData.game, formData.school]);
+
+  useEffect(() => {
+    console.log(roster);
+  }, [roster]);
 
   // Update handler for editable fields
   const handleInputChange = (event, key) => {
@@ -204,7 +234,7 @@ const ModifyPage = () => {
             />
           )}
 
-          {formData.game == "valorant" && (
+          {formData.game === "valorant" && (
             <div>
               <input
                 type="text"
@@ -240,12 +270,29 @@ const ModifyPage = () => {
                   <label className="block text-sm font-medium capitalize">
                     {key}
                   </label>
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => handlePlayerChange(e, index, key)}
-                    className="w-full rounded-md border border-custom-off-white bg-custom-gray p-2 text-white"
-                  />
+                  {key === "name" && formData.game === "apex-legends" ? (
+                    <select
+                      value={player.name || ""}
+                      onChange={(e) => handlePlayerChange(e, index, "name")}
+                      className="w-full rounded-md border border-custom-off-white bg-custom-gray p-2 text-white"
+                    >
+                      <option value="" disabled>
+                        Select Player
+                      </option>
+                      {roster.map((rosterPlayer) => (
+                        <option key={rosterPlayer} value={rosterPlayer}>
+                          {rosterPlayer}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={value}
+                      onChange={(e) => handlePlayerChange(e, index, key)}
+                      className="w-full rounded-md border border-custom-off-white bg-custom-gray p-2 text-white"
+                    />
+                  )}
                 </div>
               ))}
             </div>

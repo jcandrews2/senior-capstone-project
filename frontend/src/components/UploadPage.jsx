@@ -153,7 +153,7 @@ const UploadPage = () => {
               )}
             </select>
             {/* Losing School Selection */}
-            {game == "valorant" && (
+            {game === "valorant" && (
               <select
                 className="mx-2 rounded-md border border-custom-off-white bg-custom-gray py-8"
                 value={opponent_school}
