@@ -45,13 +45,6 @@ const DisputesManagementPage = () => {
         rl: "rocket-league",
       };
 
-      // Mapping short game codes to full names
-      const gameTypeDict = {
-        val: "valorant",
-        apex: "apex-legends",
-        rl: "rocket-league",
-      };
-      
       // Need to properly format data for ModifyPage to match upload.py expectations
       const fullGameData = {
         game_id: game.gameId,
@@ -123,8 +116,8 @@ const DisputesManagementPage = () => {
             {/* Game Details */}
             <h2 className="text-xl font-semibold">{game.gameType}</h2>
             <p className="text-custom-off-white">
-              {game.school} vs {game.opponent || "N/A"} | Week{" "} {game.week} | Game{" "}
-              {game.game_number}
+              {game.school} vs {game.opponent || "N/A"} | Week {game.week} |
+              Game {game.game_number}
             </p>
 
             {/* Display Winning & Losing Points if available */}
