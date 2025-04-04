@@ -67,7 +67,7 @@ const ManageAccounts = () => {
           type="text"
           placeholder="School"
           minLength="5"
-          maxLength="20"
+          maxLength="40"
           ref={schoolInput}
           className="my-4 w-full p-4 text-black"
         ></input>
@@ -75,7 +75,7 @@ const ManageAccounts = () => {
           type="text"
           placeholder="Username"
           minLength="5"
-          maxLength="20"
+          maxLength="40"
           ref={usernameInput}
           className="my-4 w-full p-4 text-black"
         ></input>
