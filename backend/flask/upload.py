@@ -809,7 +809,6 @@ def upload_match():
                             SELECT sum(did_win)/5
                             FROM val_game
                             WHERE val_game.week_number = {data["week"]} and val_game.school = '{o_school}'
-                            GROUP by map
                             )
                             WHERE val_week.player_name = '{player["name"]}' AND val_week.week_number = {data["week"]}; 
                             """)
