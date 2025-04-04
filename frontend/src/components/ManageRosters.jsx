@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../config";
 
 const ManageRosters = () => {
-  const [videogame, setVideogame] = useState("rl");
+  const [videogame, setVideogame] = useState("val");
   const [schools, setSchools] = useState([]);
   const [currentSchool, setCurrentSchool] = useState("Colorado College");
   const [roster, setRoster] = useState([]);

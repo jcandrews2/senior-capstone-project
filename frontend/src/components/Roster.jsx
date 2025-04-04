@@ -3,7 +3,7 @@ import { useAuth } from "./AuthContext";
 import { API_ENDPOINTS } from "../config";
 
 const Roster = () => {
-  const [videogame, setVideogame] = useState("rl");
+  const [videogame, setVideogame] = useState("val");
   const [roster, setRoster] = useState([]);
   const { school } = useAuth();
 
