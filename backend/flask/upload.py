@@ -579,16 +579,33 @@ def upload_match():
                         o_school = data["school"]
                         did_win = 0
                     
-                    cursor.execute(
-                        game_queries[game],
+                    # Validate required fields for Valorant player data
+                    try:
+                        # Make sure all required fields are present and convert to default value if missing
+                        acs = player.get("acs", "-1") or "-1"
+                        kills = player.get("kills", "-1") or "-1"
+                        deaths = player.get("deaths", "-1") or "-1"
+                        assists = player.get("assists", "-1") or "-1"
+                        econ = player.get("econ", "-1") or "-1"
+                        fb = player.get("fb", "-1") or "-1"
+                        plants = player.get("plants", "-1") or "-1"
+                        defuses = player.get("defuses", "-1") or "-1"
+                        agent = player.get("agent", "Unknown") or "Unknown"
+                        
+                        cursor.execute(
+                            game_queries[game],
                             (
-                            game_id, school, player["name"],
-                            player["acs"], player["kills"], player["deaths"],
-                            player["assists"], player["econ"], player["fb"],
-                            player["plants"], player["defuses"], player["agent"], data["map"],
-                            did_win, data["game_number"], data.get("week", "1")
+                                game_id, school, player["name"],
+                                acs, kills, deaths,
+                                assists, econ, fb,
+                                plants, defuses, agent, data["map"],
+                                did_win, data["game_number"], data.get("week", "1")
                             )   
                         )
+                    except KeyError as e:
+                        raise Exception(f"Missing required field: {str(e)}")
+                    except Exception as e:
+                        raise Exception(f"Error processing player data: {str(e)}")
                 
     
 
