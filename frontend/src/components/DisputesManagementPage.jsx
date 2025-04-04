@@ -46,6 +46,18 @@ const DisputesManagementPage = () => {
       };
 
       // Need to properly format data for ModifyPage to match upload.py expectations
+      
+      // For Valorant, extract the map from the first player that has it
+      let mapValue = "";
+      if (game.gameType === 'val' && data.players && data.players.length > 0) {
+        // Find the first player with a map value
+        const playerWithMap = data.players.find(player => player.map);
+        if (playerWithMap) {
+          mapValue = playerWithMap.map;
+          console.log("Found map value from player data:", mapValue);
+        }
+      }
+      
       const fullGameData = {
         game_id: game.gameId,
         image_url: API_ENDPOINTS.handleGetPicture(game.gameId),
@@ -66,7 +78,7 @@ const DisputesManagementPage = () => {
         game: gameTypeDict[game.gameType] || game.gameType,
         week: game.week,
         game_number: game.game_number,
-        map: data.map || game.map || "", // Try to get map from both data sources
+        map: mapValue || game.map || "", // First try map from player data, then from game object
         code: game.code || "",
         squad_placed: game.squad_placed || "",
         w_points: game.w_points || "",

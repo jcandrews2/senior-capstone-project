@@ -11,7 +11,7 @@ def get_players(gameType, gameId):
     try:
         if gameType == "val":
             query = """
-                SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, school
+                SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, school, map
                 FROM val_game
                 WHERE game_id = %s
             """
