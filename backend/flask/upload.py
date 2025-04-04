@@ -630,6 +630,14 @@ def upload_match():
                             SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
                             WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                             """)
+                            
+                        # For dispute edits, explicitly set did_win based on school marker
+                        if is_dispute_edit and player["school"] == "W":
+                            cursor.execute(f"""UPDATE val_week
+                                SET val_week.did_win = TRUE
+                                WHERE val_week.player_name = '{player["name"]}'
+                                AND val_week.week_number = {data["week"]};
+                                """)
                         cursor.execute(f"""UPDATE val_week
                             SET val_week.opponent = '{o_school}'
                             WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
@@ -698,6 +706,14 @@ def upload_match():
                             SET val_week.did_win = IF((val_week.team_score) < 2, FALSE, TRUE)
                             WHERE val_week.player_name = '{player["name"]}' and val_week.week_number ={data["week"]};
                             """)
+                            
+                        # For dispute edits, explicitly set did_win based on school marker
+                        if is_dispute_edit and player["school"] == "W":
+                            cursor.execute(f"""UPDATE val_week
+                                SET val_week.did_win = TRUE
+                                WHERE val_week.player_name = '{player["name"]}'
+                                AND val_week.week_number = {data["week"]};
+                                """)
                     
                     #check to see if this player is in the season table    
                     cursor.execute(f"""SELECT COUNT(*) from val_season where player_name="{player["name"]}";""")
