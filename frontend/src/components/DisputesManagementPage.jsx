@@ -49,18 +49,29 @@ const DisputesManagementPage = () => {
       const fullGameData = {
         game_id: game.gameId,
         image_url: API_ENDPOINTS.handleGetPicture(game.gameId),
-        players: data.players,
+        players: data.players.map(player => {
+          // Make sure each player has the correct school attribute for Valorant
+          // This is critical for determining did_win in the backend
+          if (game.gameType === 'val') {
+            // For Valorant, mark players from the winning school with "W"
+            return {
+              ...player,
+              school: player.school === game.school ? "W" : "L"
+            };
+          }
+          return player;
+        }),
         opponent_school: game.opponent,
         school: game.school,
         game: gameTypeDict[game.gameType] || game.gameType,
         week: game.week,
         game_number: game.game_number,
-        map: game.map || "",
+        map: data.map || game.map || "", // Try to get map from both data sources
         code: game.code || "",
         squad_placed: game.squad_placed || "",
         w_points: game.w_points || "",
         l_points: game.l_points || "",
-        did_win: "1", // Default to winning team since we're editing
+        // did_win is set per player in Valorant based on the school attribute
         disputes: game.disputes || [],
       };
       console.log("Full game data for ModifyPage:", fullGameData);
