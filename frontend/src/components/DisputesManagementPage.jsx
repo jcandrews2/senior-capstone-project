@@ -58,21 +58,16 @@ const DisputesManagementPage = () => {
         }
       }
       
+      // Debug logs to see what schools are in player data
+      console.log("Game school:", game.school);
+      console.log("Player schools:", data.players.map(p => p.school));
+      console.log("Players with school info:", data.players);
+      
       const fullGameData = {
         game_id: game.gameId,
         image_url: API_ENDPOINTS.handleGetPicture(game.gameId),
-        players: data.players.map(player => {
-          // Make sure each player has the correct school attribute for Valorant
-          // This is critical for determining did_win in the backend
-          if (game.gameType === 'val') {
-            // For Valorant, mark players from the winning school with "W"
-            return {
-              ...player,
-              school: player.school === game.school ? "W" : "L"
-            };
-          }
-          return player;
-        }),
+        // Backend now provides players with proper school markers (W/L)
+        players: data.players,
         opponent_school: game.opponent,
         school: game.school,
         game: gameTypeDict[game.gameType] || game.gameType,

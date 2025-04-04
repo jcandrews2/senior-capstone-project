@@ -10,11 +10,64 @@ def get_players(gameType, gameId):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
         if gameType == "val":
-            query = """
-                SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, school, map
-                FROM val_game
+            # First get the match info to see which schools are winning and losing
+            cursor.execute("""
+                SELECT w_school, l_school
+                FROM val_picture
                 WHERE game_id = %s
-            """
+            """, (gameId,))
+            
+            match_info = cursor.fetchone()
+            
+            if match_info:
+                w_school = match_info["w_school"]
+                l_school = match_info["l_school"]
+                
+                # Now get the player data with correct W/L markings
+                query = """
+                    SELECT 
+                        player_name as name, 
+                        combat_score, 
+                        kills, 
+                        deaths, 
+                        assists, 
+                        econ, 
+                        fb, 
+                        plants, 
+                        defuses, 
+                        agent, 
+                        school,
+                        map,
+                        CASE 
+                            WHEN school = %s THEN 'W'
+                            WHEN school = %s THEN 'L'
+                            ELSE school
+                        END as school_marker
+                    FROM val_game
+                    WHERE game_id = %s
+                """
+                cursor.execute(query, (w_school, l_school, gameId))
+                
+                # Process results to use the school_marker as school
+                players = cursor.fetchall()
+                players_list = []
+                
+                for player in players:
+                    player_dict = dict(player)
+                    player_dict["original_school"] = player_dict["school"]  # keep original for reference
+                    player_dict["school"] = player_dict["school_marker"]    # use marker (W/L) as school
+                    del player_dict["school_marker"]                        # remove temp field
+                    players_list.append(player_dict)
+                
+                return jsonify({"players": players_list}), 200
+            else:
+                # Fall back to original query if match info not found
+                query = """
+                    SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, school, map
+                    FROM val_game
+                    WHERE game_id = %s
+                """
+                cursor.execute(query, (gameId,))
         elif gameType == "rl":
             query = """
                 SELECT player_name as name, score, goals, assists, saves, shots
