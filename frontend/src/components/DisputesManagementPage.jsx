@@ -45,15 +45,32 @@ const DisputesManagementPage = () => {
         rl: "rocket-league",
       };
 
-      // Construct the full game data object
-      const fullGameData = {
-        ...game,
-        players: data.players,
-        opponent_school: game.opponent, // Ensure opponent_school field is correctly populated
-        game: gameTypeDict[game.gameType] || game.gameType, // Convert short form to full game name
-        game_id: game.gameId, // Ensure game_id is correctly mapped
+      // Mapping short game codes to full names
+      const gameTypeDict = {
+        val: "valorant",
+        apex: "apex-legends",
+        rl: "rocket-league",
       };
-      console.log(fullGameData);
+      
+      // Need to properly format data for ModifyPage to match upload.py expectations
+      const fullGameData = {
+        game_id: game.gameId,
+        image_url: API_ENDPOINTS.handleGetPicture(game.gameId),
+        players: data.players,
+        opponent_school: game.opponent,
+        school: game.school,
+        game: gameTypeDict[game.gameType] || game.gameType,
+        week: game.week,
+        game_number: game.game_number,
+        map: game.map || "",
+        code: game.code || "",
+        squad_placed: game.squad_placed || "",
+        w_points: game.w_points || "",
+        l_points: game.l_points || "",
+        did_win: "1", // Default to winning team since we're editing
+        disputes: game.disputes || [],
+      };
+      console.log("Full game data for ModifyPage:", fullGameData);
 
       // Navigate to Modify Page and pass the full game data
       navigate("/modify", { state: { ocrData: fullGameData } });

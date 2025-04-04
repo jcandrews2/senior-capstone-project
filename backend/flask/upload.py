@@ -120,17 +120,43 @@ def upload_match():
     data = request.json  # JSON data from frontend
     game = data.get("game")
     
+    # Check if this is a reupload from a dispute
+    is_dispute_edit = data.get("disputes") and len(data.get("disputes", [])) > 0
+    print(f"Processing {'dispute edit' if is_dispute_edit else 'new upload'}")
+    
     if request.method == "POST":
         try:
             if game not in ["rocket-league", "valorant", "apex-legends"]:
                 return jsonify({"error": f"Game '{game}' is not supported"}), 400
 
-            # Generate a new unique game_id if one isn't provided
-            game_id = data.get("game_id", "-1")
+            # Use existing game_id (for disputes) or generate a new one
+            game_id = data.get("game_id")
+            
+            # For new uploads, generate UUID if not provided
+            if not game_id or game_id == "-1":
+                game_id = str(uuid.uuid4())
+                print(f"Generated new game_id: {game_id}")
+            else:
+                print(f"Using existing game_id: {game_id}")
+                
+                # For dispute edits, we need to clean up existing entries before reinserting
+                if is_dispute_edit:
+                    game_type_tables = {
+                        "rocket-league": "rl_game", 
+                        "valorant": "val_game",
+                        "apex-legends": "apex_game"
+                    }
+                    
+                    # Delete existing game data to avoid duplicates
+                    try:
+                        cursor.execute(f"DELETE FROM {game_type_tables[game]} WHERE game_id = %s", (game_id,))
+                        print(f"Deleted existing game data for game_id: {game_id}")
+                    except Exception as e:
+                        print(f"Error deleting existing game data: {e}")
 
             # Ensure the image URL is correctly formatted
             image_url = data.get("image_url", "").strip()
-            if not image_url.startswith("http"):
+            if not image_url.startswith("http") and not image_url.startswith("/"):
                 return jsonify({"error": "Invalid image URL"}),
 
             # Define game-specific queries for the **game tables**
@@ -165,26 +191,41 @@ def upload_match():
                 """, 
             }
             
+            # Define picture tables for deletion on dispute edits
+            picture_tables = {
+                "rocket-league": "rl_picture",
+                "valorant": "val_picture",
+                "apex-legends": "apex_picture"
+            }
+            
+            # For dispute edits, delete existing picture data too
+            if is_dispute_edit:
+                try:
+                    cursor.execute(f"DELETE FROM {picture_tables[game]} WHERE game_id = %s", (game_id,))
+                    print(f"Deleted existing picture data for game_id: {game_id}")
+                except Exception as e:
+                    print(f"Error deleting existing picture data: {e}")
+            
             # insert queries for picture tables
             if game == "rocket-league":
-                    cursor.execute(
-                        picture_queries[game],
+                cursor.execute(
+                    picture_queries[game],
                     (
                         game_id, data.get("game_number"), data.get("week"), data["school"],
-                        data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
+                        data["opponent_school"], data.get("w_points", ""), data.get("l_points", ""), data["image_url"]
                     )
                 )
             elif game == "valorant":
                 cursor.execute(
-                        picture_queries[game],
-                        (
-                            game_id, data.get("game_number", "-1"), data.get("week"), data["school"],
-                            data["opponent_school"], data["w_points"], data["l_points"], data["image_url"]
-                        )
+                    picture_queries[game],
+                    (
+                        game_id, data.get("game_number", "-1"), data.get("week"), data["school"],
+                        data["opponent_school"], data.get("w_points", ""), data.get("l_points", ""), data["image_url"]
                     )
+                )
             elif game == "apex-legends":
                 cursor.execute(
-                        picture_queries[game],
+                    picture_queries[game],
                     (
                         game_id, data.get("game_number"), data.get("week"), data["school"],
                         data["image_url"]
@@ -761,9 +802,21 @@ def upload_match():
            
             
 
+            # If this was a dispute edit, let's resolve the dispute in the database
+            if is_dispute_edit:
+                try:
+                    cursor.execute("DELETE FROM disputes WHERE game_id = %s", (game_id,))
+                    print(f"Automatically resolved dispute for game_id: {game_id}")
+                except Exception as e:
+                    print(f"Error resolving dispute: {e}")
+            
             conn.commit()  # Save changes
 
-            return jsonify({"message": "Match data uploaded successfully", "game_id": game_id}), 200
+            return jsonify({
+                "message": f"Match data {'updated' if is_dispute_edit else 'uploaded'} successfully", 
+                "game_id": game_id,
+                "dispute_resolved": is_dispute_edit
+            }), 200
         
         except Exception as e:
             conn.rollback()

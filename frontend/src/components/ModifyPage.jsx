@@ -90,15 +90,30 @@ const ModifyPage = () => {
   const handleGame = async () => {
     setLoading(true);
     try {
+      // Check if we're handling a dispute (game_id already exists)
+      const isDisputeEdit = formData.disputes && formData.disputes.length > 0;
+      console.log(`Submitting data ${isDisputeEdit ? 'from dispute edit' : 'from new upload'}`);
+      
+      // Ensure image_url is set correctly
+      if (!formData.image_url && formData.game_id) {
+        formData.image_url = API_ENDPOINTS.handleGetPicture(formData.game_id);
+      }
+      
       const response = await fetch(API_ENDPOINTS.uploadMatch, {
-        method: "POST",
+        method: "POST", // Always use POST as the backend handles both cases
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert("Data submitted successfully!");
-        navigate("/");
+        // Different message based on source
+        const successMessage = isDisputeEdit 
+          ? "Dispute resolved successfully! Data updated."
+          : "Data submitted successfully!";
+        alert(successMessage);
+        
+        // Redirect to home or disputes page based on source
+        navigate(isDisputeEdit ? "/disputes" : "/");
       } else {
         const errorData = await response.json();
         setError(errorData.error || "Failed to submit data.");
