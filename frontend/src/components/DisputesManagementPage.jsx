@@ -62,6 +62,25 @@ const DisputesManagementPage = () => {
       console.log("Game school:", game.school);
       console.log("Player schools:", data.players.map(p => p.school));
       console.log("Players with school info:", data.players);
+      console.log("Game data:", game);
+      
+      // For Apex Legends, make sure we have squad_placed
+      let squadPlacement = "";
+      if (game.gameType === 'apex') {
+        // Try to get placement from different sources in order of preference
+        if (game.squad_placed) {
+          // 1. Use squad_placed from the game object if available
+          squadPlacement = game.squad_placed;
+        } else if (data.game_info && data.game_info.squad_placed) {
+          // 2. Use squad_placed from game_info if available (from our new endpoint)
+          squadPlacement = data.game_info.squad_placed;
+        } else if (data.players && data.players.length > 0 && data.players[0].placement) {
+          // 3. Use placement from first player as fallback
+          squadPlacement = data.players[0].placement;
+        }
+        
+        console.log("Squad placement for Apex game:", squadPlacement);
+      }
       
       const fullGameData = {
         game_id: game.gameId,
@@ -75,7 +94,7 @@ const DisputesManagementPage = () => {
         game_number: game.game_number,
         map: mapValue || game.map || "", // First try map from player data, then from game object
         code: game.code || "",
-        squad_placed: game.squad_placed || "",
+        squad_placed: squadPlacement || game.squad_placed || "",
         w_points: game.w_points || "",
         l_points: game.l_points || "",
         // did_win is set per player in Valorant based on the school attribute

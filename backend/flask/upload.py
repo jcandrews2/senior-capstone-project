@@ -581,22 +581,39 @@ def upload_match():
                     
                     # Validate required fields for Valorant player data
                     try:
-                        # Make sure all required fields are present and convert to default value if missing
-                        acs = player.get("acs", "-1") or "-1"
-                        kills = player.get("kills", "-1") or "-1"
-                        deaths = player.get("deaths", "-1") or "-1"
-                        assists = player.get("assists", "-1") or "-1"
-                        econ = player.get("econ", "-1") or "-1"
-                        fb = player.get("fb", "-1") or "-1"
-                        plants = player.get("plants", "-1") or "-1"
-                        defuses = player.get("defuses", "-1") or "-1"
-                        agent = player.get("agent", "Unknown") or "Unknown"
+                        # Make sure all required fields are present and preserve zero values
+                        combat_score = player.get("combat_score", "-1")
+                        combat_score = "-1" if combat_score == "" else combat_score  # Only convert empty strings to "-1", keep "0" as "0"
+                        
+                        kills = player.get("kills", "-1")
+                        kills = "-1" if kills == "" else kills
+                        
+                        deaths = player.get("deaths", "-1")
+                        deaths = "-1" if deaths == "" else deaths
+                        
+                        assists = player.get("assists", "-1")
+                        assists = "-1" if assists == "" else assists
+                        
+                        econ = player.get("econ", "-1")
+                        econ = "-1" if econ == "" else econ
+                        
+                        fb = player.get("fb", "-1")
+                        fb = "-1" if fb == "" else fb
+                        
+                        plants = player.get("plants", "-1")
+                        plants = "-1" if plants == "" else plants
+                        
+                        defuses = player.get("defuses", "-1")
+                        defuses = "-1" if defuses == "" else defuses
+                        
+                        agent = player.get("agent", "Unknown")
+                        agent = "Unknown" if agent == "" else agent
                         
                         cursor.execute(
                             game_queries[game],
                             (
                                 game_id, school, player["name"],
-                                acs, kills, deaths,
+                                combat_score, kills, deaths,
                                 assists, econ, fb,
                                 plants, defuses, agent, data["map"],
                                 did_win, data["game_number"], data.get("week", "1")

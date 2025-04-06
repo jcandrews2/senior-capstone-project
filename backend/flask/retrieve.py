@@ -80,6 +80,26 @@ def get_players(gameType, gameId):
                 FROM apex_game
                 WHERE game_id = %s
             """
+            cursor.execute(query, (gameId,))
+            players = cursor.fetchall()
+            
+            # Also get the squad placement from apex_game if available
+            squad_query = """
+                SELECT DISTINCT placement as squad_placed
+                FROM apex_game
+                WHERE game_id = %s
+                LIMIT 1
+            """
+            cursor.execute(squad_query, (gameId,))
+            game_info = cursor.fetchone()
+            
+            # Convert to list of dictionaries and return
+            players_list = [dict(player) for player in players]
+            
+            return jsonify({
+                "players": players_list,
+                "game_info": game_info
+            }), 200
         else:
             return jsonify({"error": "Invalid game type"}), 400
 
