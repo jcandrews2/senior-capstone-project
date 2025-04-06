@@ -582,7 +582,8 @@ def upload_match():
                     # Validate required fields for Valorant player data
                     try:
                         # Make sure all required fields are present and preserve zero values
-                        combat_score = player.get("combat_score", "-1")
+                        # Check for both possible field names: 'combat_score' (from database) and 'acs' (from frontend)
+                        combat_score = player.get("combat_score", player.get("acs", "-1"))
                         combat_score = "-1" if combat_score == "" else combat_score  # Only convert empty strings to "-1", keep "0" as "0"
                         
                         kills = player.get("kills", "-1")

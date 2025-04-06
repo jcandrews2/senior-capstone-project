@@ -27,7 +27,7 @@ def get_players(gameType, gameId):
                 query = """
                     SELECT 
                         player_name as name, 
-                        combat_score, 
+                        combat_score as acs, 
                         kills, 
                         deaths, 
                         assists, 
@@ -63,7 +63,7 @@ def get_players(gameType, gameId):
             else:
                 # Fall back to original query if match info not found
                 query = """
-                    SELECT player_name as name, combat_score, kills, deaths, assists, econ, fb, plants, defuses, agent, school, map
+                    SELECT player_name as name, combat_score as acs, kills, deaths, assists, econ, fb, plants, defuses, agent, school, map
                     FROM val_game
                     WHERE game_id = %s
                 """
