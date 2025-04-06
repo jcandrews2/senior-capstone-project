@@ -187,84 +187,117 @@ const ModifyPage = () => {
         <h2 className="mb-4 text-2xl font-semibold">Game Details</h2>
 
         <div className="flex flex-wrap justify-between">
-          <select
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            value={formData.game}
-            onChange={(e) => handleInputChange(e, "game")}
-          >
-            <option value="rocket-league">Rocket League</option>
-            <option value="valorant">Valorant</option>
-            <option value="apex-legends">Apex Legends</option>
-          </select>
-          <select
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            value={formData.week}
-            onChange={(e) => handleInputChange(e, "week")}
-          >
-            <option value="1">Week 1</option>
-            <option value="2">Week 2</option>
-            <option value="3">Week 3</option>
-          </select>
-          <select
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            value={formData.game_number}
-            onChange={(e) => handleInputChange(e, "game_number")}
-          >
-            <option value="1">Game 1</option>
-            <option value="2">Game 2</option>
-            <option value="3">Game 3</option>
-          </select>
+          <div className="mx-2 mb-4 w-[48%]">
+            <label className="block mb-2 text-sm font-medium">Game Type</label>
+            <select
+              className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+              value={formData.game}
+              onChange={(e) => handleInputChange(e, "game")}
+            >
+              <option value="rocket-league">Rocket League</option>
+              <option value="valorant">Valorant</option>
+              <option value="apex-legends">Apex Legends</option>
+            </select>
+          </div>
+          
+          <div className="mx-2 mb-4 w-[48%]">
+            <label className="block mb-2 text-sm font-medium">Week</label>
+            <select
+              className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+              value={formData.week}
+              onChange={(e) => handleInputChange(e, "week")}
+            >
+              <option value="1">Week 1</option>
+              <option value="2">Week 2</option>
+              <option value="3">Week 3</option>
+            </select>
+          </div>
+          
+          <div className="mx-2 mb-4 w-[48%]">
+            <label className="block mb-2 text-sm font-medium">Game Number</label>
+            <select
+              className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+              value={formData.game_number}
+              onChange={(e) => handleInputChange(e, "game_number")}
+            >
+              <option value="1">Game 1</option>
+              <option value="2">Game 2</option>
+              <option value="3">Game 3</option>
+            </select>
+          </div>
+          
           {formData.game === "valorant" && (
-            <input
-              type="text"
-              value={formData.map}
-              placeholder="Map"
-              className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-              onChange={(e) => handleInputChange(e, "map")}
-            />
+            <div className="mx-2 mb-4 w-[48%]">
+              <label className="block mb-2 text-sm font-medium">Map</label>
+              <input
+                type="text"
+                value={formData.map}
+                placeholder="Map"
+                className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                onChange={(e) => handleInputChange(e, "map")}
+              />
+            </div>
           )}
+          
           {formData.game === "apex-legends" && (
-            <input
-              type="text"
-              value={formData.squad_placed}
-              placeholder="Squad Placement"
-              className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-              onChange={(e) => handleInputChange(e, "squad_placed")}
-            />
+            <div className="mx-2 mb-4 w-[48%]">
+              <label className="block mb-2 text-sm font-medium">Squad Placement</label>
+              <input
+                type="text"
+                value={formData.squad_placed}
+                placeholder="Squad Placement"
+                className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                onChange={(e) => handleInputChange(e, "squad_placed")}
+              />
+            </div>
           )}
-          <input
-            type="text"
-            value={formData.school}
-            placeholder="School"
-            className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-            onChange={(e) => handleInputChange(e, "school")}
-          />
-          {formData.game === "valorant" && (
+          
+          <div className="mx-2 mb-4 w-[48%]">
+            <label className="block mb-2 text-sm font-medium">School</label>
             <input
               type="text"
-              value={formData.opponent_school}
-              placeholder="Opponent School"
-              className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-              onChange={(e) => handleInputChange(e, "opponent_school")}
+              value={formData.school}
+              placeholder="School"
+              className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+              onChange={(e) => handleInputChange(e, "school")}
             />
+          </div>
+          
+          {formData.game === "valorant" && (
+            <div className="mx-2 mb-4 w-[48%]">
+              <label className="block mb-2 text-sm font-medium">Opponent School</label>
+              <input
+                type="text"
+                value={formData.opponent_school}
+                placeholder="Opponent School"
+                className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                onChange={(e) => handleInputChange(e, "opponent_school")}
+              />
+            </div>
           )}
 
           {formData.game === "valorant" && (
-            <div>
-              <input
-                type="text"
-                value={formData.w_points}
-                placeholder="Winning Points"
-                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                onChange={(e) => handleInputChange(e, "w_points")}
-              />
-              <input
-                type="text"
-                value={formData.l_points}
-                placeholder="Losing Points"
-                className="mx-2 mb-4 w-[48%] rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
-                onChange={(e) => handleInputChange(e, "l_points")}
-              />
+            <div className="flex w-full">
+              <div className="mx-2 mb-4 w-[48%]">
+                <label className="block mb-2 text-sm font-medium">Winning Points</label>
+                <input
+                  type="text"
+                  value={formData.w_points}
+                  placeholder="Winning Points"
+                  className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                  onChange={(e) => handleInputChange(e, "w_points")}
+                />
+              </div>
+              <div className="mx-2 mb-4 w-[48%]">
+                <label className="block mb-2 text-sm font-medium">Losing Points</label>
+                <input
+                  type="text"
+                  value={formData.l_points}
+                  placeholder="Losing Points"
+                  className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
+                  onChange={(e) => handleInputChange(e, "l_points")}
+                />
+              </div>
             </div>
           )}
         </div>
