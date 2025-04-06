@@ -92,13 +92,15 @@ const ModifyPage = () => {
     try {
       // Check if we're handling a dispute (game_id already exists)
       const isDisputeEdit = formData.disputes && formData.disputes.length > 0;
-      console.log(`Submitting data ${isDisputeEdit ? 'from dispute edit' : 'from new upload'}`);
-      
+      console.log(
+        `Submitting data ${isDisputeEdit ? "from dispute edit" : "from new upload"}`,
+      );
+
       // Ensure image_url is set correctly
       if (!formData.image_url && formData.game_id) {
         formData.image_url = API_ENDPOINTS.handleGetPicture(formData.game_id);
       }
-      
+
       const response = await fetch(API_ENDPOINTS.uploadMatch, {
         method: "POST", // Always use POST as the backend handles both cases
         headers: { "Content-Type": "application/json" },
@@ -107,11 +109,11 @@ const ModifyPage = () => {
 
       if (response.ok) {
         // Different message based on source
-        const successMessage = isDisputeEdit 
+        const successMessage = isDisputeEdit
           ? "Dispute resolved successfully! Data updated."
           : "Data submitted successfully!";
         alert(successMessage);
-        
+
         // Redirect to home or disputes page based on source
         navigate(isDisputeEdit ? "/disputes" : "/");
       } else {
@@ -188,7 +190,7 @@ const ModifyPage = () => {
 
         <div className="flex flex-wrap justify-between">
           <div className="mx-2 mb-4 w-[48%]">
-            <label className="block mb-2 text-sm font-medium">Game Type</label>
+            <label className="mb-2 block text-sm font-medium">Game Type</label>
             <select
               className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
               value={formData.game}
@@ -199,9 +201,9 @@ const ModifyPage = () => {
               <option value="apex-legends">Apex Legends</option>
             </select>
           </div>
-          
+
           <div className="mx-2 mb-4 w-[48%]">
-            <label className="block mb-2 text-sm font-medium">Week</label>
+            <label className="mb-2 block text-sm font-medium">Week</label>
             <select
               className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
               value={formData.week}
@@ -212,9 +214,11 @@ const ModifyPage = () => {
               <option value="3">Week 3</option>
             </select>
           </div>
-          
+
           <div className="mx-2 mb-4 w-[48%]">
-            <label className="block mb-2 text-sm font-medium">Game Number</label>
+            <label className="mb-2 block text-sm font-medium">
+              Game Number
+            </label>
             <select
               className="w-full rounded-md border border-custom-off-white bg-custom-gray p-4 text-white"
               value={formData.game_number}
@@ -225,10 +229,10 @@ const ModifyPage = () => {
               <option value="3">Game 3</option>
             </select>
           </div>
-          
+
           {formData.game === "valorant" && (
             <div className="mx-2 mb-4 w-[48%]">
-              <label className="block mb-2 text-sm font-medium">Map</label>
+              <label className="mb-2 block text-sm font-medium">Map</label>
               <input
                 type="text"
                 value={formData.map}
@@ -238,10 +242,12 @@ const ModifyPage = () => {
               />
             </div>
           )}
-          
+
           {formData.game === "apex-legends" && (
             <div className="mx-2 mb-4 w-[48%]">
-              <label className="block mb-2 text-sm font-medium">Squad Placement</label>
+              <label className="mb-2 block text-sm font-medium">
+                Squad Placement
+              </label>
               <input
                 type="text"
                 value={formData.squad_placed}
@@ -251,9 +257,9 @@ const ModifyPage = () => {
               />
             </div>
           )}
-          
+
           <div className="mx-2 mb-4 w-[48%]">
-            <label className="block mb-2 text-sm font-medium">School</label>
+            <label className="mb-2 block text-sm font-medium">School</label>
             <input
               type="text"
               value={formData.school}
@@ -262,10 +268,12 @@ const ModifyPage = () => {
               onChange={(e) => handleInputChange(e, "school")}
             />
           </div>
-          
+
           {formData.game === "valorant" && (
             <div className="mx-2 mb-4 w-[48%]">
-              <label className="block mb-2 text-sm font-medium">Opponent School</label>
+              <label className="mb-2 block text-sm font-medium">
+                Opponent School
+              </label>
               <input
                 type="text"
                 value={formData.opponent_school}
@@ -277,9 +285,11 @@ const ModifyPage = () => {
           )}
 
           {formData.game === "valorant" && (
-            <div className="flex w-full">
+            <>
               <div className="mx-2 mb-4 w-[48%]">
-                <label className="block mb-2 text-sm font-medium">Winning Points</label>
+                <label className="mb-2 block text-sm font-medium">
+                  Winning Points
+                </label>
                 <input
                   type="text"
                   value={formData.w_points}
@@ -289,7 +299,9 @@ const ModifyPage = () => {
                 />
               </div>
               <div className="mx-2 mb-4 w-[48%]">
-                <label className="block mb-2 text-sm font-medium">Losing Points</label>
+                <label className="mb-2 block text-sm font-medium">
+                  Losing Points
+                </label>
                 <input
                   type="text"
                   value={formData.l_points}
@@ -298,7 +310,7 @@ const ModifyPage = () => {
                   onChange={(e) => handleInputChange(e, "l_points")}
                 />
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
