@@ -5,3 +5,7 @@ AFK is an automated esports data tracking system developed for the Southern Coll
 
 ![System Architecture](thumbnail.png)
 *System Architecture*
+
+![Stat Page](stats.gif)
+
+*Home Page displaying stats*
